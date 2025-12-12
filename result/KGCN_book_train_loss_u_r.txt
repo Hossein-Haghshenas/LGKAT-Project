@@ -1,0 +1,2 @@
+epoch: 0 train_loss:0.6931 cl_loss:0.0000
+epoch: 1 train_loss:0.6855 cl_loss:0.0000
