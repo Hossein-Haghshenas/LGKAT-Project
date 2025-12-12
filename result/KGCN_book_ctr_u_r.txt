@@ -1,0 +1,6 @@
+
+******************************************************************************
+dataset:book aggregator:sum n_epochs:2 neighbor_sample_size:8 dim:64 n_iter:3 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64,64] adj_type:norm alg_type:ngcf node_dropout_flag:0 node_dropout:[0.1, 0.1] mess_dropout:[0.1, 0.1] model_type:KGCN att:u_r agg_type:weighted_avg alpha:0 smoothing_steps:1 runs:1 logging:save pretrain:0 cl_weight:0.0 
+******************************************************************************
+epoch: 0 train_auc:0.8246 train_f1:0.7709 eval_auc:0.4989 eval_f1:0.5499 test_auc:0.5014 test_f1:0.5575
+epoch: 1 train_auc:0.7667 train_f1:0.6949 eval_auc:0.6525 eval_f1:0.5896 test_auc:0.6492 test_f1:0.5843
