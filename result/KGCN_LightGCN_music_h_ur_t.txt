@@ -1,0 +1,16 @@
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:10 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:h_ur_t agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:1 logging:save pretrain:0 
+******************************************************************************
+average auc: 0.8285+\-0.0000
+average f1 : 0.7445+\-0.0000
+average recall   : 0.0317+\-0.0000 0.0492+\-0.0000 0.1027+\-0.0000 0.1618+\-0.0000 0.2260+\-0.0000 0.3178+\-0.0000 0.4103+\-0.0000 
+average precision: 0.0500+\-0.0000 0.0400+\-0.0000 0.0440+\-0.0000 0.0310+\-0.0000 0.0235+\-0.0000 0.0140+\-0.0000 0.0093+\-0.0000 
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:10 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:h_ur_t agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:3 logging:save pretrain:0 cl_weight:0.05 
+******************************************************************************
+average auc: 0.8289+\-0.0022
+average f1 : 0.7430+\-0.0021
+average recall   : 0.0287+\-0.0134 0.0527+\-0.0058 0.0990+\-0.0274 0.1418+\-0.0268 0.2174+\-0.0311 0.3272+\-0.0134 0.4100+\-0.0261 
+average precision: 0.0633+\-0.0287 0.0533+\-0.0047 0.0433+\-0.0084 0.0313+\-0.0033 0.0248+\-0.0018 0.0153+\-0.0006 0.0095+\-0.0003 
