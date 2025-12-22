@@ -242,3 +242,82 @@ epoch: 1 test precision: 0.0600	0.0400	0.0240	0.0150	0.0095	0.0068	0.0043	test r
 epoch: 2 eval precision: 0.0100	0.0200	0.0120	0.0090	0.0055	0.0038	0.0025	eval recall: 0.0100	0.0312	0.0425	0.0725	0.0842	0.1417	0.1711	
 epoch: 2 test precision: 0.0500	0.0400	0.0240	0.0130	0.0095	0.0060	0.0036	test recall: 0.0328	0.0490	0.0735	0.0835	0.1141	0.1502	0.1697	
 
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:64 n_iter:2 batch_size:256 l2_weight:0.0001 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.3,0.3] mess_dropout:[0.3,0.3] model_type:KGCN_LightGCN att:uhrt_add_2 agg_type:weighted_avg alpha:0 smoothing_steps:1 runs:3 logging:save pretrain:0 cl_weight:0.001 
+******************************************************************************
+epoch: 0 eval precision: 0.0600	0.0300	0.0140	0.0080	0.0045	0.0022	0.0012	eval recall: 0.0512	0.0512	0.0525	0.0625	0.0638	0.0745	0.0778	
+epoch: 0 test precision: 0.0800	0.0550	0.0260	0.0130	0.0090	0.0048	0.0028	test recall: 0.0600	0.0736	0.0849	0.0849	0.0976	0.1077	0.1170	
+
+epoch: 1 eval precision: 0.0800	0.0450	0.0200	0.0100	0.0060	0.0036	0.0019	eval recall: 0.0663	0.0675	0.0775	0.0775	0.0900	0.1092	0.1192	
+epoch: 1 test precision: 0.0800	0.0450	0.0320	0.0200	0.0120	0.0064	0.0044	test recall: 0.0667	0.0678	0.0993	0.1136	0.1186	0.1535	0.1912	
+
+epoch: 2 eval precision: 0.0800	0.0450	0.0200	0.0110	0.0060	0.0032	0.0024	eval recall: 0.0663	0.0675	0.0775	0.0875	0.0882	0.1034	0.1642	
+epoch: 2 test precision: 0.0800	0.0450	0.0340	0.0210	0.0125	0.0066	0.0047	test recall: 0.0667	0.0678	0.1004	0.1076	0.1286	0.1635	0.1978	
+
+epoch: 3 eval precision: 0.0800	0.0450	0.0200	0.0110	0.0060	0.0032	0.0028	eval recall: 0.0663	0.0675	0.0775	0.0875	0.0882	0.1109	0.1689	
+epoch: 3 test precision: 0.0700	0.0400	0.0320	0.0190	0.0125	0.0066	0.0041	test recall: 0.0567	0.0578	0.0904	0.1032	0.1286	0.1550	0.1742	
+
+epoch: 4 eval precision: 0.0800	0.0450	0.0200	0.0120	0.0060	0.0032	0.0028	eval recall: 0.0663	0.0675	0.0775	0.0882	0.0882	0.1195	0.1706	
+epoch: 4 test precision: 0.0700	0.0400	0.0320	0.0190	0.0105	0.0066	0.0042	test recall: 0.0567	0.0578	0.0904	0.1032	0.1182	0.1551	0.1872	
+
+epoch: 5 eval precision: 0.0800	0.0450	0.0200	0.0120	0.0060	0.0034	0.0028	eval recall: 0.0663	0.0675	0.0775	0.0882	0.0882	0.1136	0.1706	
+epoch: 5 test precision: 0.0700	0.0400	0.0280	0.0190	0.0105	0.0062	0.0040	test recall: 0.0567	0.0578	0.0771	0.1032	0.1182	0.1452	0.1810	
+
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:128 n_iter:2 batch_size:256 l2_weight:7e-05 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64,64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.2,0.2] mess_dropout:[0.2,0.2] model_type:KGCN_LightGCN att:uhrt_add_2 agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 cl_weight:0.001 
+******************************************************************************
+epoch: 0 eval precision: 0.0800	0.0450	0.0200	0.0110	0.0065	0.0034	0.0023	eval recall: 0.0663	0.0675	0.0775	0.0875	0.0988	0.1245	0.1448	
+epoch: 0 test precision: 0.0900	0.0550	0.0340	0.0200	0.0120	0.0064	0.0042	test recall: 0.0692	0.0736	0.1004	0.1043	0.1220	0.1564	0.1865	
+
+epoch: 1 eval precision: 0.0800	0.0450	0.0200	0.0100	0.0055	0.0038	0.0026	eval recall: 0.0663	0.0675	0.0775	0.0775	0.0875	0.1334	0.1700	
+epoch: 1 test precision: 0.0900	0.0550	0.0300	0.0160	0.0125	0.0056	0.0039	test recall: 0.0692	0.0736	0.0893	0.0993	0.1392	0.1436	0.1769	
+
+epoch: 2 eval precision: 0.0000	0.0350	0.0180	0.0100	0.0060	0.0036	0.0023	eval recall: 0.0000	0.0475	0.0675	0.0775	0.0887	0.1159	0.1609	
+epoch: 2 test precision: 0.0300	0.0450	0.0260	0.0160	0.0110	0.0052	0.0034	test recall: 0.0158	0.0558	0.0693	0.0993	0.1231	0.1320	0.1539	
+
+epoch: 3 eval precision: 0.0000	0.0050	0.0160	0.0100	0.0060	0.0038	0.0023	eval recall: 0.0000	0.0100	0.0575	0.0775	0.0887	0.1259	0.1559	
+epoch: 3 test precision: 0.0100	0.0150	0.0240	0.0160	0.0105	0.0052	0.0033	test recall: 0.0033	0.0078	0.0593	0.0993	0.1181	0.1367	0.1620	
+
+epoch: 4 eval precision: 0.0000	0.0050	0.0120	0.0080	0.0060	0.0036	0.0022	eval recall: 0.0000	0.0100	0.0425	0.0575	0.0804	0.1159	0.1509	
+epoch: 4 test precision: 0.0100	0.0150	0.0160	0.0140	0.0100	0.0054	0.0032	test recall: 0.0033	0.0078	0.0243	0.0793	0.1171	0.1380	0.1480	
+
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:128 n_iter:2 batch_size:256 l2_weight:7e-05 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64,64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.2,0.2] mess_dropout:[0.2,0.2] model_type:KGCN_LightGCN att:uhrt_add_2 agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 cl_weight:0.001 
+******************************************************************************
+epoch: 0 eval precision: 0.0900	0.0500	0.0220	0.0130	0.0080	0.0044	0.0032	eval recall: 0.0700	0.0750	0.0850	0.0883	0.1133	0.1370	0.1865	
+epoch: 0 test precision: 0.0800	0.0500	0.0280	0.0170	0.0125	0.0066	0.0044	test recall: 0.0561	0.0662	0.0877	0.0929	0.1201	0.1427	0.1808	
+
+epoch: 1 eval precision: 0.0400	0.0300	0.0200	0.0110	0.0065	0.0040	0.0028	eval recall: 0.0217	0.0417	0.0750	0.0767	0.0967	0.1253	0.1795	
+epoch: 1 test precision: 0.0300	0.0300	0.0260	0.0170	0.0115	0.0066	0.0044	test recall: 0.0201	0.0434	0.0876	0.0998	0.1043	0.1455	0.1796	
+
+epoch: 2 eval precision: 0.0100	0.0050	0.0140	0.0110	0.0070	0.0042	0.0029	eval recall: 0.0050	0.0050	0.0583	0.0850	0.0983	0.1400	0.1762	
+epoch: 2 test precision: 0.0100	0.0050	0.0240	0.0160	0.0115	0.0060	0.0044	test recall: 0.0001	0.0001	0.0776	0.0994	0.1142	0.1452	0.1969	
+
+epoch: 3 eval precision: 0.0100	0.0100	0.0080	0.0110	0.0060	0.0044	0.0027	eval recall: 0.0050	0.0150	0.0350	0.0850	0.0867	0.1500	0.1675	
+epoch: 3 test precision: 0.0100	0.0100	0.0180	0.0170	0.0095	0.0056	0.0041	test recall: 0.0001	0.0101	0.0649	0.1000	0.1004	0.1415	0.1883	
+
+epoch: 4 eval precision: 0.0200	0.0100	0.0040	0.0030	0.0040	0.0028	0.0027	eval recall: 0.0150	0.0150	0.0150	0.0250	0.0683	0.0883	0.1595	
+epoch: 4 test precision: 0.0200	0.0250	0.0100	0.0090	0.0090	0.0050	0.0040	test recall: 0.0101	0.0315	0.0315	0.0439	0.0904	0.1116	0.1620	
+
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:128 n_iter:2 batch_size:256 l2_weight:7e-05 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64,64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.2,0.2] mess_dropout:[0.2,0.2] model_type:KGCN_LightGCN att:uhrt_add_2 agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 cl_weight:0.001 
+******************************************************************************
+epoch: 0 eval precision: 0.1600	0.0850	0.0420	0.0220	0.0125	0.0058	0.0040	eval recall: 0.1036	0.1043	0.1313	0.1333	0.1540	0.1733	0.2126	
+epoch: 0 test precision: 0.0600	0.0450	0.0240	0.0120	0.0065	0.0040	0.0031	test recall: 0.0470	0.0508	0.0728	0.0728	0.0735	0.0928	0.1433	
+
+epoch: 1 eval precision: 0.0300	0.0500	0.0400	0.0210	0.0120	0.0056	0.0033	eval recall: 0.0133	0.0637	0.1213	0.1313	0.1440	0.1694	0.1864	
+epoch: 1 test precision: 0.0200	0.0200	0.0220	0.0130	0.0065	0.0036	0.0027	test recall: 0.0150	0.0270	0.0717	0.0735	0.0735	0.0886	0.1131	
+
+epoch: 2 eval precision: 0.0300	0.0200	0.0160	0.0220	0.0120	0.0058	0.0033	eval recall: 0.0120	0.0170	0.0315	0.1320	0.1440	0.1719	0.1881	
+epoch: 2 test precision: 0.0200	0.0100	0.0120	0.0120	0.0065	0.0030	0.0023	test recall: 0.0120	0.0120	0.0390	0.0723	0.0735	0.0760	0.1068	
+
+epoch: 3 eval precision: 0.0100	0.0150	0.0120	0.0110	0.0090	0.0048	0.0033	eval recall: 0.0050	0.0120	0.0303	0.0426	0.0986	0.1299	0.1864	
+epoch: 3 test precision: 0.0000	0.0050	0.0100	0.0070	0.0045	0.0028	0.0024	test recall: 0.0000	0.0020	0.0370	0.0396	0.0596	0.0660	0.1169	
+
+epoch: 4 eval precision: 0.0300	0.0200	0.0120	0.0080	0.0070	0.0046	0.0029	eval recall: 0.0170	0.0220	0.0303	0.0410	0.0760	0.1251	0.1414	
+epoch: 4 test precision: 0.0000	0.0050	0.0100	0.0070	0.0035	0.0024	0.0021	test recall: 0.0000	0.0020	0.0326	0.0396	0.0396	0.0720	0.1037	
+
