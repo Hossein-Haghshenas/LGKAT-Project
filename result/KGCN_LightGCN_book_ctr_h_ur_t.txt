@@ -60,3 +60,18 @@ epoch: 6 train_auc:0.8752 train_f1:0.8023 eval_auc:0.7006 eval_f1:0.6445 test_au
 epoch: 7 train_auc:0.8753 train_f1:0.7988 eval_auc:0.7055 eval_f1:0.6447 test_auc:0.7015 test_f1:0.6445
 epoch: 8 train_auc:0.8758 train_f1:0.7976 eval_auc:0.7080 eval_f1:0.6443 test_auc:0.7040 test_f1:0.6437
 epoch: 9 train_auc:0.8768 train_f1:0.7975 eval_auc:0.7089 eval_f1:0.6434 test_auc:0.7052 test_f1:0.6441
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:20 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:h_ur_t agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 
+******************************************************************************
+epoch: 0 train_auc:0.8923 train_f1:0.8227 eval_auc:0.5003 eval_f1:0.5016 test_auc:0.4997 test_f1:0.5061
+epoch: 1 train_auc:0.9552 train_f1:0.9029 eval_auc:0.4807 eval_f1:0.5087 test_auc:0.4844 test_f1:0.5163
+epoch: 2 train_auc:0.9327 train_f1:0.8610 eval_auc:0.4971 eval_f1:0.5466 test_auc:0.5007 test_f1:0.5531
+epoch: 3 train_auc:0.8786 train_f1:0.8258 eval_auc:0.6034 eval_f1:0.5923 test_auc:0.5997 test_f1:0.5916
+epoch: 4 train_auc:0.8745 train_f1:0.8140 eval_auc:0.6592 eval_f1:0.6281 test_auc:0.6569 test_f1:0.6297
+epoch: 5 train_auc:0.8746 train_f1:0.8072 eval_auc:0.6856 eval_f1:0.6417 test_auc:0.6833 test_f1:0.6429
+epoch: 6 train_auc:0.8745 train_f1:0.8029 eval_auc:0.6968 eval_f1:0.6435 test_auc:0.6948 test_f1:0.6460
+epoch: 7 train_auc:0.8741 train_f1:0.7997 eval_auc:0.7024 eval_f1:0.6441 test_auc:0.7007 test_f1:0.6465
+epoch: 8 train_auc:0.8752 train_f1:0.7983 eval_auc:0.7050 eval_f1:0.6442 test_auc:0.7032 test_f1:0.6465
+epoch: 9 train_auc:0.8761 train_f1:0.7979 eval_auc:0.7060 eval_f1:0.6447 test_auc:0.7046 test_f1:0.6471
+epoch:10 train_auc:0.8774 train_f1:0.7984 eval_auc:0.7065 eval_f1:0.6450 test_auc:0.7048 test_f1:0.6469

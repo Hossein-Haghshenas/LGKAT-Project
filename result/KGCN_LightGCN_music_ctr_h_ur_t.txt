@@ -71,3 +71,45 @@ epoch: 6 train_auc:0.9585 train_f1:0.8846 eval_auc:0.8259 eval_f1:0.7336 test_au
 epoch: 7 train_auc:0.9616 train_f1:0.8890 eval_auc:0.8244 eval_f1:0.7352 test_auc:0.8216 test_f1:0.7361
 epoch: 8 train_auc:0.9624 train_f1:0.8913 eval_auc:0.8255 eval_f1:0.7390 test_auc:0.8225 test_f1:0.7373
 epoch: 9 train_auc:0.9645 train_f1:0.8948 eval_auc:0.8251 eval_f1:0.7381 test_auc:0.8202 test_f1:0.7386
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:10 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:h_ur_t agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:3 logging:save pretrain:0 
+******************************************************************************
+epoch: 0 train_auc:0.8829 train_f1:0.7631 eval_auc:0.8041 eval_f1:0.7005 test_auc:0.8071 test_f1:0.7021
+epoch: 1 train_auc:0.9024 train_f1:0.7883 eval_auc:0.8138 eval_f1:0.7133 test_auc:0.8141 test_f1:0.7222
+epoch: 2 train_auc:0.9174 train_f1:0.8116 eval_auc:0.8199 eval_f1:0.7255 test_auc:0.8206 test_f1:0.7325
+epoch: 3 train_auc:0.9351 train_f1:0.8387 eval_auc:0.8267 eval_f1:0.7347 test_auc:0.8256 test_f1:0.7405
+epoch: 4 train_auc:0.9448 train_f1:0.8598 eval_auc:0.8279 eval_f1:0.7414 test_auc:0.8270 test_f1:0.7466
+epoch: 5 train_auc:0.9503 train_f1:0.8670 eval_auc:0.8286 eval_f1:0.7375 test_auc:0.8268 test_f1:0.7429
+epoch: 6 train_auc:0.9547 train_f1:0.8744 eval_auc:0.8274 eval_f1:0.7360 test_auc:0.8252 test_f1:0.7404
+epoch: 7 train_auc:0.9564 train_f1:0.8779 eval_auc:0.8256 eval_f1:0.7373 test_auc:0.8236 test_f1:0.7395
+epoch: 8 train_auc:0.9586 train_f1:0.8823 eval_auc:0.8261 eval_f1:0.7385 test_auc:0.8224 test_f1:0.7393
+epoch: 9 train_auc:0.9599 train_f1:0.8855 eval_auc:0.8251 eval_f1:0.7387 test_auc:0.8240 test_f1:0.7408
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:10 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:h_ur_t agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:3 logging:save pretrain:0 
+******************************************************************************
+epoch: 0 train_auc:0.8820 train_f1:0.7611 eval_auc:0.8053 eval_f1:0.7032 test_auc:0.8004 test_f1:0.6997
+epoch: 1 train_auc:0.8991 train_f1:0.7838 eval_auc:0.8123 eval_f1:0.7199 test_auc:0.8117 test_f1:0.7240
+epoch: 2 train_auc:0.9086 train_f1:0.7988 eval_auc:0.8136 eval_f1:0.7175 test_auc:0.8150 test_f1:0.7219
+epoch: 3 train_auc:0.9213 train_f1:0.8137 eval_auc:0.8211 eval_f1:0.7269 test_auc:0.8205 test_f1:0.7300
+epoch: 4 train_auc:0.9381 train_f1:0.8483 eval_auc:0.8256 eval_f1:0.7370 test_auc:0.8239 test_f1:0.7417
+epoch: 5 train_auc:0.9461 train_f1:0.8617 eval_auc:0.8268 eval_f1:0.7390 test_auc:0.8257 test_f1:0.7410
+epoch: 6 train_auc:0.9509 train_f1:0.8702 eval_auc:0.8253 eval_f1:0.7349 test_auc:0.8250 test_f1:0.7409
+epoch: 7 train_auc:0.9546 train_f1:0.8758 eval_auc:0.8253 eval_f1:0.7376 test_auc:0.8241 test_f1:0.7408
+epoch: 8 train_auc:0.9572 train_f1:0.8785 eval_auc:0.8236 eval_f1:0.7366 test_auc:0.8236 test_f1:0.7401
+epoch: 9 train_auc:0.9588 train_f1:0.8841 eval_auc:0.8242 eval_f1:0.7383 test_auc:0.8230 test_f1:0.7365
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:10 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:h_ur_t agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:3 logging:save pretrain:0 
+******************************************************************************
+epoch: 0 train_auc:0.8993 train_f1:0.7893 eval_auc:0.8159 eval_f1:0.7147 test_auc:0.8113 test_f1:0.7168
+epoch: 1 train_auc:0.9357 train_f1:0.8387 eval_auc:0.8307 eval_f1:0.7394 test_auc:0.8268 test_f1:0.7366
+epoch: 2 train_auc:0.9461 train_f1:0.8605 eval_auc:0.8299 eval_f1:0.7423 test_auc:0.8273 test_f1:0.7428
+epoch: 3 train_auc:0.9518 train_f1:0.8701 eval_auc:0.8267 eval_f1:0.7378 test_auc:0.8259 test_f1:0.7387
+epoch: 4 train_auc:0.9546 train_f1:0.8739 eval_auc:0.8262 eval_f1:0.7364 test_auc:0.8247 test_f1:0.7385
+epoch: 5 train_auc:0.9570 train_f1:0.8794 eval_auc:0.8267 eval_f1:0.7341 test_auc:0.8242 test_f1:0.7391
+epoch: 6 train_auc:0.9569 train_f1:0.8800 eval_auc:0.8259 eval_f1:0.7380 test_auc:0.8239 test_f1:0.7386
+epoch: 7 train_auc:0.9599 train_f1:0.8853 eval_auc:0.8243 eval_f1:0.7371 test_auc:0.8223 test_f1:0.7381
+epoch: 8 train_auc:0.9608 train_f1:0.8871 eval_auc:0.8245 eval_f1:0.7361 test_auc:0.8230 test_f1:0.7414
+epoch: 9 train_auc:0.9627 train_f1:0.8910 eval_auc:0.8244 eval_f1:0.7390 test_auc:0.8204 test_f1:0.7352

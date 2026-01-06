@@ -1,5 +1,7 @@
 import argparse
 import numpy as np
+import os
+from pca_preprocessing import apply_pca_to_ratings, apply_pca_to_kg_features
 
 RATING_FILE_NAME = dict({'movie': 'ratings.csv', 'book': 'BX-Book-Ratings.csv', 'music': 'user_artists.dat'})
 SEP = dict({'movie': ',', 'book': ';', 'music': '\t'})
@@ -109,11 +111,55 @@ def convert_kg():
     print('number of relations: %d' % relation_cnt)
 
 
+def apply_pca_preprocessing(dataset, apply_to_ratings=False, apply_to_kg_features=False,
+                           n_components=None, variance_threshold=0.95, use_sklearn=True):
+    """
+    Apply PCA preprocessing to ratings and/or KG features.
+    
+    Args:
+        dataset: Dataset name
+        apply_to_ratings: Whether to apply PCA to ratings
+        apply_to_kg_features: Whether to apply PCA to KG features
+        n_components: Number of components to keep
+        variance_threshold: Minimum variance to retain
+        use_sklearn: Whether to use sklearn PCA (faster)
+    """
+    if apply_to_ratings:
+        rating_file = f'../data/{dataset}/ratings_final'
+        output_file = f'../data/{dataset}/ratings_final_pca'
+        if os.path.exists(rating_file + '.npy') or os.path.exists(rating_file + '.txt'):
+            print('\nApplying PCA to ratings...')
+            apply_pca_to_ratings(rating_file, output_file, n_components, 
+                                variance_threshold, use_sklearn, standardize=True)
+        else:
+            print(f'Rating file not found: {rating_file}')
+    
+    if apply_to_kg_features:
+        kg_feat_file = f'../data/{dataset}/kg_feat.npz'
+        output_file = f'../data/{dataset}/kg_feat_pca'
+        if os.path.exists(kg_feat_file):
+            print('\nApplying PCA to KG features...')
+            apply_pca_to_kg_features(kg_feat_file, output_file, n_components,
+                                    variance_threshold, use_sklearn, standardize=True)
+        else:
+            print(f'KG feature file not found: {kg_feat_file}')
+
+
 if __name__ == '__main__':
     np.random.seed(555)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', type=str, default='movie', help='which dataset to preprocess')
+    parser.add_argument('--pca_ratings', action='store_true', 
+                       help='Apply PCA to ratings after preprocessing')
+    parser.add_argument('--pca_kg_features', action='store_true',
+                       help='Apply PCA to KG features after preprocessing')
+    parser.add_argument('--pca_components', type=int, default=None,
+                       help='Number of PCA components to keep')
+    parser.add_argument('--pca_variance', type=float, default=0.95,
+                       help='Minimum variance to retain for PCA')
+    parser.add_argument('--pca_sklearn', action='store_true', default=True,
+                       help='Use sklearn PCA (default: True)')
     args = parser.parse_args()
     DATASET = args.d
 
@@ -124,5 +170,10 @@ if __name__ == '__main__':
     read_item_index_to_entity_id_file()
     convert_rating()
     convert_kg()
+    
+    # Apply PCA if requested
+    if args.pca_ratings or args.pca_kg_features:
+        apply_pca_preprocessing(DATASET, args.pca_ratings, args.pca_kg_features,
+                               args.pca_components, args.pca_variance, args.pca_sklearn)
 
     print('done')
