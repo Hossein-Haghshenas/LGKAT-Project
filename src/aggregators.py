@@ -342,3 +342,182 @@ class NeighborAggregator(Aggregator):
 
         return self.act(output)
 
+
+class GATAggregator(Aggregator):
+    """
+    Graph Attention Network (GAT) Aggregator
+    Implements multi-head graph attention mechanism as described in:
+    "Graph Attention Networks" by Velickovic et al., ICLR 2018
+    """
+    def __init__(self, weights_att, batch_size, dim, n_neighbor, num_heads=1, dropout=0., act=tf.nn.elu, name=None):
+        super(GATAggregator, self).__init__(weights_att, batch_size, dim, n_neighbor, dropout, act, name)
+        self.num_heads = num_heads
+        self.head_dim = dim // num_heads  # Dimension per head
+        
+        with tf.compat.v1.variable_scope(self.name):
+            # Weight matrix for linear transformation: W in GAT
+            self.W = tf.compat.v1.get_variable(
+                shape=[self.dim, self.dim], 
+                initializer=tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform"), 
+                name='W')
+            
+            # Attention weight vector: a in GAT (for single head) or a matrix for multi-head
+            if num_heads == 1:
+                self.att_vec = tf.compat.v1.get_variable(
+                    shape=[2 * self.dim, 1],
+                    initializer=tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform"),
+                    name='att_vec')
+            else:
+                # Multi-head attention: separate attention vector for each head
+                self.att_vec = tf.compat.v1.get_variable(
+                    shape=[num_heads, 2 * self.head_dim, 1],
+                    initializer=tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform"),
+                    name='att_vec')
+                # Separate W for each head in multi-head setting
+                self.W_multi = tf.compat.v1.get_variable(
+                    shape=[num_heads, self.dim, self.head_dim],
+                    initializer=tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform"),
+                    name='W_multi')
+            
+            self.bias = tf.compat.v1.get_variable(
+                shape=[self.dim], 
+                initializer=tf.compat.v1.zeros_initializer(), 
+                name='bias')
+            
+            # Store all weights for L2 regularization
+            # For compatibility with model.py which expects aggregator.weights
+            if num_heads == 1:
+                self.weights = self.W  # Main weight matrix
+            else:
+                # For multi-head, use W_multi as the primary weights
+                self.weights = self.W_multi
+
+    def _call(self, self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, masks, hops):
+        """
+        GAT aggregation with attention mechanism
+        """
+        if self.num_heads == 1:
+            return self._single_head_attention(self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, hops)
+        else:
+            return self._multi_head_attention(self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, hops)
+
+    def _single_head_attention(self, self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, hops):
+        """
+        Single-head GAT attention
+        """
+        # self_vectors: [batch_size, -1, dim]
+        # neighbor_vectors: [batch_size, -1, n_neighbor, dim]
+        
+        # Apply linear transformation W to self and neighbors
+        # [batch_size, -1, dim] -> [batch_size, -1, dim]
+        self_transformed = tf.matmul(tf.reshape(self_vectors, [-1, self.dim]), self.W)
+        self_transformed = tf.reshape(self_transformed, [self.batch_size, -1, self.dim])
+        
+        # [batch_size, -1, n_neighbor, dim] -> [batch_size, -1, n_neighbor, dim]
+        neighbor_reshaped = tf.reshape(neighbor_vectors, [-1, self.dim])
+        neighbor_transformed = tf.matmul(neighbor_reshaped, self.W)
+        neighbor_transformed = tf.reshape(neighbor_transformed, [self.batch_size, -1, self.n_neighbor, self.dim])
+        
+        # Expand self_vectors to match neighbor dimensions
+        # [batch_size, -1, 1, dim]
+        self_expanded = tf.expand_dims(self_transformed, axis=2)
+        self_expanded = tf.tile(self_expanded, [1, 1, self.n_neighbor, 1])
+        
+        # Concatenate self and neighbor features: [Wh_i || Wh_j]
+        # [batch_size, -1, n_neighbor, 2*dim]
+        concat_features = tf.concat([self_expanded, neighbor_transformed], axis=-1)
+        
+        # Compute attention scores: e_ij = LeakyReLU(a^T [Wh_i || Wh_j])
+        # [batch_size, -1, n_neighbor, 2*dim] -> [batch_size, -1, n_neighbor, 1]
+        concat_reshaped = tf.reshape(concat_features, [-1, 2 * self.dim])
+        attention_scores = tf.matmul(concat_reshaped, self.att_vec)
+        attention_scores = tf.reshape(attention_scores, [self.batch_size, -1, self.n_neighbor])
+        
+        # Apply LeakyReLU
+        attention_scores = tf.nn.leaky_relu(attention_scores, alpha=0.2)
+        
+        # Normalize attention scores: α_ij = softmax(e_ij)
+        attention_weights = tf.nn.softmax(attention_scores, axis=-1)
+        # [batch_size, -1, n_neighbor, 1]
+        attention_weights = tf.expand_dims(attention_weights, axis=-1)
+        
+        # Apply dropout to attention weights
+        attention_weights = tf.nn.dropout(attention_weights, rate=self.dropout)
+        
+        # Aggregate neighbors: h_i' = Σ α_ij Wh_j
+        # [batch_size, -1, n_neighbor, dim] * [batch_size, -1, n_neighbor, 1] -> [batch_size, -1, dim]
+        neighbors_agg = tf.reduce_sum(attention_weights * neighbor_transformed, axis=2)
+        
+        # Combine self and aggregated neighbors (residual connection)
+        output = self_transformed + neighbors_agg
+        
+        # Apply dropout
+        output = tf.nn.dropout(output, rate=self.dropout)
+        
+        # Apply bias and activation
+        output = output + self.bias
+        output = self.act(output)
+        
+        return output
+
+    def _multi_head_attention(self, self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, hops):
+        """
+        Multi-head GAT attention
+        """
+        # self_vectors: [batch_size, -1, dim]
+        # neighbor_vectors: [batch_size, -1, n_neighbor, dim]
+        
+        head_outputs = []
+        
+        for head in range(self.num_heads):
+            # Apply head-specific linear transformation
+            # [batch_size, -1, dim] -> [batch_size, -1, head_dim]
+            self_transformed = tf.matmul(
+                tf.reshape(self_vectors, [-1, self.dim]), 
+                self.W_multi[head]
+            )
+            self_transformed = tf.reshape(self_transformed, [self.batch_size, -1, self.head_dim])
+            
+            # Transform neighbors
+            neighbor_reshaped = tf.reshape(neighbor_vectors, [-1, self.dim])
+            neighbor_transformed = tf.matmul(neighbor_reshaped, self.W_multi[head])
+            neighbor_transformed = tf.reshape(neighbor_transformed, [self.batch_size, -1, self.n_neighbor, self.head_dim])
+            
+            # Expand self_vectors
+            self_expanded = tf.expand_dims(self_transformed, axis=2)
+            self_expanded = tf.tile(self_expanded, [1, 1, self.n_neighbor, 1])
+            
+            # Concatenate for attention
+            concat_features = tf.concat([self_expanded, neighbor_transformed], axis=-1)
+            
+            # Compute attention scores
+            concat_reshaped = tf.reshape(concat_features, [-1, 2 * self.head_dim])
+            attention_scores = tf.matmul(concat_reshaped, self.att_vec[head])
+            attention_scores = tf.reshape(attention_scores, [self.batch_size, -1, self.n_neighbor])
+            
+            # LeakyReLU and softmax
+            attention_scores = tf.nn.leaky_relu(attention_scores, alpha=0.2)
+            attention_weights = tf.nn.softmax(attention_scores, axis=-1)
+            attention_weights = tf.expand_dims(attention_weights, axis=-1)
+            
+            # Apply dropout
+            attention_weights = tf.nn.dropout(attention_weights, rate=self.dropout)
+            
+            # Aggregate
+            neighbors_agg = tf.reduce_sum(attention_weights * neighbor_transformed, axis=2)
+            
+            # Combine
+            head_output = self_transformed + neighbors_agg
+            head_outputs.append(head_output)
+        
+        # Concatenate all heads: [batch_size, -1, num_heads * head_dim]
+        output = tf.concat(head_outputs, axis=-1)
+        
+        # Apply dropout
+        output = tf.nn.dropout(output, rate=self.dropout)
+        
+        # Apply bias and activation
+        output = output + self.bias
+        output = self.act(output)
+        
+        return output

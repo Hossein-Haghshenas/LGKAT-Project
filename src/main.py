@@ -39,7 +39,7 @@ parser.add_argument('--model_type', nargs='?', default='KGCN+NGCF', help='{KGCN,
 
 # book
 parser.add_argument('--dataset', type=str, default='book', help='which dataset to use')
-parser.add_argument('--aggregator', type=str, default='sum', help='which aggregator to use')
+parser.add_argument('--aggregator', type=str, default='gat', help='which aggregator to use (sum, concat, neighbor, gat)')
 parser.add_argument('--n_epochs', type=int, default=15, help='the number of epochs')
 parser.add_argument('--neighbor_sample_size', type=int, default=8, help='the number of neighbors to be sampled')
 parser.add_argument('--dim', type=int, default=64, help='dimension of user and entity embeddings')
@@ -96,6 +96,10 @@ parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in 
 parser.add_argument('--runs', type=int, default=3, help='the number of epochs')
 parser.add_argument('--gpu_id', type=int, default=0, help='gpu id')
 parser.add_argument('--att', nargs='?', default='u_r', help='{avg, u_r, u_r_mlp, u_r_e}.')  # attention types
+
+# GAT-specific parameters
+parser.add_argument('--num_heads', type=int, default=1, help='Number of attention heads for GAT (default: 1)')
+parser.add_argument('--gat_dropout', type=float, default=0.0, help='Dropout rate for GAT attention layers (default: 0.0)')
 '''
 ******************************************************************************
 Methods for combining items embeddings from KGCN and CF (GCMC, NGCF or GCN)

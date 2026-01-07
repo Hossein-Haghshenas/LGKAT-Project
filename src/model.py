@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from aggregators import SumAggregator, ConcatAggregator, NeighborAggregator
+from aggregators import SumAggregator, ConcatAggregator, NeighborAggregator, GATAggregator
 from sklearn.metrics import f1_score, roc_auc_score
 
 
@@ -36,8 +36,19 @@ class KGCN(object):
             self.aggregator_class = ConcatAggregator
         elif args.aggregator == 'neighbor':
             self.aggregator_class = NeighborAggregator
+        elif args.aggregator == 'gat':
+            self.aggregator_class = GATAggregator
         else:
             raise Exception("Unknown aggregator: " + args.aggregator)
+        
+        # GAT-specific parameters
+        self.num_heads = getattr(args, 'num_heads', 1)  # Number of attention heads for GAT
+        self.gat_dropout = getattr(args, 'gat_dropout', 0.0)  # Dropout rate for GAT attention
+        
+        # Validate GAT parameters
+        if args.aggregator == 'gat':
+            if self.num_heads > 1 and self.dim % self.num_heads != 0:
+                raise ValueError(f"For multi-head GAT, dim ({self.dim}) must be divisible by num_heads ({self.num_heads})")
 
         '''
         *****************************************
@@ -533,12 +544,24 @@ class KGCN(object):
 
         for i in range(self.n_iter):
             if i == self.n_iter - 1:
-                aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
-                                                   self.n_neighbor, act=tf.nn.tanh,
-                                                   name=self.model_type + '_{}'.format(i))
+                if self.aggregator_class == GATAggregator:
+                    aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
+                                                       self.n_neighbor, num_heads=self.num_heads,
+                                                       dropout=self.gat_dropout,
+                                                       act=tf.nn.elu, name=self.model_type + '_{}'.format(i))
+                else:
+                    aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
+                                                       self.n_neighbor, act=tf.nn.tanh,
+                                                       name=self.model_type + '_{}'.format(i))
             else:
-                aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
-                                                   self.n_neighbor, name=self.model_type + '_{}'.format(i))
+                if self.aggregator_class == GATAggregator:
+                    aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
+                                                       self.n_neighbor, num_heads=self.num_heads,
+                                                       dropout=self.gat_dropout,
+                                                       act=tf.nn.elu, name=self.model_type + '_{}'.format(i))
+                else:
+                    aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
+                                                       self.n_neighbor, name=self.model_type + '_{}'.format(i))
             aggregators.append(aggregator)
 
             entity_vectors_next_iter = []
@@ -583,7 +606,18 @@ class KGCN(object):
 
         if self.model_type in ['KGCN', 'KGCN_NGCF', 'KGCN_LightGCN']:
             for aggregator in self.aggregators:
-                self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.weights)
+                # Handle different aggregator types
+                if hasattr(aggregator, 'weights'):
+                    self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.weights)
+                # For GAT aggregators, also include attention vectors
+                if hasattr(aggregator, 'att_vec'):
+                    if isinstance(aggregator.att_vec, list) or len(aggregator.att_vec.shape) > 1:
+                        # Multi-head or single head attention vector
+                        self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.att_vec)
+                if hasattr(aggregator, 'W'):
+                    self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.W)
+                if hasattr(aggregator, 'bias'):
+                    self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.bias)
 
             if self.weights_att['att'] in ['h_ur_t', 'h_r_t' 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
                                            'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp']:
