@@ -1,4 +1,9 @@
 import tensorflow as tf
+# ensure TensorFlow 1.x compatibility mode is enabled
+try:
+    tf.compat.v1.disable_eager_execution()
+except:
+    pass
 from abc import abstractmethod
 
 LAYER_IDS = {}
@@ -341,4 +346,53 @@ class NeighborAggregator(Aggregator):
         output = tf.reshape(output, [self.batch_size, -1, self.dim])
 
         return self.act(output)
+
+
+class GraphSAGEAggregator(Aggregator):
+    """
+    GraphSAGE aggregator: Mean pooling of neighbors, then concatenate with self,
+    apply transformation, and normalize.
+    Follows the same structure as ConcatAggregator but uses mean pooling instead of attention.
+    """
+    def __init__(self, weights, batch_size, dim, n_neighbor, dropout=0., act=tf.nn.relu, name=None):
+        super(GraphSAGEAggregator, self).__init__(weights, batch_size, dim, n_neighbor, dropout, act, name)
+
+        with tf.compat.v1.variable_scope(self.name):
+            # GraphSAGE: concatenate self (dim) + aggregated neighbors (dim) = 2*dim
+            self.weights = tf.compat.v1.get_variable(
+                shape=[2 * self.dim, self.dim], 
+                initializer=tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform"), 
+                name='weights')
+            self.bias = tf.compat.v1.get_variable(
+                shape=[self.dim], 
+                initializer=tf.compat.v1.zeros_initializer(), 
+                name='bias')
+
+    def _call(self, self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, masks, hops):
+        # GraphSAGE: Simple mean pooling of neighbor vectors (no attention)
+        # neighbor_vectors: [batch_size, -1, n_neighbor, dim]
+        # After mean pooling: [batch_size, -1, dim] (shape matches self_vectors)
+        neighbors_agg = tf.reduce_mean(input_tensor=neighbor_vectors, axis=2)
+        
+        # GraphSAGE: Concatenate self vectors with aggregated neighbors
+        # [batch_size, -1, dim] + [batch_size, -1, dim] -> [batch_size, -1, 2*dim]
+        output = tf.concat([self_vectors, neighbors_agg], axis=-1)
+        
+        # Reshape for matrix multiplication: [-1, 2*dim]
+        output = tf.reshape(output, [-1, 2 * self.dim])
+        output = tf.nn.dropout(output, rate=1 - (1 - self.dropout))
+        
+        # Apply transformation: W * [h_v || h_N(v)] + b
+        output = tf.matmul(output, self.weights) + self.bias
+        
+        # Reshape back: [batch_size, -1, dim]
+        output = tf.reshape(output, [self.batch_size, -1, self.dim])
+        
+        # Apply activation
+        output = self.act(output)
+        
+        # Normalize (L2 normalization as in GraphSAGE) - applied after activation
+        output = tf.math.l2_normalize(output, axis=-1)
+        
+        return output
 

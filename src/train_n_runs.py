@@ -10,6 +10,7 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
     train_data, eval_data, test_data = data[4], data[5], data[6]
     adj_entity, adj_relation = data[7], data[8]
     user_item_adj = data[9]
+    kg = data[10] if len(data) > 10 else None  # Knowledge graph for GraphSAGE
 
     auc = []
     f1_score = []
@@ -49,7 +50,7 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
     for r in range(RUNS):
         tf.compat.v1.reset_default_graph()
 
-        model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entity, adj_relation, user_item_adj, pretrain=pretrain)
+        model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entity, adj_relation, user_item_adj, kg=kg, pretrain=pretrain)
 
         saver_ckpt = tf.compat.v1.train.Saver()
 

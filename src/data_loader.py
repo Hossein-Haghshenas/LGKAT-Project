@@ -6,10 +6,10 @@ from time import time
 
 def load_data(args):
     n_user, n_item, train_data, eval_data, test_data, user_item_adj = load_rating(args)
-    n_entity, n_relation, adj_entity, adj_relation = load_kg(args)
+    n_entity, n_relation, adj_entity, adj_relation, kg = load_kg(args)
     print('data loaded.')
 
-    return n_user, n_item, n_entity, n_relation, train_data, eval_data, test_data, adj_entity, adj_relation, user_item_adj
+    return n_user, n_item, n_entity, n_relation, train_data, eval_data, test_data, adj_entity, adj_relation, user_item_adj, kg
 
 def load_rating(args):
     print('reading rating file ...')
@@ -166,7 +166,7 @@ def load_kg(args):
     kg = construct_kg(kg_np)
     adj_entity, adj_relation = construct_adj(args, kg, n_entity)
 
-    return n_entity, n_relation, adj_entity, adj_relation
+    return n_entity, n_relation, adj_entity, adj_relation, kg
 
 
 def construct_kg(kg_np):

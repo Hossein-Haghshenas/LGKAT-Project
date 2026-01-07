@@ -39,7 +39,7 @@ parser.add_argument('--model_type', nargs='?', default='KGCN+NGCF', help='{KGCN,
 
 # book
 parser.add_argument('--dataset', type=str, default='book', help='which dataset to use')
-parser.add_argument('--aggregator', type=str, default='sum', help='which aggregator to use')
+parser.add_argument('--aggregator', type=str, default='graphsage', help='which aggregator to use (sum, concat, neighbor, graphsage)')
 parser.add_argument('--n_epochs', type=int, default=15, help='the number of epochs')
 parser.add_argument('--neighbor_sample_size', type=int, default=8, help='the number of neighbors to be sampled')
 parser.add_argument('--dim', type=int, default=64, help='dimension of user and entity embeddings')
@@ -48,6 +48,8 @@ parser.add_argument('--batch_size', type=int, default=256, help='batch size')
 parser.add_argument('--l2_weight', type=float, default=2e-5, help='weight of l2 regularization')
 parser.add_argument('--ls_weight', type=float, default=0, help='weight of LS regularization')
 parser.add_argument('--lr', type=float, default=2e-4, help='learning rate')
+parser.add_argument('--cl_weight', type=float, default=0.01, help='weight of contrastive learning loss (start with 0.01, adjust if needed)')
+parser.add_argument('--cl_temperature', type=float, default=1.0, help='temperature parameter for contrastive learning (1.0 is recommended)')
 parser.add_argument('--ratio', type=float, default=1, help='size of training dataset')
 
 # NGCF
@@ -123,7 +125,8 @@ parser.add_argument(
             '\'dim\',\'n_iter\',\'batch_size\',\'l2_weight\',\'ls_weight\',\'lr\','
             '\'ratio\',\'layer_size\',\'adj_type\',\'alg_type\',\'node_dropout_flag\','
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
-            '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\']',
+            '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
+            '\'cl_weight\',\'cl_temperature\']',
     help='paramerts')
 
 show_loss = False

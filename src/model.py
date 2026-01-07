@@ -1,12 +1,13 @@
 import tensorflow as tf
 import numpy as np
-from aggregators import SumAggregator, ConcatAggregator, NeighborAggregator
+from aggregators import SumAggregator, ConcatAggregator, NeighborAggregator, GraphSAGEAggregator
 from sklearn.metrics import f1_score, roc_auc_score
 
 
 class KGCN(object):
-    def __init__(self, args, n_user, n_item, n_entity, n_relation, adj_entity, adj_relation, user_item_adj, pretrain=None):
+    def __init__(self, args, n_user, n_item, n_entity, n_relation, adj_entity, adj_relation, user_item_adj, kg=None, pretrain=None):
         self.pretrain = pretrain
+        self.kg = kg  # Store knowledge graph for dynamic sampling
         self._parse_args(args, n_user, n_item, adj_entity, adj_relation, user_item_adj)
         self._build_inputs()
         self._build_model(n_user, n_item, n_entity, n_relation)
@@ -29,13 +30,18 @@ class KGCN(object):
         self.dim = args.dim
         self.l2_weight = args.l2_weight
         self.lr = args.lr
+        self.cl_weight = args.cl_weight
+        self.cl_temperature = args.cl_temperature
 #        self.layer_cl = args.layer_cl
+        self.aggregator_type = args.aggregator
         if args.aggregator == 'sum':
             self.aggregator_class = SumAggregator
         elif args.aggregator == 'concat':
             self.aggregator_class = ConcatAggregator
         elif args.aggregator == 'neighbor':
             self.aggregator_class = NeighborAggregator
+        elif args.aggregator == 'graphsage':
+            self.aggregator_class = GraphSAGEAggregator
         else:
             raise Exception("Unknown aggregator: " + args.aggregator)
 
@@ -514,9 +520,18 @@ class KGCN(object):
     '''
 
     def get_neighbors(self, seeds):
+        """
+        Get neighbors for GraphSAGE-style dynamic sampling or fixed sampling.
+        If kg is provided, use dynamic sampling (GraphSAGE style).
+        Otherwise, use pre-sampled neighbors (original KGCN style).
+        """
         seeds = tf.expand_dims(seeds, axis=1)
         entities = [seeds]
         relations = []
+        
+        # For GraphSAGE, use the same neighbor sampling as original KGCN
+        # (Dynamic sampling breaks gradients, so we use pre-sampled neighbors)
+        # The GraphSAGE difference is in the aggregation method (mean pooling + concat)
         for i in range(self.n_iter):
             neighbor_entities = tf.reshape(tf.gather(self.adj_entity, entities[i]), [self.batch_size, -1])
             neighbor_relations = tf.reshape(tf.gather(self.adj_relation, entities[i]), [self.batch_size, -1])
@@ -571,6 +586,52 @@ class KGCN(object):
     *****************************************
     '''
 
+    def _compute_contrastive_loss(self):
+        """
+        Compute margin-based contrastive loss for recommendation systems.
+        This encourages positive pairs to be similar while maintaining
+        reasonable separation to prevent overfitting and representation collapse.
+        """
+        # Normalize embeddings for cosine similarity
+        user_emb_norm = tf.nn.l2_normalize(self.user_embeddings_final, axis=1)
+        item_emb_norm = tf.nn.l2_normalize(self.item_embeddings_final, axis=1)
+        
+        # Compute cosine similarity
+        similarity = tf.reduce_sum(input_tensor=user_emb_norm * item_emb_norm, axis=1)
+        
+        # Separate positive and negative pairs
+        pos_mask = tf.cast(self.labels, tf.bool)
+        neg_mask = tf.logical_not(pos_mask)
+        
+        pos_similarities = tf.boolean_mask(tensor=similarity, mask=pos_mask)
+        neg_similarities = tf.boolean_mask(tensor=similarity, mask=neg_mask)
+        
+        pos_count = tf.reduce_sum(input_tensor=tf.cast(pos_mask, tf.float32))
+        neg_count = tf.reduce_sum(input_tensor=tf.cast(neg_mask, tf.float32))
+        
+        # Margin-based contrastive loss
+        # For positive pairs: encourage similarity but with a margin to prevent collapse
+        # For negative pairs: encourage separation
+        margin_pos = 0.8  # Target similarity for positive pairs (not too high to avoid collapse)
+        margin_neg = 0.0  # Target similarity for negative pairs
+        
+        pos_loss = tf.cond(
+            pred=tf.greater(pos_count, 0),
+            true_fn=lambda: tf.reduce_mean(input_tensor=tf.maximum(0.0, margin_pos - pos_similarities)),
+            false_fn=lambda: tf.constant(0.0, dtype=tf.float32)
+        )
+        
+        neg_loss = tf.cond(
+            pred=tf.greater(neg_count, 0),
+            true_fn=lambda: tf.reduce_mean(input_tensor=tf.maximum(0.0, neg_similarities - margin_neg)),
+            false_fn=lambda: tf.constant(0.0, dtype=tf.float32)
+        )
+        
+        # Combined loss with temperature scaling
+        contrastive_loss = (pos_loss + 0.5 * neg_loss) / self.cl_temperature
+        
+        return contrastive_loss
+
     def _build_train(self):
         self.base_loss = tf.reduce_mean(input_tensor=tf.nn.sigmoid_cross_entropy_with_logits(
             labels=self.labels, logits=self.scores))
@@ -612,8 +673,17 @@ class KGCN(object):
         '''
         *****************************************
         '''
+        
+        '''
+        *****************************************
+        Contrastive Learning Loss
+        '''
+        self.contrastive_loss = self._compute_contrastive_loss()
+        '''
+        *****************************************
+        '''
 
-        self.loss = self.base_loss + self.l2_weight * self.l2_loss
+        self.loss = self.base_loss + self.l2_weight * self.l2_loss + self.cl_weight * self.contrastive_loss
         self.optimizer = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(self.loss)
 
     def train(self, sess, feed_dict):

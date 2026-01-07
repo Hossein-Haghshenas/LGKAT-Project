@@ -1,0 +1,24 @@
+
+******************************************************************************
+dataset:book aggregator:graphsage n_epochs:15 neighbor_sample_size:8 dim:64 n_iter:3 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64,64] adj_type:norm alg_type:ngcf node_dropout_flag:0 node_dropout:[0.1,0.1] mess_dropout:[0.1,0.1] model_type:KGCN att:u_r agg_type:weighted_avg alpha:0 smoothing_steps:1 runs:3 logging:save pretrain:0 
+******************************************************************************
+average auc: 0.6617+\-0.0010
+average f1 : 0.6226+\-0.0020
+average recall   : 0.0292+\-0.0127 0.0414+\-0.0112 0.0457+\-0.0096 0.0514+\-0.0126 0.0604+\-0.0154 0.0810+\-0.0110 0.1080+\-0.0095 
+average precision: 0.0400+\-0.0163 0.0350+\-0.0108 0.0180+\-0.0028 0.0107+\-0.0021 0.0072+\-0.0017 0.0043+\-0.0008 0.0030+\-0.0003 
+
+******************************************************************************
+dataset:book aggregator:graphsage n_epochs:15 neighbor_sample_size:8 dim:64 n_iter:3 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64,64] adj_type:norm alg_type:ngcf node_dropout_flag:0 node_dropout:[0.1,0.1] mess_dropout:[0.1,0.1] model_type:KGCN att:u_r agg_type:weighted_avg alpha:0 smoothing_steps:1 runs:3 logging:save pretrain:0 cl_weight:0.005 cl_temperature:1.0 
+******************************************************************************
+average auc: 0.6553+\-0.0033
+average f1 : 0.6219+\-0.0014
+average recall   : 0.0225+\-0.0159 0.0248+\-0.0180 0.0278+\-0.0201 0.0350+\-0.0199 0.0562+\-0.0249 0.0591+\-0.0241 0.0799+\-0.0196 
+average precision: 0.0267+\-0.0189 0.0200+\-0.0147 0.0120+\-0.0091 0.0070+\-0.0049 0.0053+\-0.0031 0.0029+\-0.0012 0.0023+\-0.0010 
+
+******************************************************************************
+dataset:book aggregator:graphsage n_epochs:15 neighbor_sample_size:8 dim:64 n_iter:3 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64,64] adj_type:norm alg_type:ngcf node_dropout_flag:0 node_dropout:[0.1,0.1] mess_dropout:[0.1,0.1] model_type:KGCN att:u_r agg_type:weighted_avg alpha:0 smoothing_steps:1 runs:3 logging:save pretrain:0 cl_weight:0.01 cl_temperature:1.0 
+******************************************************************************
+average auc: 0.6560+\-0.0032
+average f1 : 0.6225+\-0.0019
+average recall   : 0.0167+\-0.0118 0.0251+\-0.0170 0.0311+\-0.0209 0.0382+\-0.0244 0.0414+\-0.0258 0.0522+\-0.0295 0.0792+\-0.0242 
+average precision: 0.0200+\-0.0141 0.0200+\-0.0108 0.0133+\-0.0066 0.0093+\-0.0037 0.0062+\-0.0014 0.0033+\-0.0008 0.0025+\-0.0002 
