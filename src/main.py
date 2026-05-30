@@ -116,6 +116,11 @@ parser.add_argument('--pretrain', type=int, default=0, help='0: no pretrain, 1: 
 parser.add_argument('--logging', nargs='?', default='save', help='{save, ctr, topk}.')
 parser.add_argument('--seed', type=int, default=555, help='random seed')
 
+parser.add_argument('--topk_user_num', type=int, default=100,
+                    help='Users for top-K eval; 0 = all users in train∩test (slow on large datasets)')
+parser.add_argument('--topk_k_list', nargs='?', default='[1,2,5,10,20,50,100]',
+                    help='K values for Recall@K, e.g. [2,10,50,100] to match paper tables')
+
 parser.add_argument(
     '--params', 
     nargs='?', 
@@ -123,7 +128,8 @@ parser.add_argument(
             '\'dim\',\'n_iter\',\'batch_size\',\'l2_weight\',\'ls_weight\',\'lr\','
             '\'ratio\',\'layer_size\',\'adj_type\',\'alg_type\',\'node_dropout_flag\','
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
-            '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\']',
+            '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
+            '\'topk_user_num\',\'topk_k_list\']',
     help='paramerts')
 
 show_loss = False

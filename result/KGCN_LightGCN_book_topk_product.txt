@@ -1,0 +1,26 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0100	0.0040	0.0016	0.0009	eval recall: 0.0200	0.0350	0.0464	0.0564	
+epoch: 0 test precision: 0.0200	0.0040	0.0018	0.0011	test recall: 0.0267	0.0267	0.0590	0.0627	
+epoch: 0 test R@2:0.0267	R@10:0.0267	R@50:0.0590	R@100:0.0627
+epoch: 1 eval precision: 0.0150	0.0070	0.0024	0.0015	eval recall: 0.0300	0.0462	0.0777	0.1002	
+epoch: 1 test precision: 0.0250	0.0060	0.0024	0.0015	test recall: 0.0367	0.0378	0.0557	0.0719	
+epoch: 1 test R@2:0.0367	R@10:0.0378	R@50:0.0557	R@100:0.0719
+epoch: 2 eval precision: 0.0200	0.0070	0.0020	0.0014	eval recall: 0.0312	0.0525	0.0652	0.0827	
+epoch: 2 test precision: 0.0250	0.0140	0.0050	0.0031	test recall: 0.0278	0.0526	0.0826	0.0941	
+epoch: 2 test R@2:0.0278	R@10:0.0526	R@50:0.0826	R@100:0.0941
+epoch: 3 eval precision: 0.0200	0.0070	0.0022	0.0015	eval recall: 0.0312	0.0525	0.0702	0.0859	
+epoch: 3 test precision: 0.0400	0.0150	0.0058	0.0038	test recall: 0.0436	0.0626	0.1006	0.1194	
+epoch: 3 test R@2:0.0436	R@10:0.0626	R@50:0.1006	R@100:0.1194
+epoch: 4 eval precision: 0.0250	0.0080	0.0024	0.0015	eval recall: 0.0413	0.0625	0.0802	0.0859	
+epoch: 4 test precision: 0.0400	0.0170	0.0056	0.0039	test recall: 0.0436	0.0654	0.0973	0.1244	
+epoch: 4 test R@2:0.0436	R@10:0.0654	R@50:0.0973	R@100:0.1244
+epoch: 5 eval precision: 0.0350	0.0100	0.0028	0.0018	eval recall: 0.0563	0.0775	0.0909	0.1042	
+epoch: 5 test precision: 0.0400	0.0170	0.0056	0.0039	test recall: 0.0436	0.0654	0.0973	0.1244	
+epoch: 5 test R@2:0.0436	R@10:0.0654	R@50:0.0973	R@100:0.1244
+epoch: 6 eval precision: 0.0350	0.0090	0.0028	0.0017	eval recall: 0.0563	0.0675	0.0909	0.1017	
+epoch: 6 test precision: 0.0350	0.0160	0.0056	0.0039	test recall: 0.0425	0.0643	0.0973	0.1244	
+epoch: 6 test R@2:0.0425	R@10:0.0643	R@50:0.0973	R@100:0.1244

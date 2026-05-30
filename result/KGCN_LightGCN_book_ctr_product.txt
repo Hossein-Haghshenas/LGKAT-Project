@@ -1,0 +1,12 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:5e-05 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+******************************************************************************
+epoch: 0 train_auc:0.8801 train_f1:0.8140 eval_auc:0.5042 eval_f1:0.5053 test_auc:0.5037 test_f1:0.5039
+epoch: 1 train_auc:0.9673 train_f1:0.9130 eval_auc:0.5128 eval_f1:0.5409 test_auc:0.5097 test_f1:0.5409
+epoch: 2 train_auc:0.9221 train_f1:0.8187 eval_auc:0.5666 eval_f1:0.5909 test_auc:0.5610 test_f1:0.5924
+epoch: 3 train_auc:0.8736 train_f1:0.8051 eval_auc:0.6379 eval_f1:0.6151 test_auc:0.6327 test_f1:0.6152
+epoch: 4 train_auc:0.8751 train_f1:0.8068 eval_auc:0.6768 eval_f1:0.6434 test_auc:0.6723 test_f1:0.6429
+epoch: 5 train_auc:0.8754 train_f1:0.8029 eval_auc:0.6976 eval_f1:0.6540 test_auc:0.6941 test_f1:0.6539
+epoch: 6 train_auc:0.8748 train_f1:0.7989 eval_auc:0.7073 eval_f1:0.6544 test_auc:0.7043 test_f1:0.6565
+epoch: 7 train_auc:0.8745 train_f1:0.7957 eval_auc:0.7118 eval_f1:0.6541 test_auc:0.7094 test_f1:0.6571

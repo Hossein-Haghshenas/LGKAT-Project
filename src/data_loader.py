@@ -44,10 +44,20 @@ def load_rating(args):
         user_item_adj = mean_adj
     else:
         user_item_adj = mean_adj + sp.eye(mean_adj.shape[0])
-    '''
-    *****************************************
-    '''
+
+    # paper Table 1: S smoothing steps as A^S on the UI adjacency used by LightGCN
+    user_item_adj = adjacency_power(user_item_adj, args.smoothing_steps)
     return n_user, n_item, train_data, eval_data, test_data, user_item_adj
+
+
+def adjacency_power(adj, power):
+    if power is None or power <= 1:
+        return adj
+    A = adj.tocsr()
+    out = A
+    for _ in range(int(power) - 1):
+        out = out.dot(A)
+    return out.tocsr()
 
 '''
 *****************************************

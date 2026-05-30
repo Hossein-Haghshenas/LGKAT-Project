@@ -21,26 +21,50 @@ The code has been tested running under Python 3.9.12. The required packages are 
 * sklearn == 1.0.2
 
 ## Examples to Run the code
-The instruction of commands has been clearly stated in the code (see src/main.py).
+Place datasets under `data/<dataset_name>/` (see `src/data_loader.py`), then run from `src/`:
+
+```bash
+cd src
+python main.py ...
+```
+
+### Paper reproduction (Product LGKAT, Scientific Reports Tables 2–3)
+
+These commands match the published setup more closely than the older `h_ur_t` examples:
+
+- **`--att product`**: Product attention (paper Eq. 7), the variant reported as **LGKAT (Product)** in the tables.
+- **`--n_epochs 39`**: Training length consistent with the paper’s loss curves.
+- **`--smoothing_steps`**: Applied as **A^S** on the user–item adjacency before LightGCN (Table 1, coefficient S).
+- **`--topk_k_list '[2,10,50,100]'`**: Logs Recall@2 / @10 / @50 / @100 in lockstep with Table 2.
+- **`--topk_user_num`**: Default `100` (fast, higher variance vs the paper). Use `0` for **all** users in the train∩test set (slower; on `restaurant` this can be very expensive).
+- **`alpha`**: Movie/Book use `alpha=0` below (pure KG item branch + LightGCN users), matching the prior README. The paper’s Eq. (10) uses a blend; for a closer semantic match to the fusion in the article, try **`--alpha 0.5`** on movie/book and compare F1 / Recall.
 
 * Movie
 ```
-python main.py  --dataset movie --aggregator concat --n_epochs 10 --neighbor_sample_size 4 --dim 32 --n_iter 2 --batch_size 65536 --l2_weight 5e-6 --lr 2e-2 --layer_size [32] --adj_type plain --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 1 --pretrain 0 --att h_ur_t --runs 3 --gpu_id 0
+python main.py --dataset movie --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 32 --n_iter 2 --batch_size 65536 --l2_weight 5e-6 --lr 2e-2 --layer_size [32] --adj_type plain --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 1 --pretrain 0 --att product --runs 3 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
 ```
 
 * book
 ```
-python main.py --dataset book --aggregator concat --n_epochs 20 --neighbor_sample_size 8 --dim 64 --n_iter 1 --batch_size 256 --l2_weight 2e-5 --lr 5e-5 --layer_size [64] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 3 --pretrain 0 --att h_ur_t --runs 3 --gpu_id 0
+python main.py --dataset book --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 64 --n_iter 1 --batch_size 256 --l2_weight 2e-5 --lr 5e-5 --layer_size [64] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 3 --pretrain 0 --att product --runs 3 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
 ```
 
 * Music
 ```
-python main.py --dataset music --aggregator concat --n_epochs 10 --neighbor_sample_size 8 --dim 32 --n_iter 1 --batch_size 128 --l2_weight 1e-4 --lr 0.005 --layer_size [32] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0.5 --smoothing_steps 8 --pretrain 0 --att h_ur_t --runs 3 --gpu_id 0
+python main.py --dataset music --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 32 --n_iter 1 --batch_size 128 --l2_weight 1e-4 --lr 0.005 --layer_size [32] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0.5 --smoothing_steps 8 --pretrain 0 --att product --runs 3 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
 ```
 
 * Restaurant
 ```
-python main.py --dataset restaurant --aggregator concat --n_epochs 30 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 65536 --l2_weight 1e-7 --lr 2e-2 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att h_ur_t --runs 3 --gpu_id 0
+python main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 65536 --l2_weight 1e-7 --lr 2e-2 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att product --runs 3 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
+```
+
+After training, each `result/KGCN_LightGCN_<dataset>_topk_<att>.txt` includes an extra line per epoch: `epoch:N test R@2:... R@10:...` (when those K values are in `--topk_k_list`). The aggregate file `result/KGCN_LightGCN_<dataset>_<att>.txt` ends with a **`paper_style`** mean±std block for R@2 / R@10 / R@50 / R@100 vs Table 2 (Product row) and F1 vs Table 3.
+
+Compare your aggregate log to the paper’s Product LGKAT row (Tables 2–3):
+
+```bash
+python scripts/compare_run_to_paper.py result/KGCN_LightGCN_book_product.txt book
 ```
 
 ## About implementation

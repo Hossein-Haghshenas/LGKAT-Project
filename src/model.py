@@ -66,7 +66,7 @@ class KGCN(object):
 
         self.att = args.att  # or 'u_r'
         if self.att in ['h_ur_t', 'h_r_t', 'hrt_add', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
-                        'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp']:
+                        'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product']:
             self.weights_att = self._init_weights_att()
             self.weights_att['att'] = self.att
         else:
@@ -206,7 +206,7 @@ class KGCN(object):
     def _init_weights_att(self):
         all_weights = dict()
 
-        if self.att == 'h_ur_t':
+        if self.att in ['h_ur_t', 'product']:
             shape_w_1 = [3 * self.dim, 1]
 
         elif self.att == 'h_r_t':
@@ -247,7 +247,7 @@ class KGCN(object):
 
         with tf.compat.v1.variable_scope('{}'.format(self.model_type)):
 
-            if self.att in ['h_r_t', 'h_ur_t', 'uhrt_concat', 'uhrt_add']:
+            if self.att in ['h_r_t', 'h_ur_t', 'product', 'uhrt_concat', 'uhrt_add']:
                 all_weights['att_w_1'] = tf.compat.v1.get_variable(
                     shape=shape_w_1, initializer=KGCN.get_initializer(), name='att_w_1_{}'.format(self.model_type))
                 all_weights['att_b_1'] = tf.compat.v1.get_variable(
@@ -585,8 +585,8 @@ class KGCN(object):
             for aggregator in self.aggregators:
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.weights)
 
-            if self.weights_att['att'] in ['h_ur_t', 'h_r_t' 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
-                                           'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp']:
+            if self.weights_att['att'] in ['h_ur_t', 'h_r_t', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
+                                           'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product']:
                 for weights in self.weights_att.keys():
                     if weights.startswith('att_w'):
                         self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_att[weights])

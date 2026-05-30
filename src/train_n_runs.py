@@ -65,12 +65,16 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         best_r10_eval = 0
 
         user_list_eval, train_record_eval, test_record_eval, \
-            item_set_eval, k_list_eval = topk_settings(show_topk, train_data, eval_data, n_item, seed=args.seed)
+            item_set_eval, k_list_eval = topk_settings(
+                show_topk, train_data, eval_data, n_item, seed=args.seed, args=args)
         args.seed += 1
 
         user_list_test, train_record_test, test_record_test, \
-            item_set_test, k_list_test = topk_settings(show_topk, train_data, test_data, n_item, seed=args.seed)
+            item_set_test, k_list_test = topk_settings(
+                show_topk, train_data, test_data, n_item, seed=args.seed, args=args)
         args.seed += 1
+
+        idx_eval_r10 = recall_k_index(k_list_eval, 10)
 
         config = tf.compat.v1.ConfigProto()
         config.gpu_options.allow_growth = True
@@ -135,10 +139,10 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                     test_precision, test_recall = topk_eval(
                         args, sess, model, user_list_test, train_record_test, test_record_test, item_set_test, k_list_test, args.batch_size)
 
-                    eval_logging_topk(args, step, eval_precision, eval_recall, test_precision, test_recall)
-                    if eval_recall[3] > best_r10_eval:
+                    eval_logging_topk(args, step, k_list_eval, eval_precision, eval_recall, test_precision, test_recall)
+                    if eval_recall[idx_eval_r10] > best_r10_eval:
                         best_recall_epoch = step
-                        best_r10_eval = eval_recall[3]
+                        best_r10_eval = eval_recall[idx_eval_r10]
                         best_recall = test_recall
                         best_precision = test_precision
 
@@ -178,14 +182,16 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         print(printings_recall)
         print(printings_precision)
 
-        logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision)
+        printings_paper = format_paper_recall_block(k_list_test, recall, precision)
+        print(printings_paper)
+        logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper)
     print("average train_Loss", np.mean(train_losses))  # New: Print average losses after training
 
 '''
 ***********************************************
 logging functions
 '''
-def logging_final(args, auc, f1_score, recall, precision):
+def logging_final(args, auc, f1_score, recall, precision, paper_block=''):
     fid = open('../result/{}_{}_{}.txt'.format(args.model_type, args.dataset, args.att), 'a')
 
     fid.write('\n******************************************************************************\n')
@@ -200,11 +206,13 @@ def logging_final(args, auc, f1_score, recall, precision):
     fid.write(f1_score+'\n')
     fid.write(recall+'\n')
     fid.write(precision+'\n')
+    if paper_block:
+        fid.write(paper_block + '\n')
 
     fid.close()
 
 
-def eval_logging_topk(args, epoch, eval_pr, eval_re, test_pr, test_re):
+def eval_logging_topk(args, epoch, k_list, eval_pr, eval_re, test_pr, test_re):
     fid = open('../result/{}_{}_topk_{}.txt'.format(args.model_type, args.dataset, args.att), 'a')
 
     if epoch == 0:
@@ -214,6 +222,7 @@ def eval_logging_topk(args, epoch, eval_pr, eval_re, test_pr, test_re):
         for i in range(len(params)):
             settings = settings + params[i] + ':{} '.format(eval('args.'+params[i]))
         fid.write(settings+'\n')
+        fid.write('k_list (Recall@K): {}\n'.format(k_list))
         fid.write('******************************************************************************\n')
 
     result_type = ['epoch:{:2d} eval precision: '.format(epoch), 'eval recall: '.format(epoch),
@@ -226,6 +235,7 @@ def eval_logging_topk(args, epoch, eval_pr, eval_re, test_pr, test_re):
         fid.write(printings)
         if i == 1 or i == 3:
             fid.write('\n')
+    fid.write('epoch:{:2d} test {}'.format(epoch, format_paper_recall_line(k_list, test_re)))
     fid.write('\n')
     fid.close()
 
@@ -250,16 +260,49 @@ def eval_logging_ctr(args, epoch, train_auc, train_f1, eval_auc, eval_f1, test_a
 ***********************************************
 '''
 
-def topk_settings(show_topk, train_data, test_data, n_item, seed=555):
+def recall_k_index(k_list, k):
+    if k in k_list:
+        return k_list.index(k)
+    return min(3, len(k_list) - 1) if len(k_list) > 0 else 0
+
+
+def format_paper_recall_line(k_list, recall_vec):
+    line = ''
+    for pk in (2, 10, 50, 100):
+        if pk in k_list:
+            i = k_list.index(pk)
+            line += 'R@{}:{:.4f}\t'.format(pk, recall_vec[i])
+    return line.rstrip() if line else '(add K to topk_k_list for paper R@2/10/50/100)\t'
+
+
+def format_paper_recall_block(k_list, recall_runs, precision_runs):
+    lines = ['paper_style (mean+-std over runs, test set):']
+    for pk in (2, 10, 50, 100):
+        if pk not in k_list:
+            continue
+        i = k_list.index(pk)
+        rm = np.mean(recall_runs[:, i])
+        rs = np.std(recall_runs[:, i])
+        pm = np.mean(precision_runs[:, i])
+        ps = np.std(precision_runs[:, i])
+        lines.append('  R@{} recall: {:.4f}+-{:.4f}  precision: {:.4f}+-{:.4f}'.format(pk, rm, rs, pm, ps))
+    return '\n'.join(lines)
+
+
+def topk_settings(show_topk, train_data, test_data, n_item, seed=555, args=None):
     np.random.seed(seed)
     if show_topk:
-        user_num = 100
-        k_list = [1, 2, 5, 10, 20, 50, 100]
+        user_num = getattr(args, 'topk_user_num', 100) if args is not None else 100
+        k_list = list(eval(getattr(args, 'topk_k_list', '[1,2,5,10,20,50,100]'))) if args is not None else [1, 2, 5, 10, 20, 50, 100]
         train_record = get_user_record(train_data, True)
         test_record = get_user_record(test_data, False)
         user_list = list(set(train_record.keys()) & set(test_record.keys()))
-        if len(user_list) > user_num:
+        if user_num is None or user_num <= 0:
+            user_list = np.array(user_list, dtype=object)
+        elif len(user_list) > user_num:
             user_list = np.random.choice(user_list, size=user_num, replace=False)
+        else:
+            user_list = np.array(user_list, dtype=object)
         item_set = set(list(range(n_item)))
         return user_list, train_record, test_record, item_set, k_list
     else:

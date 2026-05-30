@@ -119,6 +119,26 @@ class Aggregator(object):
 
                 user_relation_scores_normalized = tf.nn.softmax(scores, axis=-1)
 
+            if self.weights_att['att'] == 'product':
+                # paper Eq.7: concat(u, r⊙ei, ej) then linear score
+                print('Attention: product')
+                shape_1 = [-1, self.dim * 3]
+                shape_2 = [self.batch_size, -1, self.n_neighbor]
+
+                h_embeddings = tf.reshape(self_vectors, [self.batch_size, -1, 1, self.dim])
+                h_embeddings = tf.tile(h_embeddings, [1, 1, self.n_neighbor, 1])
+
+                u_e = tf.tile(user_embeddings, [1, self.n_neighbor ** (hops - 1), self.n_neighbor, 1])
+                r_mul_ei = neighbor_relations * h_embeddings
+                embeddings = tf.concat([u_e, r_mul_ei, neighbor_vectors], -1)
+                embeddings = tf.reshape(embeddings, shape_1)
+
+                scores = tf.nn.leaky_relu(
+                    tf.matmul(embeddings, self.weights_att['att_w_1']) + self.weights_att['att_b_1'])
+                scores = tf.reshape(scores, shape_2)
+
+                user_relation_scores_normalized = tf.nn.softmax(scores, axis=-1)
+
             if self.weights_att['att'] == 'ur_ht_mlp':
                 # u-r inner product, h-t MLP
                 print('Attention: ur_ht_mlp')
