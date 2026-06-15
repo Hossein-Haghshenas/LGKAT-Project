@@ -1,0 +1,13 @@
+
+******************************************************************************
+dataset:restaurant aggregator:concat n_epochs:5 neighbor_sample_size:4 dim:8 n_iter:2 batch_size:32768 l2_weight:1e-07 ls_weight:0 lr:0.02 ratio:1 layer_size:[8] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+******************************************************************************
+average auc: 0.8723+\-0.0010
+average f1 : 0.7843+\-0.0019
+average recall   : 0.0593+\-0.0161 0.1556+\-0.0272 0.3802+\-0.0325 0.5394+\-0.0271 
+average precision: 0.0520+\-0.0075 0.0326+\-0.0038 0.0178+\-0.0023 0.0130+\-0.0009 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0593+-0.0161  precision: 0.0520+-0.0075
+  R@10 recall: 0.1556+-0.0272  precision: 0.0326+-0.0038
+  R@50 recall: 0.3802+-0.0325  precision: 0.0178+-0.0023
+  R@100 recall: 0.5394+-0.0271  precision: 0.0130+-0.0009

@@ -123,3 +123,240 @@ epoch: 7 test R@2:0.0283	R@10:0.1085	R@50:0.2803	R@100:0.3688
 epoch: 8 eval precision: 0.0250	0.0220	0.0132	0.0084	eval recall: 0.0187	0.0853	0.2808	0.3663	
 epoch: 8 test precision: 0.0250	0.0230	0.0112	0.0084	test recall: 0.0258	0.1085	0.2737	0.3708	
 epoch: 8 test R@2:0.0258	R@10:0.1085	R@50:0.2737	R@100:0.3708
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:60 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:6 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0350	0.0220	0.0128	0.0086	eval recall: 0.0303	0.0862	0.2772	0.3608	
+epoch: 0 test precision: 0.0300	0.0240	0.0124	0.0088	test recall: 0.0262	0.1118	0.2908	0.3842	
+epoch: 0 test R@2:0.0262	R@10:0.1118	R@50:0.2908	R@100:0.3842
+epoch: 1 eval precision: 0.0250	0.0230	0.0134	0.0092	eval recall: 0.0237	0.0903	0.2792	0.3850	
+epoch: 1 test precision: 0.0200	0.0240	0.0122	0.0083	test recall: 0.0158	0.1185	0.2842	0.3713	
+epoch: 1 test R@2:0.0158	R@10:0.1185	R@50:0.2842	R@100:0.3713
+epoch: 2 eval precision: 0.0300	0.0230	0.0142	0.0091	eval recall: 0.0220	0.0953	0.3153	0.3900	
+epoch: 2 test precision: 0.0300	0.0230	0.0118	0.0085	test recall: 0.0278	0.1085	0.2792	0.3658	
+epoch: 2 test R@2:0.0278	R@10:0.1085	R@50:0.2792	R@100:0.3658
+epoch: 3 eval precision: 0.0300	0.0230	0.0132	0.0089	eval recall: 0.0220	0.0887	0.2865	0.3783	
+epoch: 3 test precision: 0.0150	0.0230	0.0118	0.0086	test recall: 0.0108	0.1085	0.2730	0.3785	
+epoch: 3 test R@2:0.0108	R@10:0.1085	R@50:0.2730	R@100:0.3785
+epoch: 4 eval precision: 0.0300	0.0240	0.0136	0.0086	eval recall: 0.0220	0.0928	0.2962	0.3655	
+epoch: 4 test precision: 0.0300	0.0240	0.0114	0.0083	test recall: 0.0278	0.1193	0.2775	0.3818	
+epoch: 4 test R@2:0.0278	R@10:0.1193	R@50:0.2775	R@100:0.3818
+epoch: 5 eval precision: 0.0300	0.0260	0.0122	0.0086	eval recall: 0.0220	0.1095	0.2567	0.3780	
+epoch: 5 test precision: 0.0250	0.0240	0.0116	0.0088	test recall: 0.0228	0.1185	0.2667	0.3972	
+epoch: 5 test R@2:0.0228	R@10:0.1185	R@50:0.2667	R@100:0.3972
+epoch: 6 eval precision: 0.0300	0.0250	0.0134	0.0092	eval recall: 0.0220	0.1078	0.2942	0.3940	
+epoch: 6 test precision: 0.0250	0.0260	0.0116	0.0089	test recall: 0.0283	0.1243	0.2808	0.4005	
+epoch: 6 test R@2:0.0283	R@10:0.1243	R@50:0.2808	R@100:0.4005
+epoch: 7 eval precision: 0.0300	0.0230	0.0136	0.0091	eval recall: 0.0220	0.0903	0.2787	0.3773	
+epoch: 7 test precision: 0.0250	0.0240	0.0114	0.0086	test recall: 0.0258	0.1135	0.2612	0.3913	
+epoch: 7 test R@2:0.0258	R@10:0.1135	R@50:0.2612	R@100:0.3913
+epoch: 8 eval precision: 0.0400	0.0240	0.0146	0.0090	eval recall: 0.0287	0.0953	0.3205	0.3837	
+epoch: 8 test precision: 0.0300	0.0270	0.0116	0.0090	test recall: 0.0308	0.1318	0.2800	0.4037	
+epoch: 8 test R@2:0.0308	R@10:0.1318	R@50:0.2800	R@100:0.4037
+epoch: 9 eval precision: 0.0550	0.0250	0.0160	0.0099	eval recall: 0.0537	0.1090	0.3527	0.4307	
+epoch: 9 test precision: 0.0250	0.0260	0.0132	0.0096	test recall: 0.0333	0.1268	0.3050	0.4278	
+epoch: 9 test R@2:0.0333	R@10:0.1268	R@50:0.3050	R@100:0.4278
+epoch:10 eval precision: 0.0450	0.0280	0.0152	0.0102	eval recall: 0.0403	0.1173	0.3232	0.4193	
+epoch:10 test precision: 0.0200	0.0260	0.0134	0.0093	test recall: 0.0283	0.1268	0.3103	0.4105	
+epoch:10 test R@2:0.0283	R@10:0.1268	R@50:0.3103	R@100:0.4105
+epoch:11 eval precision: 0.0550	0.0310	0.0156	0.0100	eval recall: 0.0462	0.1295	0.3213	0.4110	
+epoch:11 test precision: 0.0200	0.0280	0.0138	0.0093	test recall: 0.0283	0.1418	0.3232	0.4088	
+epoch:11 test R@2:0.0283	R@10:0.1418	R@50:0.3232	R@100:0.4088
+epoch:12 eval precision: 0.0350	0.0300	0.0142	0.0102	eval recall: 0.0337	0.1260	0.3157	0.4148	
+epoch:12 test precision: 0.0300	0.0260	0.0138	0.0099	test recall: 0.0383	0.1298	0.3182	0.4375	
+epoch:12 test R@2:0.0383	R@10:0.1298	R@50:0.3182	R@100:0.4375
+epoch:13 eval precision: 0.0500	0.0280	0.0154	0.0102	eval recall: 0.0420	0.1132	0.3275	0.4185	
+epoch:13 test precision: 0.0350	0.0310	0.0136	0.0095	test recall: 0.0392	0.1580	0.3115	0.4288	
+epoch:13 test R@2:0.0392	R@10:0.1580	R@50:0.3115	R@100:0.4288
+epoch:14 eval precision: 0.0400	0.0290	0.0158	0.0103	eval recall: 0.0345	0.1173	0.3380	0.4227	
+epoch:14 test precision: 0.0300	0.0270	0.0144	0.0095	test recall: 0.0358	0.1247	0.3323	0.4112	
+epoch:14 test R@2:0.0358	R@10:0.1247	R@50:0.3323	R@100:0.4112
+epoch:15 eval precision: 0.0450	0.0280	0.0168	0.0106	eval recall: 0.0370	0.1132	0.3472	0.4377	
+epoch:15 test precision: 0.0350	0.0300	0.0138	0.0100	test recall: 0.0417	0.1535	0.3203	0.4358	
+epoch:15 test R@2:0.0417	R@10:0.1535	R@50:0.3203	R@100:0.4358
+epoch:16 eval precision: 0.0450	0.0320	0.0164	0.0105	eval recall: 0.0370	0.1282	0.3341	0.4277	
+epoch:16 test precision: 0.0250	0.0330	0.0136	0.0093	test recall: 0.0333	0.1655	0.3245	0.4067	
+epoch:16 test R@2:0.0333	R@10:0.1655	R@50:0.3245	R@100:0.4067
+epoch:17 eval precision: 0.0450	0.0360	0.0164	0.0101	eval recall: 0.0395	0.1393	0.3362	0.4152	
+epoch:17 test precision: 0.0200	0.0320	0.0148	0.0094	test recall: 0.0258	0.1618	0.3323	0.4185	
+epoch:17 test R@2:0.0258	R@10:0.1618	R@50:0.3323	R@100:0.4185
+epoch:18 eval precision: 0.0350	0.0320	0.0166	0.0102	eval recall: 0.0320	0.1248	0.3484	0.4227	
+epoch:18 test precision: 0.0400	0.0320	0.0142	0.0097	test recall: 0.0442	0.1563	0.3270	0.4230	
+epoch:18 test R@2:0.0442	R@10:0.1563	R@50:0.3270	R@100:0.4230
+epoch:19 eval precision: 0.0400	0.0350	0.0168	0.0103	eval recall: 0.0278	0.1338	0.3483	0.4243	
+epoch:19 test precision: 0.0350	0.0290	0.0156	0.0095	test recall: 0.0342	0.1372	0.3447	0.4078	
+epoch:19 test R@2:0.0342	R@10:0.1372	R@50:0.3447	R@100:0.4078
+epoch:20 eval precision: 0.0500	0.0340	0.0160	0.0104	eval recall: 0.0403	0.1268	0.3355	0.4273	
+epoch:20 test precision: 0.0350	0.0320	0.0154	0.0095	test recall: 0.0392	0.1538	0.3382	0.4112	
+epoch:20 test R@2:0.0392	R@10:0.1538	R@50:0.3382	R@100:0.4112
+epoch:21 eval precision: 0.0450	0.0330	0.0168	0.0104	eval recall: 0.0378	0.1282	0.3600	0.4277	
+epoch:21 test precision: 0.0450	0.0300	0.0146	0.0101	test recall: 0.0500	0.1472	0.3268	0.4472	
+epoch:21 test R@2:0.0500	R@10:0.1472	R@50:0.3268	R@100:0.4472
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:40 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:6 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0400	0.0230	0.0126	0.0083	eval recall: 0.0300	0.0882	0.2753	0.3425	
+epoch: 0 test precision: 0.0300	0.0230	0.0120	0.0084	test recall: 0.0303	0.1085	0.2808	0.3722	
+epoch: 0 test R@2:0.0303	R@10:0.1085	R@50:0.2808	R@100:0.3722
+epoch: 1 eval precision: 0.0200	0.0210	0.0134	0.0087	eval recall: 0.0150	0.0795	0.2858	0.3733	
+epoch: 1 test precision: 0.0200	0.0230	0.0118	0.0081	test recall: 0.0250	0.1143	0.2750	0.3668	
+epoch: 1 test R@2:0.0250	R@10:0.1143	R@50:0.2750	R@100:0.3668
+epoch: 2 eval precision: 0.0250	0.0220	0.0136	0.0087	eval recall: 0.0187	0.0862	0.3045	0.3767	
+epoch: 2 test precision: 0.0250	0.0230	0.0112	0.0083	test recall: 0.0258	0.1085	0.2672	0.3605	
+epoch: 2 test R@2:0.0258	R@10:0.1085	R@50:0.2672	R@100:0.3605
+epoch: 3 eval precision: 0.0350	0.0210	0.0128	0.0092	eval recall: 0.0312	0.0820	0.2862	0.3932	
+epoch: 3 test precision: 0.0250	0.0240	0.0112	0.0081	test recall: 0.0283	0.1143	0.2622	0.3645	
+epoch: 3 test R@2:0.0283	R@10:0.1143	R@50:0.2622	R@100:0.3645
+epoch: 4 eval precision: 0.0350	0.0280	0.0144	0.0090	eval recall: 0.0250	0.1123	0.3098	0.3715	
+epoch: 4 test precision: 0.0300	0.0230	0.0122	0.0083	test recall: 0.0287	0.1243	0.2928	0.3960	
+epoch: 4 test R@2:0.0287	R@10:0.1243	R@50:0.2928	R@100:0.3960
+epoch: 5 eval precision: 0.0500	0.0290	0.0138	0.0097	eval recall: 0.0337	0.1090	0.2907	0.4169	
+epoch: 5 test precision: 0.0300	0.0270	0.0126	0.0084	test recall: 0.0367	0.1272	0.2988	0.3765	
+epoch: 5 test R@2:0.0367	R@10:0.1272	R@50:0.2988	R@100:0.3765
+epoch: 6 eval precision: 0.0450	0.0270	0.0148	0.0095	eval recall: 0.0378	0.1082	0.3108	0.3966	
+epoch: 6 test precision: 0.0300	0.0290	0.0132	0.0089	test recall: 0.0267	0.1527	0.3015	0.3918	
+epoch: 6 test R@2:0.0267	R@10:0.1527	R@50:0.3015	R@100:0.3918
+epoch: 7 eval precision: 0.0500	0.0290	0.0148	0.0099	eval recall: 0.0403	0.1110	0.2947	0.4027	
+epoch: 7 test precision: 0.0300	0.0280	0.0126	0.0091	test recall: 0.0267	0.1393	0.2907	0.4127	
+epoch: 7 test R@2:0.0267	R@10:0.1393	R@50:0.2907	R@100:0.4127
+epoch: 8 eval precision: 0.0500	0.0300	0.0152	0.0096	eval recall: 0.0412	0.1215	0.3100	0.4014	
+epoch: 8 test precision: 0.0250	0.0280	0.0122	0.0096	test recall: 0.0242	0.1405	0.2837	0.4302	
+epoch: 8 test R@2:0.0242	R@10:0.1405	R@50:0.2837	R@100:0.4302
+epoch: 9 eval precision: 0.0500	0.0300	0.0152	0.0101	eval recall: 0.0362	0.1202	0.3192	0.4155	
+epoch: 9 test precision: 0.0150	0.0250	0.0126	0.0090	test recall: 0.0158	0.1168	0.3025	0.4053	
+epoch: 9 test R@2:0.0158	R@10:0.1168	R@50:0.3025	R@100:0.4053
+epoch:10 eval precision: 0.0350	0.0300	0.0148	0.0100	eval recall: 0.0295	0.1102	0.3111	0.4115	
+epoch:10 test precision: 0.0250	0.0240	0.0134	0.0094	test recall: 0.0217	0.1110	0.3015	0.4135	
+epoch:10 test R@2:0.0217	R@10:0.1110	R@50:0.3015	R@100:0.4135
+epoch:11 eval precision: 0.0500	0.0280	0.0150	0.0099	eval recall: 0.0420	0.1102	0.3118	0.4023	
+epoch:11 test precision: 0.0200	0.0280	0.0128	0.0088	test recall: 0.0192	0.1255	0.3025	0.3998	
+epoch:11 test R@2:0.0192	R@10:0.1255	R@50:0.3025	R@100:0.3998
+epoch:12 eval precision: 0.0400	0.0310	0.0146	0.0095	eval recall: 0.0337	0.1285	0.3181	0.3982	
+epoch:12 test precision: 0.0150	0.0300	0.0144	0.0094	test recall: 0.0167	0.1493	0.3235	0.4143	
+epoch:12 test R@2:0.0167	R@10:0.1493	R@50:0.3235	R@100:0.4143
+epoch:13 eval precision: 0.0400	0.0320	0.0146	0.0093	eval recall: 0.0320	0.1272	0.2997	0.3766	
+epoch:13 test precision: 0.0350	0.0280	0.0136	0.0091	test recall: 0.0262	0.1485	0.3020	0.4152	
+epoch:13 test R@2:0.0262	R@10:0.1485	R@50:0.3020	R@100:0.4152
+epoch:14 eval precision: 0.0450	0.0300	0.0156	0.0095	eval recall: 0.0362	0.1168	0.3297	0.3941	
+epoch:14 test precision: 0.0300	0.0270	0.0136	0.0099	test recall: 0.0267	0.1280	0.3108	0.4242	
+epoch:14 test R@2:0.0267	R@10:0.1280	R@50:0.3108	R@100:0.4242
+epoch:15 eval precision: 0.0450	0.0280	0.0148	0.0099	eval recall: 0.0328	0.1063	0.3065	0.4157	
+epoch:15 test precision: 0.0350	0.0280	0.0132	0.0092	test recall: 0.0367	0.1347	0.2918	0.4055	
+epoch:15 test R@2:0.0367	R@10:0.1347	R@50:0.2918	R@100:0.4055
+epoch:16 eval precision: 0.0500	0.0370	0.0152	0.0095	eval recall: 0.0387	0.1447	0.3138	0.3870	
+epoch:16 test precision: 0.0200	0.0330	0.0134	0.0088	test recall: 0.0192	0.1680	0.3100	0.3922	
+epoch:16 test R@2:0.0192	R@10:0.1680	R@50:0.3100	R@100:0.3922
+epoch:17 eval precision: 0.0600	0.0330	0.0150	0.0097	eval recall: 0.0387	0.1297	0.3113	0.4020	
+epoch:17 test precision: 0.0450	0.0310	0.0132	0.0082	test recall: 0.0375	0.1660	0.3072	0.3765	
+epoch:17 test R@2:0.0375	R@10:0.1660	R@50:0.3072	R@100:0.3765
+epoch:18 eval precision: 0.0500	0.0350	0.0158	0.0094	eval recall: 0.0337	0.1380	0.3275	0.3917	
+epoch:18 test precision: 0.0400	0.0300	0.0132	0.0086	test recall: 0.0350	0.1565	0.3045	0.3888	
+epoch:18 test R@2:0.0350	R@10:0.1565	R@50:0.3045	R@100:0.3888
+epoch:19 eval precision: 0.0350	0.0290	0.0150	0.0096	eval recall: 0.0262	0.1127	0.2983	0.4020	
+epoch:19 test precision: 0.0550	0.0300	0.0134	0.0091	test recall: 0.0525	0.1443	0.3078	0.4038	
+epoch:19 test R@2:0.0525	R@10:0.1443	R@50:0.3078	R@100:0.4038
+epoch:20 eval precision: 0.0400	0.0320	0.0142	0.0093	eval recall: 0.0287	0.1280	0.2847	0.3667	
+epoch:20 test precision: 0.0600	0.0320	0.0130	0.0088	test recall: 0.0625	0.1513	0.2992	0.3968	
+epoch:20 test R@2:0.0625	R@10:0.1513	R@50:0.2992	R@100:0.3968
+epoch:21 eval precision: 0.0550	0.0300	0.0150	0.0096	eval recall: 0.0453	0.1222	0.3050	0.3862	
+epoch:21 test precision: 0.0400	0.0350	0.0132	0.0087	test recall: 0.0417	0.1747	0.3003	0.3880	
+epoch:21 test R@2:0.0417	R@10:0.1747	R@50:0.3003	R@100:0.3880
+epoch:22 eval precision: 0.0600	0.0320	0.0150	0.0097	eval recall: 0.0395	0.1288	0.3013	0.3907	
+epoch:22 test precision: 0.0500	0.0300	0.0134	0.0089	test recall: 0.0520	0.1603	0.3183	0.4032	
+epoch:22 test R@2:0.0520	R@10:0.1603	R@50:0.3183	R@100:0.4032
+epoch:23 eval precision: 0.0400	0.0310	0.0152	0.0095	eval recall: 0.0287	0.1152	0.3188	0.3808	
+epoch:23 test precision: 0.0550	0.0260	0.0124	0.0089	test recall: 0.0558	0.1377	0.2850	0.3980	
+epoch:23 test R@2:0.0558	R@10:0.1377	R@50:0.2850	R@100:0.3980
+epoch:24 eval precision: 0.0450	0.0320	0.0160	0.0097	eval recall: 0.0303	0.1227	0.3233	0.3971	
+epoch:24 test precision: 0.0550	0.0280	0.0132	0.0089	test recall: 0.0600	0.1445	0.3053	0.3933	
+epoch:24 test R@2:0.0600	R@10:0.1445	R@50:0.3053	R@100:0.3933
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:2 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:8 lr_decay:0.9 early_stop:0 runs:1 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0300	0.0220	0.0132	0.0087	eval recall: 0.0192	0.0853	0.2928	0.3575	
+epoch: 0 test precision: 0.0300	0.0240	0.0130	0.0084	test recall: 0.0353	0.1118	0.2948	0.3687	
+epoch: 0 test R@2:0.0353	R@10:0.1118	R@50:0.2948	R@100:0.3687
+epoch: 1 eval precision: 0.0200	0.0210	0.0134	0.0090	eval recall: 0.0150	0.0795	0.2767	0.3900	
+epoch: 1 test precision: 0.0250	0.0240	0.0114	0.0081	test recall: 0.0270	0.1177	0.2667	0.3677	
+epoch: 1 test R@2:0.0270	R@10:0.1177	R@50:0.2667	R@100:0.3677
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:8 lr_decay:0.9 early_stop:8 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0250	0.0220	0.0128	0.0088	eval recall: 0.0192	0.0853	0.2808	0.3608	
+epoch: 0 test precision: 0.0450	0.0240	0.0130	0.0086	test recall: 0.0412	0.1118	0.2948	0.3753	
+epoch: 0 test R@2:0.0412	R@10:0.1118	R@50:0.2948	R@100:0.3753
+epoch: 1 eval precision: 0.0400	0.0210	0.0132	0.0091	eval recall: 0.0350	0.0795	0.2742	0.3917	
+epoch: 1 test precision: 0.0350	0.0240	0.0116	0.0083	test recall: 0.0420	0.1177	0.2717	0.3722	
+epoch: 1 test R@2:0.0420	R@10:0.1177	R@50:0.2717	R@100:0.3722
+epoch: 2 eval precision: 0.0350	0.0220	0.0140	0.0087	eval recall: 0.0325	0.0837	0.3112	0.3767	
+epoch: 2 test precision: 0.0350	0.0230	0.0116	0.0084	test recall: 0.0420	0.1093	0.2742	0.3627	
+epoch: 2 test R@2:0.0420	R@10:0.1093	R@50:0.2742	R@100:0.3627
+epoch: 3 eval precision: 0.0250	0.0230	0.0132	0.0089	eval recall: 0.0175	0.0887	0.2920	0.3867	
+epoch: 3 test precision: 0.0250	0.0240	0.0118	0.0084	test recall: 0.0300	0.1118	0.2725	0.3715	
+epoch: 3 test R@2:0.0300	R@10:0.1118	R@50:0.2725	R@100:0.3715
+epoch: 4 eval precision: 0.0300	0.0220	0.0132	0.0088	eval recall: 0.0220	0.0862	0.2867	0.3683	
+epoch: 4 test precision: 0.0300	0.0240	0.0112	0.0081	test recall: 0.0303	0.1210	0.2692	0.3823	
+epoch: 4 test R@2:0.0303	R@10:0.1210	R@50:0.2692	R@100:0.3823
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:8 lr_decay:0.9 early_stop:8 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0450	0.0210	0.0130	0.0089	eval recall: 0.0350	0.0820	0.2908	0.3658	
+epoch: 0 test precision: 0.0300	0.0240	0.0132	0.0086	test recall: 0.0353	0.1127	0.2998	0.3765	
+epoch: 0 test R@2:0.0353	R@10:0.1127	R@50:0.2998	R@100:0.3765
+epoch: 1 eval precision: 0.0200	0.0210	0.0132	0.0091	eval recall: 0.0150	0.0795	0.2733	0.3917	
+epoch: 1 test precision: 0.0250	0.0240	0.0114	0.0083	test recall: 0.0270	0.1177	0.2667	0.3802	
+epoch: 1 test R@2:0.0270	R@10:0.1177	R@50:0.2667	R@100:0.3802
+epoch: 2 eval precision: 0.0200	0.0210	0.0140	0.0087	eval recall: 0.0150	0.0803	0.3112	0.3767	
+epoch: 2 test precision: 0.0250	0.0240	0.0116	0.0082	test recall: 0.0270	0.1118	0.2742	0.3577	
+epoch: 2 test R@2:0.0270	R@10:0.1118	R@50:0.2742	R@100:0.3577
+epoch: 3 eval precision: 0.0200	0.0210	0.0132	0.0089	eval recall: 0.0150	0.0803	0.2920	0.3867	
+epoch: 3 test precision: 0.0250	0.0240	0.0120	0.0082	test recall: 0.0270	0.1118	0.2763	0.3640	
+epoch: 3 test R@2:0.0270	R@10:0.1118	R@50:0.2763	R@100:0.3640
+epoch: 4 eval precision: 0.0200	0.0210	0.0126	0.0086	eval recall: 0.0150	0.0828	0.2708	0.3705	
+epoch: 4 test precision: 0.0250	0.0230	0.0112	0.0083	test recall: 0.0270	0.1085	0.2667	0.3793	
+epoch: 4 test R@2:0.0270	R@10:0.1085	R@50:0.2667	R@100:0.3793
+epoch: 5 eval precision: 0.0300	0.0260	0.0132	0.0091	eval recall: 0.0220	0.1020	0.2837	0.3907	
+epoch: 5 test precision: 0.0300	0.0240	0.0122	0.0081	test recall: 0.0303	0.1185	0.2812	0.3698	
+epoch: 5 test R@2:0.0303	R@10:0.1185	R@50:0.2812	R@100:0.3698
+epoch: 6 eval precision: 0.0350	0.0230	0.0134	0.0093	eval recall: 0.0245	0.0903	0.2950	0.3965	
+epoch: 6 test precision: 0.0300	0.0250	0.0116	0.0085	test recall: 0.0383	0.1218	0.2792	0.3810	
+epoch: 6 test R@2:0.0383	R@10:0.1218	R@50:0.2792	R@100:0.3810
+epoch: 7 eval precision: 0.0300	0.0230	0.0134	0.0093	eval recall: 0.0220	0.0903	0.2938	0.3915	
+epoch: 7 test precision: 0.0250	0.0260	0.0112	0.0086	test recall: 0.0283	0.1268	0.2758	0.3935	
+epoch: 7 test R@2:0.0283	R@10:0.1268	R@50:0.2758	R@100:0.3935
+epoch: 8 eval precision: 0.0400	0.0220	0.0134	0.0092	eval recall: 0.0370	0.0870	0.2943	0.3965	
+epoch: 8 test precision: 0.0350	0.0260	0.0118	0.0087	test recall: 0.0408	0.1252	0.2837	0.3997	
+epoch: 8 test R@2:0.0408	R@10:0.1252	R@50:0.2837	R@100:0.3997
+epoch: 9 eval precision: 0.0350	0.0220	0.0134	0.0093	eval recall: 0.0270	0.0920	0.2883	0.3990	
+epoch: 9 test precision: 0.0350	0.0260	0.0120	0.0088	test recall: 0.0408	0.1252	0.2907	0.3997	
+epoch: 9 test R@2:0.0408	R@10:0.1252	R@50:0.2907	R@100:0.3997
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:30 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:8 lr_decay:0.9 early_stop:8 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0350	0.0270	0.0140	0.0094	eval recall: 0.0312	0.0865	0.2366	0.3271	
+epoch: 0 test precision: 0.0200	0.0250	0.0112	0.0076	test recall: 0.0145	0.1015	0.2377	0.3097	
+epoch: 0 test R@2:0.0145	R@10:0.1015	R@50:0.2377	R@100:0.3097
+epoch: 1 eval precision: 0.0300	0.0250	0.0126	0.0089	eval recall: 0.0262	0.0830	0.2165	0.3116	
+epoch: 1 test precision: 0.0200	0.0210	0.0108	0.0073	test recall: 0.0145	0.0857	0.2155	0.2845	
+epoch: 1 test R@2:0.0145	R@10:0.0857	R@50:0.2155	R@100:0.2845
+epoch: 2 eval precision: 0.0350	0.0250	0.0132	0.0090	eval recall: 0.0287	0.0822	0.2214	0.3052	
+epoch: 2 test precision: 0.0200	0.0220	0.0116	0.0076	test recall: 0.0145	0.0823	0.2372	0.3075	
+epoch: 2 test R@2:0.0145	R@10:0.0823	R@50:0.2372	R@100:0.3075
+epoch: 3 eval precision: 0.0400	0.0250	0.0132	0.0095	eval recall: 0.0337	0.0822	0.2264	0.3255	
+epoch: 3 test precision: 0.0400	0.0250	0.0106	0.0075	test recall: 0.0253	0.1023	0.2235	0.2912	
+epoch: 3 test R@2:0.0253	R@10:0.1023	R@50:0.2235	R@100:0.2912
+epoch: 4 eval precision: 0.0400	0.0270	0.0128	0.0091	eval recall: 0.0307	0.0955	0.2219	0.3120	
+epoch: 4 test precision: 0.0300	0.0250	0.0110	0.0081	test recall: 0.0170	0.1023	0.2218	0.3125	
+epoch: 4 test R@2:0.0170	R@10:0.1023	R@50:0.2218	R@100:0.3125

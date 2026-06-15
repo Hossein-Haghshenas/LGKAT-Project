@@ -1,0 +1,26 @@
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:15 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:32768 l2_weight:5e-06 ls_weight:0 lr:0.002 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+******************************************************************************
+average auc: 0.9826+\-0.0001
+average f1 : 0.9391+\-0.0001
+average recall   : 0.0424+\-0.0104 0.1575+\-0.0119 0.3848+\-0.0201 0.5305+\-0.0189 
+average precision: 0.1500+\-0.0187 0.1133+\-0.0039 0.0633+\-0.0023 0.0458+\-0.0008 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0424+-0.0104  precision: 0.1500+-0.0187
+  R@10 recall: 0.1575+-0.0119  precision: 0.1133+-0.0039
+  R@50 recall: 0.3848+-0.0201  precision: 0.0633+-0.0023
+  R@100 recall: 0.5305+-0.0189  precision: 0.0458+-0.0008
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:25 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:32768 l2_weight:5e-06 ls_weight:0 lr:0.002 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:2 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] 
+******************************************************************************
+average auc: 0.9850+\-0.0001
+average f1 : 0.9442+\-0.0003
+average recall   : 0.0428+\-0.0146 0.1635+\-0.0254 0.4036+\-0.0399 0.5433+\-0.0412 
+average precision: 0.1430+\-0.0223 0.1164+\-0.0093 0.0678+\-0.0072 0.0488+\-0.0046 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0428+-0.0146  precision: 0.1430+-0.0223
+  R@10 recall: 0.1635+-0.0254  precision: 0.1164+-0.0093
+  R@50 recall: 0.4036+-0.0399  precision: 0.0678+-0.0072
+  R@100 recall: 0.5433+-0.0412  precision: 0.0488+-0.0046
