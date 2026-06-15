@@ -54,6 +54,27 @@ python main.py --dataset book --aggregator concat --n_epochs 39 --neighbor_sampl
 python main.py --dataset music --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 32 --n_iter 1 --batch_size 128 --l2_weight 1e-4 --lr 0.005 --layer_size [32] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0.5 --smoothing_steps 8 --pretrain 0 --att product --runs 3 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
 ```
 
+### Improved training (identity-initialized gate + LR decay + early stopping)
+
+The adaptive gate is now identity-initialized (`W_g = 0`, `b_g = logit(alpha)`), so training
+starts exactly at the fixed-alpha weighted average and adapts from there. Two new flags:
+
+- **`--lr_decay`** (default `1.0` = off): per-epoch exponential LR decay, e.g. `0.9`.
+- **`--early_stop`** (default `0` = off): stop a run if eval AUC has not improved for N epochs
+  (reported metrics are always taken from the best eval-AUC epoch, as before).
+
+Recommended commands for the two datasets still below the paper targets:
+
+* Music (target AUC 0.831 / F1 0.742)
+```
+python main.py --dataset music --aggregator concat --n_epochs 30 --neighbor_sample_size 8 --dim 32 --n_iter 1 --batch_size 128 --l2_weight 1e-4 --lr 0.005 --lr_decay 0.9 --early_stop 8 --layer_size [32] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --alpha 0.5 --smoothing_steps 8 --pretrain 0 --att product --runs 5 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
+```
+
+* Book (target AUC 0.718 / F1 0.650)
+```
+python main.py --dataset book --aggregator concat --n_epochs 30 --neighbor_sample_size 8 --dim 64 --n_iter 2 --batch_size 256 --l2_weight 5e-5 --lr 2e-4 --lr_decay 0.9 --early_stop 8 --layer_size [64] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --alpha 0.5 --smoothing_steps 3 --pretrain 0 --att product --runs 5 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100
+```
+
 * Restaurant
 ```
 python main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 65536 --l2_weight 1e-7 --lr 2e-2 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att product --runs 3 --gpu_id 0 --topk_k_list '[2,10,50,100]' --topk_user_num 100

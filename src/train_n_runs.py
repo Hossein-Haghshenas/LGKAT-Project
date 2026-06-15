@@ -95,8 +95,13 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
 
                 epoch_train_loss = []  # New: To store the loss for each epoch
 
+                # exponential LR decay per epoch (lr_decay=1.0 disables it)
+                lr_decay = getattr(args, 'lr_decay', 1.0)
+                cur_lr = args.lr * (lr_decay ** step) if lr_decay < 1.0 else None
+
                 while start + args.batch_size <= train_data.shape[0]:
-                    _, loss = model.train(sess, get_feed_dict(args, model, train_data, start, start + args.batch_size))
+                    _, loss = model.train(sess, get_feed_dict(args, model, train_data, start, start + args.batch_size,
+                                                              lr=cur_lr))
                     epoch_train_loss.append(loss)
                     start += args.batch_size
                     if show_loss:
@@ -145,6 +150,13 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                         best_r10_eval = eval_recall[idx_eval_r10]
                         best_recall = test_recall
                         best_precision = test_precision
+
+                # early stopping on eval AUC (patience = args.early_stop epochs; 0 disables it)
+                patience = getattr(args, 'early_stop', 0)
+                if show_ctr and patience and (step - best_auc_epoch) >= patience:
+                    print('Early stopping at epoch %d: no eval AUC improvement for %d epochs (best epoch %d, eval auc %.4f)'
+                          % (step, patience, best_auc_epoch, best_auc_eval))
+                    break
 
         if show_ctr:
             auc.append(best_auc)
@@ -309,7 +321,7 @@ def topk_settings(show_topk, train_data, test_data, n_item, seed=555, args=None)
         return [None] * 5
 
 
-def get_feed_dict(args, model, data, start, end, flag=True):
+def get_feed_dict(args, model, data, start, end, flag=True, lr=None):
     if flag:
         feed_dict = {model.user_indices: data[start:end, 0],
                      model.item_indices: data[start:end, 1],
@@ -322,6 +334,8 @@ def get_feed_dict(args, model, data, start, end, flag=True):
                      model.labels: data[start:end, 2],
                      model.node_dropout: [0.]*len(eval(args.layer_size)),
                      model.mess_dropout: [0.]*len(eval(args.layer_size))}
+    if lr is not None:
+        feed_dict[model.lr_ph] = lr
     return feed_dict
 
 

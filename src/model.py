@@ -75,10 +75,12 @@ class KGCN(object):
 
         # item embeddings aggregation from KGCN and CF
         self.agg_type = args.agg_type
-        self.alpha = args.alpha
+        self.alpha = args.alpha  # kept for non-weighted_avg branches; gate replaces it for weighted_avg
 #        self.beta = args.beta
         if self.agg_type in ['gcn', 'graphsage', 'bi']:
             self.weights_agg = self._init_weights_agg()
+        if self.agg_type == 'weighted_avg' and self.model_type == 'KGCN_LightGCN':
+            self.weights_gate = self._init_weights_gate()
         '''
         *****************************************
         '''
@@ -89,6 +91,11 @@ class KGCN(object):
         self.item_indices = tf.compat.v1.placeholder(dtype=tf.int64, shape=[None],
                                                      name='item_indices_{}'.format(self.model_type))
         self.labels = tf.compat.v1.placeholder(dtype=tf.float32, shape=[None], name='labels_{}'.format(self.model_type))
+
+        # Feedable learning rate (defaults to args.lr). train_n_runs feeds a decayed
+        # value per epoch when --lr_decay < 1; eval/inference never needs to feed it.
+        self.lr_ph = tf.compat.v1.placeholder_with_default(
+            tf.constant(self.lr, dtype=tf.float32), shape=[], name='lr_{}'.format(self.model_type))
 
         '''
         *****************************************
@@ -171,8 +178,15 @@ class KGCN(object):
 
             # combine item embeddings from CF & KG
             if self.agg_type == 'weighted_avg':
-                self.item_embeddings_final = self.alpha * self.item_embeddings_cf + (
-                            1 - self.alpha) * self.item_embeddings_kg
+                # Adaptive gate (paper Eq. 12-13): g = sigmoid(W_g [e_item_cf ; h_kg] + b_g)
+                # Identity-initialized (W_g = 0, b_g = logit(alpha)), so training starts
+                # exactly at the proven fixed-alpha weighted average and adapts from there.
+                gate_input = tf.concat([self.item_embeddings_cf, self.item_embeddings_kg], axis=-1)  # [batch_size, 2*dim]
+                alpha_dynamic = tf.sigmoid(
+                    tf.matmul(gate_input, self.weights_gate['gate_W']) + self.weights_gate['gate_b']
+                )  # [batch_size, 1]
+                self.item_embeddings_final = alpha_dynamic * self.item_embeddings_cf + \
+                                             (1 - alpha_dynamic) * self.item_embeddings_kg
             elif self.agg_type == 'gcn':
                 # item_embeddings = self.alpha*self.item_embeddings_cf + (1-self.alpha)*self.item_embeddings_kg
                 item_embeddings = self.item_embeddings_cf + self.item_embeddings_kg
@@ -336,6 +350,31 @@ class KGCN(object):
                 all_weights['agg_b_2'] = tf.compat.v1.get_variable(
                     shape=shape_b, initializer=KGCN.get_initializer(), name='agg_b_2_{}'.format(self.model_type))
 
+        return all_weights
+
+    '''
+    *****************************************
+    '''
+
+    '''
+    *****************************************
+    user-adaptive gate weights for item embedding fusion
+    '''
+
+    def _init_weights_gate(self):
+        all_weights = dict()
+        # Identity initialization: zero weights + bias = logit(alpha) makes the gate
+        # output exactly alpha at step 0 (equivalent to the fixed-alpha baseline),
+        # avoiding noisy CF/KG fusion early in training on small/sparse datasets.
+        alpha_clamped = min(max(float(self.alpha), 0.01), 0.99)
+        bias_init = float(np.log(alpha_clamped / (1.0 - alpha_clamped)))
+        with tf.compat.v1.variable_scope('{}'.format(self.model_type)):
+            all_weights['gate_W'] = tf.compat.v1.get_variable(
+                shape=[2 * self.dim, 1], initializer=tf.compat.v1.zeros_initializer(),
+                name='gate_W_{}'.format(self.model_type))
+            all_weights['gate_b'] = tf.compat.v1.get_variable(
+                shape=[1], initializer=tf.compat.v1.constant_initializer(bias_init),
+                name='gate_b_{}'.format(self.model_type))
         return all_weights
 
     '''
@@ -598,6 +637,9 @@ class KGCN(object):
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_agg['agg_w_1']) + \
                                tf.nn.l2_loss(self.weights_agg['agg_w_2'])
 
+            if self.agg_type == 'weighted_avg' and self.model_type == 'KGCN_LightGCN':
+                self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_gate['gate_W'])
+
         '''
         ******************************************
         L2 loss in NGCF
@@ -614,7 +656,10 @@ class KGCN(object):
         '''
 
         self.loss = self.base_loss + self.l2_weight * self.l2_loss
-        self.optimizer = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(self.loss)
+        optimizer = tf.compat.v1.train.AdamOptimizer(self.lr_ph)
+        gvs = optimizer.compute_gradients(self.loss)
+        capped_gvs = [(tf.clip_by_norm(g, 1.0) if g is not None else g, v) for g, v in gvs]
+        self.optimizer = optimizer.apply_gradients(capped_gvs)
 
     def train(self, sess, feed_dict):
         return sess.run([self.optimizer, self.base_loss], feed_dict)

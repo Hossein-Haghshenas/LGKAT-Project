@@ -93,6 +93,10 @@ parser.add_argument('--att', nargs='?', default='u_r', help='{avg, u_r, u_r_mlp,
 parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in gcn layer.')
 # '''
 parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in gcn layer.')
+parser.add_argument('--lr_decay', type=float, default=1.0,
+                    help='per-epoch exponential learning-rate decay factor; 1.0 = no decay (e.g. 0.9)')
+parser.add_argument('--early_stop', type=int, default=0,
+                    help='early-stopping patience in epochs on eval AUC; 0 = disabled')
 parser.add_argument('--runs', type=int, default=3, help='the number of epochs')
 parser.add_argument('--gpu_id', type=int, default=0, help='gpu id')
 parser.add_argument('--att', nargs='?', default='u_r', help='{avg, u_r, u_r_mlp, u_r_e}.')  # attention types
@@ -128,7 +132,7 @@ parser.add_argument(
             '\'dim\',\'n_iter\',\'batch_size\',\'l2_weight\',\'ls_weight\',\'lr\','
             '\'ratio\',\'layer_size\',\'adj_type\',\'alg_type\',\'node_dropout_flag\','
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
-            '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
+            '\'alpha\',\'smoothing_steps\',\'lr_decay\',\'early_stop\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\']',
     help='paramerts')
 

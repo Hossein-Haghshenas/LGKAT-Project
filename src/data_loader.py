@@ -54,6 +54,15 @@ def adjacency_power(adj, power):
     if power is None or power <= 1:
         return adj
     A = adj.tocsr()
+    # For bipartite graphs, A^k fill-in is driven by max node degree, not average nnz.
+    # A single popular item with degree d contributes d^2 entries per multiplication.
+    # Skip the power computation for large graphs; LightGCN handles multi-hop via its layer loop.
+    MAX_NODES_FOR_POWER = 50000
+    if A.shape[0] > MAX_NODES_FOR_POWER:
+        print('[adjacency_power] Skipping A^{}: matrix has {} nodes (> {} threshold). '
+              'Using A^1. LightGCN propagates multi-hop via its internal layer loop.'.format(
+                  power, A.shape[0], MAX_NODES_FOR_POWER))
+        return A
     out = A
     for _ in range(int(power) - 1):
         out = out.dot(A)
