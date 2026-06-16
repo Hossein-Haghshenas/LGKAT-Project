@@ -230,6 +230,21 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         print(printings_paper)
         logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper, printings_ndcg)
 
+        # Task 7: dump per-run results (machine-readable) for the paired significance test.
+        # Additive (a new file); existing logs are unchanged.
+        runs_payload = {
+            'model_type': args.model_type, 'dataset': args.dataset, 'att': args.att,
+            'exp_tag': getattr(args, 'exp_tag', ''), 'k_list': list(k_list_test),
+            'runs': int(len(auc)),
+            'auc': np.array(auc).tolist(), 'f1': np.array(f1_score).tolist(),
+            'recall': np.array(recall).tolist(), 'precision': np.array(precision).tolist(),
+        }
+        if printings_ndcg:
+            runs_payload['ndcg'] = np.array(ndcg).tolist()
+        with open('../result/runs_{}_{}_{}.json'.format(args.model_type, args.dataset, _att_tag(args)),
+                  'w', encoding='utf-8') as f:
+            json.dump(runs_payload, f, indent=2)
+
     if getattr(args, 'sparsity_eval', 0):
         logging_sparsity(args, sparsity_runs, k_list_test, sparsity_edges)
     print("average train_Loss", np.mean(train_losses))  # New: Print average losses after training
