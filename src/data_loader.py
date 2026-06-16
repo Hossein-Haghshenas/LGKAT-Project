@@ -4,9 +4,18 @@ import os
 from time import time
 
 
-def load_data(args):
+def load_data(args, relation_mask=None):
+    """Load ratings + KG.
+
+    relation_mask (optional): a 0/1 iterable of length n_relation (full). When
+    provided, only KG triples whose relation id is selected (mask==1) are kept
+    while building the entity adjacency. The relation embedding table size is
+    still derived from the FULL KG so the model dimensions stay identical; this
+    is what lets MOKAR search over relation subsets without changing the model.
+    Passing relation_mask=None reproduces the original behaviour exactly.
+    """
     n_user, n_item, train_data, eval_data, test_data, user_item_adj = load_rating(args)
-    n_entity, n_relation, adj_entity, adj_relation, kg = load_kg(args)
+    n_entity, n_relation, adj_entity, adj_relation, kg = load_kg(args, relation_mask=relation_mask)
     print('data loaded.')
 
     return n_user, n_item, n_entity, n_relation, train_data, eval_data, test_data, adj_entity, adj_relation, user_item_adj, kg
@@ -149,7 +158,7 @@ def dataset_split(rating_np, args):
     return train_data, eval_data, test_data
 
 
-def load_kg(args):
+def load_kg(args, relation_mask=None):
     print('reading KG file ...')
 
     # reading kg file
@@ -161,21 +170,35 @@ def load_kg(args):
         np.save(kg_file + '.npy', kg_np)
 
     n_entity = len(set(kg_np[:, 0]) | set(kg_np[:, 2]))
+    # n_relation is always derived from the FULL KG so that the relation
+    # embedding table has a fixed size regardless of any relation masking.
     n_relation = len(set(kg_np[:, 1]))
 
-    kg = construct_kg(kg_np)
-    adj_entity, adj_relation = construct_adj(args, kg, n_entity)
+    keep_relations = None
+    if relation_mask is not None:
+        keep_relations = set(int(r) for r in range(len(relation_mask)) if relation_mask[r])
+        n_active = len(keep_relations)
+        print('constructing KG with %d / %d relations active' % (n_active, n_relation))
+
+    kg = construct_kg(kg_np, keep_relations=keep_relations)
+    # Use a deterministic local RNG only when masking (so MOKAR evaluations are
+    # reproducible); otherwise fall back to the original global-RNG behaviour.
+    seed = getattr(args, 'seed', None) if relation_mask is not None else None
+    adj_entity, adj_relation = construct_adj(kg, n_entity, args.neighbor_sample_size, seed=seed)
 
     return n_entity, n_relation, adj_entity, adj_relation, kg
 
 
-def construct_kg(kg_np):
+def construct_kg(kg_np, keep_relations=None):
     print('constructing knowledge graph ...')
     kg = dict()
     for triple in kg_np:
         head = triple[0]
         relation = triple[1]
         tail = triple[2]
+        # MOKAR relation selection: drop triples whose relation is not selected.
+        if keep_relations is not None and int(relation) not in keep_relations:
+            continue
         # treat the KG as an undirected graph
         if head not in kg:
             kg[head] = []
@@ -186,19 +209,25 @@ def construct_kg(kg_np):
     return kg
 
 
-def construct_adj(args, kg, entity_num):
+def construct_adj(kg, entity_num, neighbor_sample_size, seed=None):
     print('constructing adjacency matrix ...')
     # each line of adj_entity stores the sampled neighbor entities for a given entity
     # each line of adj_relation stores the corresponding sampled neighbor relations
-    adj_entity = np.zeros([entity_num, args.neighbor_sample_size], dtype=np.int64)
-    adj_relation = np.zeros([entity_num, args.neighbor_sample_size], dtype=np.int64)
+    rng = np.random if seed is None else np.random.RandomState(seed)
+    adj_entity = np.zeros([entity_num, neighbor_sample_size], dtype=np.int64)
+    adj_relation = np.zeros([entity_num, neighbor_sample_size], dtype=np.int64)
     for entity in range(entity_num):
-        neighbors = kg[entity]
+        # Relation masking can leave some entities with no neighbours; fall back
+        # to a self-loop so the adjacency stays well-defined (the entity simply
+        # attends to itself, contributing its own embedding).
+        neighbors = kg.get(entity)
+        if not neighbors:
+            neighbors = [(entity, 0)]
         n_neighbors = len(neighbors)
-        if n_neighbors >= args.neighbor_sample_size:
-            sampled_indices = np.random.choice(list(range(n_neighbors)), size=args.neighbor_sample_size, replace=False)
+        if n_neighbors >= neighbor_sample_size:
+            sampled_indices = rng.choice(n_neighbors, size=neighbor_sample_size, replace=False)
         else:
-            sampled_indices = np.random.choice(list(range(n_neighbors)), size=args.neighbor_sample_size, replace=True)
+            sampled_indices = rng.choice(n_neighbors, size=neighbor_sample_size, replace=True)
         adj_entity[entity] = np.array([neighbors[i][0] for i in sampled_indices])
         adj_relation[entity] = np.array([neighbors[i][1] for i in sampled_indices])
 

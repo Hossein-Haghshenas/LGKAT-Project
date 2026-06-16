@@ -1,4 +1,6 @@
 import argparse
+import os
+import sys
 import numpy as np
 from time import time
 from data_loader import load_data
@@ -129,6 +131,16 @@ parser.add_argument(
             '\'cl_weight\',\'cl_temperature\']',
     help='paramerts')
 
+# ---- MOKAR multi-objective optimization (NSGA-II) ----
+parser.add_argument('--mode', type=str, default='train',
+                    help="{train, optimize}; 'optimize' runs MOKAR NSGA-II over LGKAT")
+parser.add_argument('--pop_size', type=int, default=20, help='MOKAR: NSGA-II population size')
+parser.add_argument('--n_gen', type=int, default=15, help='MOKAR: number of generations')
+parser.add_argument('--eval_epochs', type=int, default=5, help='MOKAR: training epochs per candidate')
+parser.add_argument('--moo_seed', type=int, default=555, help='MOKAR: RNG seed')
+parser.add_argument('--out_dir', type=str, default='../result', help='MOKAR: output directory')
+parser.add_argument('--verbose', type=int, default=1, help='MOKAR: verbosity')
+
 show_loss = False
 show_time = False
 show_topk = True
@@ -141,6 +153,16 @@ t = time()
 fixed parameters
 '''
 args = parser.parse_args()
+
+# MOKAR optimization mode: search configurations + KG relation subsets, then exit.
+if getattr(args, 'mode', 'train') == 'optimize':
+    from optimize_moo import run_optimization
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(args.gpu_id)
+    if getattr(args, 'batch_size', 0) in (0, None):
+        args.batch_size = None  # let MOKAR pick the per-dataset default
+    run_optimization(args)
+    sys.exit(0)
+
 data = load_data(args)
 
 # train(args, data, show_loss, show_topk)
