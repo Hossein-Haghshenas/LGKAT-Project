@@ -155,6 +155,16 @@ parser.add_argument('--sparsity_eval', type=int, default=0,
 parser.add_argument('--sparsity_buckets', nargs='?', default='[5,10,20]',
                     help='bucket edges on positive train interactions; [5,10,20] -> <5, 5-10, 10-20, 20+')
 
+# Task 6: interpretability case study. When on, after training a user's top-K recommended
+# items and the knowledge-aware attention weights over their KG neighbors are exported to
+# result/{model_type}_{dataset}_attention_{att}.{json,txt}. Off by default.
+parser.add_argument('--interpret', type=int, default=0,
+                    help='1: after training, export KG attention weights for a user top-K recs')
+parser.add_argument('--interpret_user', type=int, default=-1,
+                    help='user id for the attention case study; -1 = auto-pick an active user')
+parser.add_argument('--interpret_topk', type=int, default=5,
+                    help='number of top recommended items to explain')
+
 parser.add_argument(
     '--params', 
     nargs='?', 
@@ -165,7 +175,8 @@ parser.add_argument(
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
             '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'fusion\',\'exp_tag\','
-            '\'sparsity_eval\',\'sparsity_buckets\']',
+            '\'sparsity_eval\',\'sparsity_buckets\','
+            '\'interpret\',\'interpret_user\',\'interpret_topk\']',
     help='paramerts')
 
 show_loss = False

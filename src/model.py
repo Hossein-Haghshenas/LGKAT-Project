@@ -576,6 +576,8 @@ class KGCN(object):
 
         res = [tf.reshape(entity_vectors[0], [self.batch_size, self.dim])]
 
+        self.kg_attention = None  # Task 6: item -> 1-hop KG-neighbor attention [batch, 1, n_neighbor]
+
         for i in range(self.n_iter):
             if i == self.n_iter - 1:
                 aggregator = self.aggregator_class(self.weights_att, self.batch_size, self.dim,
@@ -596,6 +598,9 @@ class KGCN(object):
                                     masks=None,
                                     hops=hop + 1)
                 entity_vectors_next_iter.append(vector)
+                # capture the target item's attention over its direct KG neighbors
+                if i == 0 and hop == 0:
+                    self.kg_attention = aggregator.attention_scores
             entity_vectors = entity_vectors_next_iter
             res.append(tf.reshape(entity_vectors[0], [self.batch_size, self.dim]))
 
@@ -714,6 +719,10 @@ class KGCN(object):
 
     def get_scores(self, sess, feed_dict):
         return sess.run([self.item_indices, self.scores_normalized], feed_dict)
+
+    def get_attention(self, sess, feed_dict):
+        # Task 6: item -> direct KG-neighbor attention weights, [batch_size, 1, n_neighbor]
+        return sess.run([self.item_indices, self.kg_attention], feed_dict)
 
     def get_embeddings(self, sess):
         user_emb, entity_emb, relation_emb = sess.run(

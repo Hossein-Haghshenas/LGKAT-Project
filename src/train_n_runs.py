@@ -3,6 +3,7 @@ import numpy as np
 import scipy.io as sio
 from model import KGCN
 import os
+import json
 
 
 def train_n_runs(args, data, show_loss, show_topk, show_ctr):
@@ -174,6 +175,11 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                 sparsity_runs.append(topk_eval_buckets(
                     args, sess, model, user_list_test, train_record_test, test_record_test,
                     item_set_test, k_list_test, args.batch_size, user_pos_count, sparsity_edges))
+
+            # Task 6: attention interpretability case study (first run only)
+            if getattr(args, 'interpret', 0) and show_topk and r == 0:
+                export_attention_case_study(
+                    args, sess, model, train_record_test, test_record_test, n_item)
 
         if show_ctr:
             auc.append(best_auc)
@@ -350,6 +356,76 @@ def logging_sparsity(args, sparsity_runs, k_list, edges):
     fid.close()
     print('sparsity per-bucket results written to ../result/{}_{}_sparsity_{}.txt'.format(
         args.model_type, args.dataset, _att_tag(args)))
+
+
+def export_attention_case_study(args, sess, model, train_record, test_record, n_item):
+    # Task 6: pick a user, rank items for them, and export the personalized knowledge-aware
+    # attention over the KG neighbors of the top recommended items (the "why" of each rec).
+    if getattr(model, 'kg_attention', None) is None:
+        print('[interpret] no KG attention available (need a KGCN_* model with a personalized --att); skipped')
+        return
+
+    candidates = set(train_record.keys()) & set(test_record.keys())
+    if not candidates:
+        print('[interpret] no train/test user overlap; skipped')
+        return
+    user = getattr(args, 'interpret_user', -1)
+    if user is None or user < 0 or user not in candidates:
+        user = max(candidates, key=lambda u: len(test_record[u]))  # most active held-out user
+
+    item_set = set(range(n_item))
+    item_sorted = _score_user_items(args, sess, model, user, train_record, item_set, args.batch_size)
+    topk = max(1, int(getattr(args, 'interpret_topk', 5)))
+    top_items = item_sorted[:topk]
+
+    # one padded batch so the static-graph reshapes (which use batch_size) are satisfied
+    bs = args.batch_size
+    padded = (list(top_items) + [top_items[-1]] * (bs - len(top_items)))[:bs]
+    feed = {model.user_indices: [user] * bs,
+            model.item_indices: padded,
+            model.node_dropout: [0.] * len(eval(args.layer_size)),
+            model.mess_dropout: [0.] * len(eval(args.layer_size))}
+    _, scores = model.get_scores(sess, feed)
+    _, att = model.get_attention(sess, feed)            # [bs, 1, n_neighbor]
+    att = np.reshape(np.array(att), (bs, -1))           # [bs, n_neighbor]
+    score_map = {int(it): float(sc) for it, sc in zip(padded, scores)}
+
+    adj_entity, adj_relation = model.adj_entity, model.adj_relation
+    recs = []
+    for rank, item in enumerate(top_items):
+        neighbors = [{'entity': int(adj_entity[item][j]),
+                      'relation': int(adj_relation[item][j]),
+                      'attention': float(att[rank][j])}
+                     for j in range(adj_entity.shape[1])]
+        neighbors.sort(key=lambda d: d['attention'], reverse=True)
+        recs.append({'rank': rank + 1, 'item': int(item),
+                     'score': score_map.get(int(item), float('nan')),
+                     'in_test': bool(item in test_record[user]),
+                     'kg_neighbors': neighbors})
+
+    payload = {'dataset': args.dataset, 'model_type': args.model_type, 'att': args.att,
+               'user': int(user), 'n_neighbor': int(args.neighbor_sample_size),
+               'user_train_items': sorted(int(x) for x in train_record[user]),
+               'user_test_items': sorted(int(x) for x in test_record[user]),
+               'recommendations': recs}
+
+    base = '../result/{}_{}_attention_{}'.format(args.model_type, args.dataset, _att_tag(args))
+    with open(base + '.json', 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2)
+    with open(base + '.txt', 'w', encoding='utf-8') as f:
+        f.write('Attention case study -- dataset:{} model:{} att:{}\n'.format(
+            args.dataset, args.model_type, args.att))
+        f.write('user:{}  (train items:{}  test items:{})\n'.format(
+            user, len(train_record[user]), len(test_record[user])))
+        f.write('top-{} recommended items and their KG-neighbor attention:\n\n'.format(len(top_items)))
+        for rec in recs:
+            f.write('rank {}: item {}  score={:.4f}  {}\n'.format(
+                rec['rank'], rec['item'], rec['score'], '[in test]' if rec['in_test'] else ''))
+            for nb in rec['kg_neighbors']:
+                f.write('    neighbor entity {:>7}  relation {:>3}  attention {:.4f}\n'.format(
+                    nb['entity'], nb['relation'], nb['attention']))
+            f.write('\n')
+    print('attention case study (user {}) written to {}.json / .txt'.format(user, base))
 '''
 ***********************************************
 '''

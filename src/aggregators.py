@@ -25,6 +25,7 @@ class Aggregator(object):
         self.dim = dim
         self.weights_att = weights_att
         self.n_neighbor = n_neighbor
+        self.attention_scores = None  # Task 6: last computed [batch, -1, n_neighbor] attention
 
     def __call__(self, self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, masks, hops):
         outputs = self._call(self_vectors, neighbor_vectors, neighbor_relations, user_embeddings, masks, hops)
@@ -273,6 +274,10 @@ class Aggregator(object):
                 user_relation_scores = tf.nn.leaky_relu(tf.matmul(embeddings, self.weights_att['att_w_2'])+self.weights_att['att_b_2'])
                 user_relation_scores = tf.reshape(user_relation_scores, [self.batch_size, -1, self.n_neighbor])
                 user_relation_scores_normalized = tf.nn.softmax(user_relation_scores, axis=-1)
+
+            # Task 6: expose the personalized knowledge-aware attention weights over the
+            # n_neighbor KG neighbors (per item/entity), shape [batch_size, -1, n_neighbor]
+            self.attention_scores = user_relation_scores_normalized
 
             # [batch_size, -1, n_neighbor, 1]
             user_relation_scores_normalized = tf.expand_dims(user_relation_scores_normalized, axis=-1)
