@@ -121,6 +121,31 @@ parser.add_argument('--topk_user_num', type=int, default=100,
 parser.add_argument('--topk_k_list', nargs='?', default='[1,2,5,10,20,50,100]',
                     help='K values for Recall@K, e.g. [2,10,50,100] to match paper tables')
 
+# Task 1: NDCG@K. 1 = compute & log NDCG@K alongside Precision@K/Recall@K in the
+# *_topk_*.txt files (paper Section 3-4, binary relevance). 0 = legacy output
+# (byte-for-byte identical to pre-NDCG logs).
+parser.add_argument('--report_ndcg', type=int, default=1,
+                    help='1: log NDCG@K alongside Precision/Recall in topk files; 0: legacy output')
+
+# Task 8: cross-view self-supervised contrastive (InfoNCE), paper Section 3-3-6.
+# Off by default so all existing commands reproduce their current results exactly.
+parser.add_argument('--use_cl', type=int, default=0,
+                    help='1: add cross-view InfoNCE (CF<->KG item views) to the loss; 0: off')
+parser.add_argument('--cl_lambda', type=float, default=0.1,
+                    help='weight of the contrastive loss in the multi-task objective')
+parser.add_argument('--cl_tau', type=float, default=0.2,
+                    help='temperature tau for the InfoNCE cosine similarity')
+
+# Task 2: ablation switches.
+#   --fusion: item-embedding fusion for weighted_avg. 'fixed' = alpha-blend (paper
+#     default, base reproduction). 'gate' = adaptive gate (ablation 2c), identity-
+#     initialized so it starts exactly at the fixed-alpha weighted average.
+#   --exp_tag: optional suffix appended to all result filenames so ablation variants
+#     that share a model_type (e.g. fixed vs gate, w/o-cl vs with-cl) write to
+#     separate files. Empty (default) keeps the legacy filenames byte-for-byte.
+parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate} item-embedding fusion')
+parser.add_argument('--exp_tag', nargs='?', default='', help='optional suffix for result filenames (ablation variants)')
+
 parser.add_argument(
     '--params', 
     nargs='?', 
@@ -129,7 +154,8 @@ parser.add_argument(
             '\'ratio\',\'layer_size\',\'adj_type\',\'alg_type\',\'node_dropout_flag\','
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
-            '\'topk_user_num\',\'topk_k_list\']',
+            '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
+            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'fusion\',\'exp_tag\']',
     help='paramerts')
 
 show_loss = False

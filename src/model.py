@@ -77,8 +77,19 @@ class KGCN(object):
         self.agg_type = args.agg_type
         self.alpha = args.alpha
 #        self.beta = args.beta
+
+        # Task 8: cross-view contrastive (InfoNCE) settings. Off by default so the
+        # base-model reproduction path is byte-for-byte unchanged.
+        self.use_cl = bool(getattr(args, 'use_cl', 0))
+        self.cl_lambda = float(getattr(args, 'cl_lambda', 0.1))
+        self.cl_tau = float(getattr(args, 'cl_tau', 0.2))
         if self.agg_type in ['gcn', 'graphsage', 'bi']:
             self.weights_agg = self._init_weights_agg()
+
+        # Task 2(c): adaptive fusion gate vs. fixed-alpha weighted average.
+        self.fusion = getattr(args, 'fusion', 'fixed')
+        if self.fusion == 'gate' and self.agg_type == 'weighted_avg':
+            self.weights_gate = self._init_weights_gate()
         '''
         *****************************************
         '''
@@ -171,8 +182,18 @@ class KGCN(object):
 
             # combine item embeddings from CF & KG
             if self.agg_type == 'weighted_avg':
-                self.item_embeddings_final = self.alpha * self.item_embeddings_cf + (
-                            1 - self.alpha) * self.item_embeddings_kg
+                if self.fusion == 'gate':
+                    # Adaptive gate (Task 2c): per-item scalar g = sigmoid(W_g[e_cf;e_kg] + b_g).
+                    # Identity init (W_g=0, b_g=logit(alpha)) => g==alpha at step 0, so training
+                    # starts exactly at the fixed-alpha weighted average and adapts from there.
+                    gate_input = tf.concat([self.item_embeddings_cf, self.item_embeddings_kg], axis=-1)
+                    alpha_dynamic = tf.sigmoid(
+                        tf.matmul(gate_input, self.weights_gate['gate_W']) + self.weights_gate['gate_b'])
+                    self.item_embeddings_final = alpha_dynamic * self.item_embeddings_cf + \
+                                                 (1 - alpha_dynamic) * self.item_embeddings_kg
+                else:
+                    self.item_embeddings_final = self.alpha * self.item_embeddings_cf + (
+                                1 - self.alpha) * self.item_embeddings_kg
             elif self.agg_type == 'gcn':
                 # item_embeddings = self.alpha*self.item_embeddings_cf + (1-self.alpha)*self.item_embeddings_kg
                 item_embeddings = self.item_embeddings_cf + self.item_embeddings_kg
@@ -306,6 +327,30 @@ class KGCN(object):
     '''
     *****************************************
     '''
+
+    '''
+    *****************************************
+    Task 2(c): identity-initialized adaptive fusion gate
+    '''
+
+    def _init_weights_gate(self):
+        all_weights = dict()
+
+        # Identity initialization: gate_W = 0 and gate_b = logit(alpha) make the gate
+        # output exactly alpha at step 0 (equivalent to the fixed-alpha baseline),
+        # so the proven base model is the starting point and the gate adapts from there.
+        alpha_clamped = min(max(float(self.alpha), 0.01), 0.99)
+        bias_init = float(np.log(alpha_clamped / (1.0 - alpha_clamped)))
+
+        with tf.compat.v1.variable_scope('{}'.format(self.model_type)):
+            all_weights['gate_W'] = tf.compat.v1.get_variable(
+                shape=[2 * self.dim, 1], initializer=tf.compat.v1.zeros_initializer(),
+                name='gate_W_{}'.format(self.model_type))
+            all_weights['gate_b'] = tf.compat.v1.get_variable(
+                initializer=tf.constant([bias_init], dtype=tf.float32),
+                name='gate_b_{}'.format(self.model_type))
+
+        return all_weights
 
     '''
     *****************************************
@@ -571,6 +616,32 @@ class KGCN(object):
     *****************************************
     '''
 
+    '''
+    *****************************************
+    Task 8: cross-view contrastive loss (InfoNCE), paper Section 3-3-6
+    '''
+
+    def _create_contrastive_loss(self):
+        # The collaborative (CF) and knowledge (KG) views of the SAME item form the
+        # positive pair; every other item in the batch is an in-batch negative.
+        # Cosine similarity (via L2-normalization) with temperature tau.
+        z_cf = tf.nn.l2_normalize(self.item_embeddings_cf, axis=1)  # [batch_size, dim]
+        z_kg = tf.nn.l2_normalize(self.item_embeddings_kg, axis=1)  # [batch_size, dim]
+
+        # [batch_size, batch_size]; entry (i, j) = cos(cf_i, kg_j) / tau
+        logits = tf.matmul(z_cf, z_kg, transpose_b=True) / self.cl_tau
+        labels = tf.range(tf.shape(input=logits)[0])  # positive for row i is column i
+
+        # Symmetric InfoNCE (cf->kg and kg->cf). sparse_softmax_cross_entropy is the
+        # numerically stable (log-sum-exp) form of -log( exp(pos) / sum_j exp(.) ).
+        loss_cf2kg = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logits)
+        loss_kg2cf = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=tf.transpose(a=logits))
+        return tf.reduce_mean(input_tensor=0.5 * (loss_cf2kg + loss_kg2cf))
+
+    '''
+    *****************************************
+    '''
+
     def _build_train(self):
         self.base_loss = tf.reduce_mean(input_tensor=tf.nn.sigmoid_cross_entropy_with_logits(
             labels=self.labels, logits=self.scores))
@@ -598,6 +669,9 @@ class KGCN(object):
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_agg['agg_w_1']) + \
                                tf.nn.l2_loss(self.weights_agg['agg_w_2'])
 
+            if getattr(self, 'fusion', 'fixed') == 'gate' and self.agg_type == 'weighted_avg':
+                self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_gate['gate_W'])
+
         '''
         ******************************************
         L2 loss in NGCF
@@ -614,10 +688,21 @@ class KGCN(object):
         '''
 
         self.loss = self.base_loss + self.l2_weight * self.l2_loss
+
+        # Task 8: multi-task objective  L = L_main + cl_lambda * L_cl + l2_weight * L2.
+        # cl_loss is always defined (0 when disabled) so the training op can report it.
+        self.cl_loss = tf.constant(0.0, dtype=tf.float32)
+        if self.use_cl:
+            if self.model_type in ['KGCN_NGCF', 'KGCN_LightGCN']:
+                self.cl_loss = self._create_contrastive_loss()
+                self.loss = self.loss + self.cl_lambda * self.cl_loss
+            else:
+                print('[CL] --use_cl ignored: model_type {} has no separate CF/KG item views'.format(self.model_type))
+
         self.optimizer = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(self.loss)
 
     def train(self, sess, feed_dict):
-        return sess.run([self.optimizer, self.base_loss], feed_dict)
+        return sess.run([self.optimizer, self.base_loss, self.cl_loss], feed_dict)
 
     def eval(self, sess, feed_dict):
         labels, scores = sess.run([self.labels, self.scores_normalized], feed_dict)
