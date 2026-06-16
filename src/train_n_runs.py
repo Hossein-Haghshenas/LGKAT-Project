@@ -21,6 +21,11 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
     train_losses = []  # New: To store the loss values
     cl_losses = []  # Task 8: per-epoch average contrastive loss (parallel to train_losses)
 
+    # Task 3: cold-start / data-sparsity eval state
+    sparsity_runs = []
+    sparsity_edges = sorted(eval(getattr(args, 'sparsity_buckets', '[5,10,20]')))
+    user_pos_count = get_user_pos_count(train_data) if getattr(args, 'sparsity_eval', 0) else {}
+
 
 
     RUNS = args.runs
@@ -164,6 +169,12 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                         best_precision = test_precision
                         best_ndcg = test_ndcg
 
+            # Task 3: per-bucket cold-start eval using the final-epoch model
+            if getattr(args, 'sparsity_eval', 0) and show_topk:
+                sparsity_runs.append(topk_eval_buckets(
+                    args, sess, model, user_list_test, train_record_test, test_record_test,
+                    item_set_test, k_list_test, args.batch_size, user_pos_count, sparsity_edges))
+
         if show_ctr:
             auc.append(best_auc)
             f1_score.append(best_f1)
@@ -212,6 +223,9 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         printings_paper = format_paper_recall_block(k_list_test, recall, precision, ndcg if printings_ndcg else None)
         print(printings_paper)
         logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper, printings_ndcg)
+
+    if getattr(args, 'sparsity_eval', 0):
+        logging_sparsity(args, sparsity_runs, k_list_test, sparsity_edges)
     print("average train_Loss", np.mean(train_losses))  # New: Print average losses after training
 
 '''
@@ -304,6 +318,38 @@ def eval_logging_ctr(args, epoch, train_auc, train_f1, eval_auc, eval_f1, test_a
               'test_auc:{:.4f} test_f1:{:.4f}\n'.format(test_auc, test_f1))
 
     fid.close()
+
+
+def logging_sparsity(args, sparsity_runs, k_list, edges):
+    # Task 3: aggregate per-bucket metrics (mean+-std over runs) and append to
+    # result/{model_type}_{dataset}_sparsity_{att}.txt
+    if not sparsity_runs:
+        return
+    names = bucket_names(edges)
+    fid = open('../result/{}_{}_sparsity_{}.txt'.format(args.model_type, args.dataset, _att_tag(args)), 'a')
+
+    fid.write('\n******************************************************************************\n')
+    params = eval(args.params)
+    settings = ''
+    for i in range(len(params)):
+        settings = settings + params[i] + ':{} '.format(eval('args.'+params[i]))
+    fid.write(settings+'\n')
+    fid.write('sparsity_buckets (pos train interactions): {}   k_list: {}   runs: {}\n'.format(
+        edges, k_list, len(sparsity_runs)))
+    fid.write('******************************************************************************\n')
+
+    tagmap = {'recall': 'R', 'ndcg': 'N', 'precision': 'P'}
+    for b in names:
+        avg_count = float(np.mean([r[b]['count'] for r in sparsity_runs]))
+        line = 'bucket:{:<7} users:{:.0f}  '.format(b, avg_count)
+        for metric in ['recall', 'ndcg', 'precision']:
+            for j, k in enumerate(k_list):
+                vals = [r[b][metric][j] for r in sparsity_runs]
+                line += '{}@{}:{:.4f}+-{:.4f}  '.format(tagmap[metric], k, np.nanmean(vals), np.nanstd(vals))
+        fid.write(line + '\n')
+    fid.close()
+    print('sparsity per-bucket results written to ../result/{}_{}_sparsity_{}.txt'.format(
+        args.model_type, args.dataset, _att_tag(args)))
 '''
 ***********************************************
 '''
@@ -412,38 +458,43 @@ def ndcg_at_k(item_sorted, test_set, k):
     return dcg / idcg if idcg > 0 else 0.0
 
 
+def _score_user_items(args, sess, model, user, train_record, item_set, batch_size):
+    # Rank all candidate items (catalog minus the user's training items) by model score.
+    # Shared by the standard top-K eval and the cold-start per-bucket eval (Task 3).
+    test_item_list = list(item_set - train_record[user])
+    item_score_map = dict()
+    start = 0
+    while start + batch_size <= len(test_item_list):
+        items, scores = model.get_scores(sess, {model.user_indices: [user] * batch_size,
+                                                model.item_indices: test_item_list[start:start + batch_size],
+                                                model.node_dropout: [0.]*len(eval(args.layer_size)),
+                                                model.mess_dropout: [0.]*len(eval(args.layer_size))})
+        for item, score in zip(items, scores):
+            item_score_map[item] = score
+        start += batch_size
+
+    # padding the last incomplete minibatch if exists
+    if start < len(test_item_list):
+        items, scores = model.get_scores(
+            sess, {model.user_indices: [user] * batch_size,
+                   model.item_indices: test_item_list[start:] + [test_item_list[-1]] * (
+                           batch_size - len(test_item_list) + start),
+                   model.node_dropout: [0.]*len(eval(args.layer_size)),
+                   model.mess_dropout: [0.]*len(eval(args.layer_size))})
+        for item, score in zip(items, scores):
+            item_score_map[item] = score
+
+    item_score_pair_sorted = sorted(item_score_map.items(), key=lambda x: x[1], reverse=True)
+    return [i[0] for i in item_score_pair_sorted]
+
+
 def topk_eval(args, sess, model, user_list, train_record, test_record, item_set, k_list, batch_size):
     precision_list = {k: [] for k in k_list}
     recall_list = {k: [] for k in k_list}
     ndcg_list = {k: [] for k in k_list}
 
     for user in user_list:
-        test_item_list = list(item_set - train_record[user])
-        item_score_map = dict()
-        start = 0
-        while start + batch_size <= len(test_item_list):
-            items, scores = model.get_scores(sess, {model.user_indices: [user] * batch_size,
-                                                    model.item_indices: test_item_list[start:start + batch_size],
-                                                    model.node_dropout: [0.]*len(eval(args.layer_size)),
-                                                    model.mess_dropout: [0.]*len(eval(args.layer_size))})
-            for item, score in zip(items, scores):
-                item_score_map[item] = score
-            start += batch_size
-
-        # padding the last incomplete minibatch if exists
-        if start < len(test_item_list):
-            items, scores = model.get_scores(
-                sess, {model.user_indices: [user] * batch_size,
-                       model.item_indices: test_item_list[start:] + [test_item_list[-1]] * (
-                               batch_size - len(test_item_list) + start),
-                       model.node_dropout: [0.]*len(eval(args.layer_size)),
-                       model.mess_dropout: [0.]*len(eval(args.layer_size))})
-            for item, score in zip(items, scores):
-                item_score_map[item] = score
-
-        item_score_pair_sorted = sorted(item_score_map.items(), key=lambda x: x[1], reverse=True)
-        item_sorted = [i[0] for i in item_score_pair_sorted]
-
+        item_sorted = _score_user_items(args, sess, model, user, train_record, item_set, batch_size)
         for k in k_list:
             hit_num = len(set(item_sorted[:k]) & test_record[user])
             precision_list[k].append(hit_num / k)
@@ -455,6 +506,67 @@ def topk_eval(args, sess, model, user_list, train_record, test_record, item_set,
     ndcg = [np.mean(ndcg_list[k]) for k in k_list]
 
     return precision, recall, ndcg
+
+
+'''
+***********************************************
+Task 3: cold-start / data-sparsity per-bucket evaluation
+'''
+
+
+def bucket_names(edges):
+    names = ['<{}'.format(edges[0])]
+    for i in range(len(edges) - 1):
+        names.append('{}-{}'.format(edges[i], edges[i + 1]))
+    names.append('{}+'.format(edges[-1]))
+    return names
+
+
+def bucket_label(count, edges):
+    if count < edges[0]:
+        return '<{}'.format(edges[0])
+    for i in range(len(edges) - 1):
+        if edges[i] <= count < edges[i + 1]:
+            return '{}-{}'.format(edges[i], edges[i + 1])
+    return '{}+'.format(edges[-1])
+
+
+def get_user_pos_count(train_data):
+    # profile size = number of positive (label==1) training interactions per user
+    counts = dict()
+    for interaction in train_data:
+        if interaction[2] == 1:
+            counts[interaction[0]] = counts.get(interaction[0], 0) + 1
+    return counts
+
+
+def topk_eval_buckets(args, sess, model, user_list, train_record, test_record, item_set,
+                      k_list, batch_size, user_pos_count, edges):
+    names = bucket_names(edges)
+    prec = {b: {k: [] for k in k_list} for b in names}
+    rec = {b: {k: [] for k in k_list} for b in names}
+    ndc = {b: {k: [] for k in k_list} for b in names}
+    counts = {b: 0 for b in names}
+
+    for user in user_list:
+        b = bucket_label(user_pos_count.get(user, 0), edges)
+        item_sorted = _score_user_items(args, sess, model, user, train_record, item_set, batch_size)
+        counts[b] += 1
+        for k in k_list:
+            hit_num = len(set(item_sorted[:k]) & test_record[user])
+            prec[b][k].append(hit_num / k)
+            rec[b][k].append(hit_num / len(test_record[user]))
+            ndc[b][k].append(ndcg_at_k(item_sorted, test_record[user], k))
+
+    out = {}
+    for b in names:
+        out[b] = {
+            'count': counts[b],
+            'precision': [float(np.mean(prec[b][k])) if prec[b][k] else float('nan') for k in k_list],
+            'recall': [float(np.mean(rec[b][k])) if rec[b][k] else float('nan') for k in k_list],
+            'ndcg': [float(np.mean(ndc[b][k])) if ndc[b][k] else float('nan') for k in k_list],
+        }
+    return out
 
 
 def get_user_record(data, is_train):

@@ -146,6 +146,15 @@ parser.add_argument('--cl_tau', type=float, default=0.2,
 parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate} item-embedding fusion')
 parser.add_argument('--exp_tag', nargs='?', default='', help='optional suffix for result filenames (ablation variants)')
 
+# Task 3: cold-start / data-sparsity evaluation. When on, after training each run the
+# top-K test users are grouped by their number of positive training interactions and
+# per-bucket Precision/Recall/NDCG are logged (use --topk_user_num 0 for all users so
+# every bucket is well populated). Off by default.
+parser.add_argument('--sparsity_eval', type=int, default=0,
+                    help='1: also log per-bucket (cold-start) top-K metrics by user interaction count')
+parser.add_argument('--sparsity_buckets', nargs='?', default='[5,10,20]',
+                    help='bucket edges on positive train interactions; [5,10,20] -> <5, 5-10, 10-20, 20+')
+
 parser.add_argument(
     '--params', 
     nargs='?', 
@@ -155,7 +164,8 @@ parser.add_argument(
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
-            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'fusion\',\'exp_tag\']',
+            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'fusion\',\'exp_tag\','
+            '\'sparsity_eval\',\'sparsity_buckets\']',
     help='paramerts')
 
 show_loss = False
