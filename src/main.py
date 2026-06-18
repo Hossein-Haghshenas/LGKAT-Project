@@ -121,15 +121,22 @@ parser.add_argument('--topk_user_num', type=int, default=100,
 parser.add_argument('--topk_k_list', nargs='?', default='[1,2,5,10,20,50,100]',
                     help='K values for Recall@K, e.g. [2,10,50,100] to match paper tables')
 
+# Phase 1 (OL-LGKAT): evaluation completeness. Both default ON so NDCG/structured output
+# are produced by default; set both to 0 for byte-identical legacy (base-reproduction) logs.
+parser.add_argument('--report_ndcg', type=int, default=1,
+                    help='1: log NDCG@K alongside Precision/Recall (topk files + aggregate block); 0: legacy output')
+parser.add_argument('--structured_out', type=int, default=1,
+                    help='1: also write structured per-run results to result/structured/ (JSON + runs.csv); 0: off')
+
 parser.add_argument(
-    '--params', 
+    '--params',
     nargs='?', 
     default='[\'dataset\',\'aggregator\',\'n_epochs\',\'neighbor_sample_size\','
             '\'dim\',\'n_iter\',\'batch_size\',\'l2_weight\',\'ls_weight\',\'lr\','
             '\'ratio\',\'layer_size\',\'adj_type\',\'alg_type\',\'node_dropout_flag\','
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
-            '\'topk_user_num\',\'topk_k_list\']',
+            '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\',\'structured_out\']',
     help='paramerts')
 
 show_loss = False

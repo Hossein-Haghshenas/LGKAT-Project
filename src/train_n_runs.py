@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import scipy.io as sio
 from model import KGCN
+from evaluation import ranking_metrics_at_ks, write_structured_results
 import os
 
 
@@ -15,6 +16,7 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
     f1_score = []
     precision = []
     recall = []
+    ndcg = []  # Phase 1: per-run best test NDCG@K (parallel to recall/precision)
     epochs_auc = []
     epochs_recall = []
     train_losses = []  # New: To store the loss values
@@ -57,6 +59,7 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         best_f1 = 0
         best_recall = None
         best_precision = None
+        best_ndcg = None
 
         best_auc_epoch = 0
         best_recall_epoch = 0
@@ -134,23 +137,25 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                         np.save('../output/{}_{}_relation_emb.npy'.format(args.model_type, args.dataset), relation_embedding)
 
                 if show_topk:
-                    eval_precision, eval_recall = topk_eval(
+                    eval_precision, eval_recall, eval_ndcg = topk_eval(
                         args, sess, model, user_list_eval, train_record_eval, test_record_eval, item_set_eval, k_list_eval, args.batch_size)
-                    test_precision, test_recall = topk_eval(
+                    test_precision, test_recall, test_ndcg = topk_eval(
                         args, sess, model, user_list_test, train_record_test, test_record_test, item_set_test, k_list_test, args.batch_size)
 
-                    eval_logging_topk(args, step, k_list_eval, eval_precision, eval_recall, test_precision, test_recall)
+                    eval_logging_topk(args, step, k_list_eval, eval_precision, eval_recall, test_precision, test_recall, eval_ndcg, test_ndcg)
                     if eval_recall[idx_eval_r10] > best_r10_eval:
                         best_recall_epoch = step
                         best_r10_eval = eval_recall[idx_eval_r10]
                         best_recall = test_recall
                         best_precision = test_precision
+                        best_ndcg = test_ndcg
 
         if show_ctr:
             auc.append(best_auc)
             f1_score.append(best_f1)
             recall.append(best_recall)
             precision.append(best_precision)
+            ndcg.append(best_ndcg)
 
         if show_topk:
             epochs_recall.append(best_recall_epoch)
@@ -161,6 +166,9 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         f1_score = np.array(f1_score)
         recall = np.array(recall)
         precision = np.array(precision)
+
+        report_ndcg = bool(getattr(args, 'report_ndcg', 0)) and len(ndcg) > 0 and ndcg[0] is not None
+        ndcg_arr = np.array(ndcg) if report_ndcg else None
 
         print(auc)
         print(f1_score)
@@ -177,21 +185,37 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
         for i in range(len(k_list_test)):
             printings_precision = printings_precision + '{:.4f}+\\-{:.4f} '.format(np.mean(precision[:, i]), np.std(precision[:, i]))
 
+        printings_ndcg = ''
+        if ndcg_arr is not None:
+            printings_ndcg = 'average ndcg     : '
+            for i in range(len(k_list_test)):
+                printings_ndcg = printings_ndcg + '{:.4f}+\\-{:.4f} '.format(np.mean(ndcg_arr[:, i]), np.std(ndcg_arr[:, i]))
+
         print(printings_auc)
         print(printings_f1)
         print(printings_recall)
         print(printings_precision)
+        if printings_ndcg:
+            print(printings_ndcg)
 
-        printings_paper = format_paper_recall_block(k_list_test, recall, precision)
+        printings_paper = format_paper_recall_block(k_list_test, recall, precision, ndcg_arr)
         print(printings_paper)
-        logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper)
+        logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper, printings_ndcg)
+
+        if bool(getattr(args, 'structured_out', 0)):
+            try:
+                jp, cp = write_structured_results(
+                    args, k_list_test, auc, f1_score, precision, recall, ndcg_runs=ndcg_arr)
+                print('structured results written:\n  {}\n  {}'.format(jp, cp))
+            except Exception as e:
+                print('[structured_out] skipped (%s)' % e)
     print("average train_Loss", np.mean(train_losses))  # New: Print average losses after training
 
 '''
 ***********************************************
 logging functions
 '''
-def logging_final(args, auc, f1_score, recall, precision, paper_block=''):
+def logging_final(args, auc, f1_score, recall, precision, paper_block='', ndcg=''):
     fid = open('../result/{}_{}_{}.txt'.format(args.model_type, args.dataset, args.att), 'a')
 
     fid.write('\n******************************************************************************\n')
@@ -206,13 +230,16 @@ def logging_final(args, auc, f1_score, recall, precision, paper_block=''):
     fid.write(f1_score+'\n')
     fid.write(recall+'\n')
     fid.write(precision+'\n')
+    if ndcg:
+        fid.write(ndcg+'\n')
     if paper_block:
         fid.write(paper_block + '\n')
 
     fid.close()
 
 
-def eval_logging_topk(args, epoch, k_list, eval_pr, eval_re, test_pr, test_re):
+def eval_logging_topk(args, epoch, k_list, eval_pr, eval_re, test_pr, test_re, eval_nd=None, test_nd=None):
+    report_ndcg = bool(getattr(args, 'report_ndcg', 0)) and eval_nd is not None and test_nd is not None
     fid = open('../result/{}_{}_topk_{}.txt'.format(args.model_type, args.dataset, args.att), 'a')
 
     if epoch == 0:
@@ -235,7 +262,11 @@ def eval_logging_topk(args, epoch, k_list, eval_pr, eval_re, test_pr, test_re):
         fid.write(printings)
         if i == 1 or i == 3:
             fid.write('\n')
-    fid.write('epoch:{:2d} test {}'.format(epoch, format_paper_recall_line(k_list, test_re)))
+    if report_ndcg:
+        nd_line = 'epoch:{:2d} eval ndcg: '.format(epoch) + ''.join('{:.4f}\t'.format(j) for j in eval_nd) + '\n'
+        nd_line += 'test ndcg: ' + ''.join('{:.4f}\t'.format(j) for j in test_nd) + '\n'
+        fid.write(nd_line)
+    fid.write('epoch:{:2d} test {}'.format(epoch, format_paper_recall_line(k_list, test_re, test_nd if report_ndcg else None)))
     fid.write('\n')
     fid.close()
 
@@ -266,16 +297,18 @@ def recall_k_index(k_list, k):
     return min(3, len(k_list) - 1) if len(k_list) > 0 else 0
 
 
-def format_paper_recall_line(k_list, recall_vec):
+def format_paper_recall_line(k_list, recall_vec, ndcg_vec=None):
     line = ''
     for pk in (2, 10, 50, 100):
         if pk in k_list:
             i = k_list.index(pk)
             line += 'R@{}:{:.4f}\t'.format(pk, recall_vec[i])
+            if ndcg_vec is not None:
+                line += 'N@{}:{:.4f}\t'.format(pk, ndcg_vec[i])
     return line.rstrip() if line else '(add K to topk_k_list for paper R@2/10/50/100)\t'
 
 
-def format_paper_recall_block(k_list, recall_runs, precision_runs):
+def format_paper_recall_block(k_list, recall_runs, precision_runs, ndcg_runs=None):
     lines = ['paper_style (mean+-std over runs, test set):']
     for pk in (2, 10, 50, 100):
         if pk not in k_list:
@@ -285,7 +318,12 @@ def format_paper_recall_block(k_list, recall_runs, precision_runs):
         rs = np.std(recall_runs[:, i])
         pm = np.mean(precision_runs[:, i])
         ps = np.std(precision_runs[:, i])
-        lines.append('  R@{} recall: {:.4f}+-{:.4f}  precision: {:.4f}+-{:.4f}'.format(pk, rm, rs, pm, ps))
+        line = '  R@{} recall: {:.4f}+-{:.4f}  precision: {:.4f}+-{:.4f}'.format(pk, rm, rs, pm, ps)
+        if ndcg_runs is not None:
+            nm = np.mean(ndcg_runs[:, i])
+            ns = np.std(ndcg_runs[:, i])
+            line += '  ndcg: {:.4f}+-{:.4f}'.format(nm, ns)
+        lines.append(line)
     return '\n'.join(lines)
 
 
@@ -340,6 +378,7 @@ def ctr_eval(args, sess, model, data, batch_size):
 def topk_eval(args, sess, model, user_list, train_record, test_record, item_set, k_list, batch_size):
     precision_list = {k: [] for k in k_list}
     recall_list = {k: [] for k in k_list}
+    ndcg_list = {k: [] for k in k_list}
 
     for user in user_list:
         test_item_list = list(item_set - train_record[user])
@@ -368,15 +407,17 @@ def topk_eval(args, sess, model, user_list, train_record, test_record, item_set,
         item_score_pair_sorted = sorted(item_score_map.items(), key=lambda x: x[1], reverse=True)
         item_sorted = [i[0] for i in item_score_pair_sorted]
 
-        for k in k_list:
-            hit_num = len(set(item_sorted[:k]) & test_record[user])
-            precision_list[k].append(hit_num / k)
-            recall_list[k].append(hit_num / len(test_record[user]))
+        m = ranking_metrics_at_ks(item_sorted, test_record[user], k_list)
+        for idx, k in enumerate(k_list):
+            precision_list[k].append(m['precision'][idx])
+            recall_list[k].append(m['recall'][idx])
+            ndcg_list[k].append(m['ndcg'][idx])
 
     precision = [np.mean(precision_list[k]) for k in k_list]
     recall = [np.mean(recall_list[k]) for k in k_list]
+    ndcg = [np.mean(ndcg_list[k]) for k in k_list]
 
-    return precision, recall
+    return precision, recall, ndcg
 
 
 def get_user_record(data, is_train):
