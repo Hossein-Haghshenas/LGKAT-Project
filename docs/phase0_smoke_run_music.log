@@ -1,0 +1,49 @@
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-06-18 19:54:37.045846: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-18 19:54:37.065755: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2026-06-18 19:54:37.068219: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: matrix-80
+2026-06-18 19:54:37.068314: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: matrix-80
+2026-06-18 19:54:37.106557: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already create adjacency matrix (5718, 5718) 0.340578556060791
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.013391494750976562
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6046
+epoch 0    train auc: 0.8969  f1: 0.7946    eval auc: 0.8187  f1: 0.7222    test auc: 0.8208  f1: 0.7236
+epoch 1    train_loss: 0.4459
+epoch 1    train auc: 0.9306  f1: 0.8353    eval auc: 0.8318  f1: 0.7414    test auc: 0.8326  f1: 0.7444
+[0.83260206]
+[0.74437831]
+[[0.05833333 0.164      0.346      0.46566667]]
+[[0.06   0.034  0.0148 0.0104]]
+average auc: 0.8326+\-0.0000
+average f1 : 0.7444+\-0.0000
+average recall   : 0.0583+\-0.0000 0.1640+\-0.0000 0.3460+\-0.0000 0.4657+\-0.0000 
+average precision: 0.0600+\-0.0000 0.0340+\-0.0000 0.0148+\-0.0000 0.0104+\-0.0000 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0583+-0.0000  precision: 0.0600+-0.0000
+  R@10 recall: 0.1640+-0.0000  precision: 0.0340+-0.0000
+  R@50 recall: 0.3460+-0.0000  precision: 0.0148+-0.0000
+  R@100 recall: 0.4657+-0.0000  precision: 0.0104+-0.0000
+average train_Loss 0.52526075
