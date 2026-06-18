@@ -1,0 +1,53 @@
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-06-18 20:16:47.625819: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-18 20:16:47.648649: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2026-06-18 20:16:47.651056: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: matrix-80
+2026-06-18 20:16:47.651172: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: matrix-80
+2026-06-18 20:16:47.687567: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already create adjacency matrix (5718, 5718) 0.3418080806732178
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.01433253288269043
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.5998
+epoch 0    train auc: 0.8873  f1: 0.7738    eval auc: 0.8114  f1: 0.7092    test auc: 0.8138  f1: 0.7160
+epoch 1    train_loss: 0.4559
+epoch 1    train auc: 0.9182  f1: 0.8136    eval auc: 0.8262  f1: 0.7321    test auc: 0.8259  f1: 0.7381
+[0.82591215]
+[0.73808534]
+[[0.02833333 0.19733333 0.30133333 0.41433333]]
+[[0.04   0.038  0.0128 0.0088]]
+average auc: 0.8259+\-0.0000
+average f1 : 0.7381+\-0.0000
+average recall   : 0.0283+\-0.0000 0.1973+\-0.0000 0.3013+\-0.0000 0.4143+\-0.0000 
+average precision: 0.0400+\-0.0000 0.0380+\-0.0000 0.0128+\-0.0000 0.0088+\-0.0000 
+average ndcg     : 0.0445+\-0.0000 0.1096+\-0.0000 0.1398+\-0.0000 0.1629+\-0.0000 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0283+-0.0000  precision: 0.0400+-0.0000  ndcg: 0.0445+-0.0000
+  R@10 recall: 0.1973+-0.0000  precision: 0.0380+-0.0000  ndcg: 0.1096+-0.0000
+  R@50 recall: 0.3013+-0.0000  precision: 0.0128+-0.0000  ndcg: 0.1398+-0.0000
+  R@100 recall: 0.4143+-0.0000  precision: 0.0088+-0.0000  ndcg: 0.1629+-0.0000
+structured results written:
+  ../result/structured\KGCN_LightGCN_music_product_20260618_201703.json
+  ../result/structured\runs.csv
+average train_Loss 0.5278747
