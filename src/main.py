@@ -128,6 +128,46 @@ parser.add_argument('--report_ndcg', type=int, default=1,
 parser.add_argument('--structured_out', type=int, default=1,
                     help='1: also write structured per-run results to result/structured/ (JSON + runs.csv); 0: off')
 
+# Phase 3 (OL-LGKAT): temporal/streaming protocol. split='random' (default) keeps the base
+# behaviour; split='temporal' windows the data by timestamp and runs the protocol below.
+parser.add_argument('--split', nargs='?', default='random', help='{random, temporal} data split')
+parser.add_argument('--n_windows', type=int, default=10, help='number of temporal windows (split=temporal)')
+parser.add_argument('--protocol', nargs='?', default='incremental',
+                    help='{incremental, batch} temporal training mode (split=temporal)')
+
+# Phase 4 (OL-LGKAT): forgetting-aware fusion gate. fixed (base) | gate (adaptive per-item) |
+# forgetting_gate (adaptive gate + per-item historical stability signal). Default 'fixed'.
+parser.add_argument('--fusion', nargs='?', default='fixed',
+                    help='{fixed, gate, forgetting_gate} item-embedding fusion')
+parser.add_argument('--n_stability_feats', type=int, default=4,
+                    help='per-item stability feature dim used by forgetting_gate')
+
+# Phase 4: checkpoint/resume controls for the incremental temporal loop.
+parser.add_argument('--resume', type=int, default=0, help='1: resume temporal run from saved state')
+parser.add_argument('--stop_after_window', type=int, default=-1,
+                    help='stop after this window index (for stop/resume testing); -1 = run all')
+parser.add_argument('--deterministic', type=int, default=0,
+                    help='1: single-thread + TF_DETERMINISTIC_OPS for reproducible resume')
+
+# Phase 5: continual-learning baselines for the incremental loop (full-retrain = --protocol
+# batch; fine-tune = incremental + fusion fixed + baseline none).
+parser.add_argument('--baseline', nargs='?', default='none',
+                    help='{none, replay, ewc} incremental CL baseline')
+parser.add_argument('--replay_ratio', type=float, default=1.0,
+                    help='experience replay: #replayed past samples per current-window sample')
+parser.add_argument('--ewc_lambda', type=float, default=0.0,
+                    help='EWC regularization strength (baseline ewc)')
+
+# Phase 6: cold-start bucketed eval + gate interpretability (computed at the final window).
+parser.add_argument('--coldstart', type=int, default=0,
+                    help='1: also report Recall/NDCG bucketed by user interaction count')
+parser.add_argument('--coldstart_buckets', nargs='?', default='[5,20,50]',
+                    help='ascending interaction-count boundaries for cold-start buckets')
+parser.add_argument('--interpret', type=int, default=0,
+                    help='1: export the fusion gate case study for a sample user (gate fusions)')
+parser.add_argument('--interpret_topk', type=int, default=10,
+                    help='number of top items to export in the interpretability case study')
+
 parser.add_argument(
     '--params',
     nargs='?', 
@@ -151,17 +191,25 @@ t = time()
 fixed parameters
 '''
 args = parser.parse_args()
-data = load_data(args)
+
 
 # train(args, data, show_loss, show_topk)
 def train_case_study(args, data, show_loss, show_topk, show_ctr):
     pass
 
 
-if args.logging == 'save':
-    train_n_runs(args, data, show_loss, show_topk, show_ctr)
+if args.split == 'temporal':
+    # Phase 3: temporal/streaming protocol (does not touch the base random-split flow).
+    from data_loader import load_data_temporal
+    from train_temporal import run_temporal_and_log
+    data = load_data_temporal(args)
+    run_temporal_and_log(args, data)
 else:
-    train_case_study(args, data, show_loss, show_topk, show_ctr)
+    data = load_data(args)
+    if args.logging == 'save':
+        train_n_runs(args, data, show_loss, show_topk, show_ctr)
+    else:
+        train_case_study(args, data, show_loss, show_topk, show_ctr)
 
 if show_time:
     print('time used: %d s' % (time() - t))

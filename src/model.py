@@ -79,6 +79,15 @@ class KGCN(object):
 #        self.beta = args.beta
         if self.agg_type in ['gcn', 'graphsage', 'bi']:
             self.weights_agg = self._init_weights_agg()
+
+        # OL-LGKAT fusion gate (Phase 4). 'fixed' = base alpha blend; 'gate' = adaptive
+        # per-item gate; 'forgetting_gate' = gate that also consumes a per-item historical
+        # stability signal (unifies CF/KG fusion with the stability-plasticity trade-off).
+        self.fusion = getattr(args, 'fusion', 'fixed')
+        self.n_stab = int(getattr(args, 'n_stability_feats', 4))
+        if self.fusion in ('gate', 'forgetting_gate') and self.agg_type == 'weighted_avg':
+            self.weights_gate = self._init_weights_gate()
+        self.ewc_lambda = float(getattr(args, 'ewc_lambda', 0.0))   # Phase 5 EWC baseline
         '''
         *****************************************
         '''
@@ -124,6 +133,17 @@ class KGCN(object):
                 self.relation_emb_matrix = tf.compat.v1.get_variable(
                     shape=[n_relation, self.dim], initializer=KGCN.get_initializer(),
                     name='relation_emb_matrix_{}'.format(self.model_type))
+
+        # Phase 4: per-item historical stability table (forgetting-aware gate). A NON-trainable
+        # variable so it is checkpointed/restored with the model (resume keeps stability intact);
+        # written from Python each window via update_stability(), gathered per item in the gate.
+        if self.fusion == 'forgetting_gate':
+            self.item_stability_table = tf.compat.v1.get_variable(
+                shape=[n_item, self.n_stab], initializer=tf.compat.v1.zeros_initializer(),
+                trainable=False, name='item_stability_table_{}'.format(self.model_type))
+            self.stability_ph = tf.compat.v1.placeholder(
+                tf.float32, shape=[n_item, self.n_stab], name='stability_ph_{}'.format(self.model_type))
+            self.assign_stability = tf.compat.v1.assign(self.item_stability_table, self.stability_ph)
 
         '''
         *****************************************
@@ -171,8 +191,19 @@ class KGCN(object):
 
             # combine item embeddings from CF & KG
             if self.agg_type == 'weighted_avg':
-                self.item_embeddings_final = self.alpha * self.item_embeddings_cf + (
-                            1 - self.alpha) * self.item_embeddings_kg
+                if self.fusion in ('gate', 'forgetting_gate'):
+                    # adaptive per-item gate; 'forgetting_gate' also consumes the stability signal
+                    gate_in = tf.concat([self.item_embeddings_cf, self.item_embeddings_kg], axis=-1)
+                    if self.fusion == 'forgetting_gate':
+                        stab = tf.gather(self.item_stability_table, self.item_indices)
+                        gate_in = tf.concat([gate_in, stab], axis=-1)
+                    self.fusion_gate = tf.sigmoid(
+                        tf.matmul(gate_in, self.weights_gate['gate_W']) + self.weights_gate['gate_b'])
+                    self.item_embeddings_final = self.fusion_gate * self.item_embeddings_cf + \
+                        (1 - self.fusion_gate) * self.item_embeddings_kg
+                else:
+                    self.item_embeddings_final = self.alpha * self.item_embeddings_cf + (
+                                1 - self.alpha) * self.item_embeddings_kg
             elif self.agg_type == 'gcn':
                 # item_embeddings = self.alpha*self.item_embeddings_cf + (1-self.alpha)*self.item_embeddings_kg
                 item_embeddings = self.item_embeddings_cf + self.item_embeddings_kg
@@ -336,6 +367,27 @@ class KGCN(object):
                 all_weights['agg_b_2'] = tf.compat.v1.get_variable(
                     shape=shape_b, initializer=KGCN.get_initializer(), name='agg_b_2_{}'.format(self.model_type))
 
+        return all_weights
+
+    '''
+    *****************************************
+    Phase 4: forgetting-aware fusion gate (identity-initialized)
+    '''
+    def _init_weights_gate(self):
+        # Identity init: gate_W = 0, gate_b = logit(alpha) => the gate outputs exactly alpha at
+        # step 0 (== fixed-alpha baseline), so 'gate'/'forgetting_gate' start at the proven base
+        # model and adapt from there. 'forgetting_gate' widens the input with n_stab features.
+        in_dim = 2 * self.dim + (self.n_stab if self.fusion == 'forgetting_gate' else 0)
+        a = min(max(float(self.alpha), 0.01), 0.99)
+        bias_init = float(np.log(a / (1.0 - a)))
+        all_weights = dict()
+        with tf.compat.v1.variable_scope('{}'.format(self.model_type)):
+            all_weights['gate_W'] = tf.compat.v1.get_variable(
+                shape=[in_dim, 1], initializer=tf.compat.v1.zeros_initializer(),
+                name='gate_W_{}'.format(self.model_type))
+            all_weights['gate_b'] = tf.compat.v1.get_variable(
+                initializer=tf.constant([bias_init], dtype=tf.float32),
+                name='gate_b_{}'.format(self.model_type))
         return all_weights
 
     '''
@@ -591,6 +643,9 @@ class KGCN(object):
                     if weights.startswith('att_w'):
                         self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_att[weights])
 
+            if getattr(self, 'fusion', 'fixed') in ('gate', 'forgetting_gate') and self.agg_type == 'weighted_avg':
+                self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_gate['gate_W'])
+
             if self.agg_type in ['gcn', 'graphsage']:
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_agg['agg_w_1'])
 
@@ -614,6 +669,13 @@ class KGCN(object):
         '''
 
         self.loss = self.base_loss + self.l2_weight * self.l2_loss
+
+        # Phase 5 EWC baseline: elastic weight consolidation penalty on the embeddings
+        # (lambda/2 * sum F * (theta - theta_star)^2). Off (graph unchanged) unless ewc_lambda > 0.
+        if getattr(self, 'ewc_lambda', 0.0) > 0:
+            self._build_ewc()
+            self.loss = self.loss + self.ewc_penalty
+
         self.optimizer = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(self.loss)
 
     def train(self, sess, feed_dict):
@@ -635,3 +697,53 @@ class KGCN(object):
             [self.user_emb_matrix, self.entity_emb_matrix, self.relation_emb_matrix])
 
         return user_emb, entity_emb, relation_emb
+
+    def update_stability(self, sess, stability_matrix):
+        """Phase 4: write the per-item stability table (shape [n_item, n_stab]) from Python.
+        No-op unless fusion == 'forgetting_gate'."""
+        if getattr(self, 'assign_stability', None) is not None:
+            sess.run(self.assign_stability, feed_dict={self.stability_ph: stability_matrix})
+
+    '''
+    *****************************************
+    Phase 5: EWC (elastic weight consolidation) on the embedding matrices
+    '''
+    def _build_ewc(self):
+        self._ewc_params = {'user': self.user_emb_matrix, 'entity': self.entity_emb_matrix,
+                            'relation': self.relation_emb_matrix}
+        self.ewc_F = {}; self.ewc_star = {}
+        self.ewc_F_ph = {}; self.ewc_star_ph = {}; self.ewc_assign = []
+        penalty = 0.0
+        with tf.compat.v1.variable_scope('{}_ewc'.format(self.model_type)):
+            for name, p in self._ewc_params.items():
+                F = tf.compat.v1.get_variable('F_' + name, shape=p.shape,
+                    initializer=tf.compat.v1.zeros_initializer(), trainable=False)
+                star = tf.compat.v1.get_variable('star_' + name, shape=p.shape,
+                    initializer=tf.compat.v1.zeros_initializer(), trainable=False)
+                F_ph = tf.compat.v1.placeholder(tf.float32, p.shape)
+                star_ph = tf.compat.v1.placeholder(tf.float32, p.shape)
+                self.ewc_F[name] = F; self.ewc_star[name] = star
+                self.ewc_F_ph[name] = F_ph; self.ewc_star_ph[name] = star_ph
+                self.ewc_assign += [tf.compat.v1.assign(F, F_ph), tf.compat.v1.assign(star, star_ph)]
+                penalty = penalty + tf.reduce_sum(input_tensor=F * tf.square(p - star))
+        self.ewc_penalty = 0.5 * self.ewc_lambda * penalty
+        # Fisher = (d base_loss / d theta)^2. A param the loss does not depend on (e.g. relation
+        # embeddings under model_type LightGCN) has grad None -> use zeros so EWC stays robust.
+        names = ['user', 'entity', 'relation']
+        g = tf.gradients(ys=self.base_loss, xs=[self._ewc_params[n] for n in names])
+        self.ewc_fisher = {n: (tf.square(gi) if gi is not None else tf.zeros_like(self._ewc_params[n]))
+                           for n, gi in zip(names, g)}
+
+    def compute_fisher(self, sess, feed_dict):
+        return sess.run(self.ewc_fisher, feed_dict)
+
+    def get_param_values(self, sess):
+        u, e, r = sess.run([self.user_emb_matrix, self.entity_emb_matrix, self.relation_emb_matrix])
+        return {'user': u, 'entity': e, 'relation': r}
+
+    def set_ewc(self, sess, F_dict, star_dict):
+        fd = {}
+        for name in self.ewc_F_ph:
+            fd[self.ewc_F_ph[name]] = F_dict[name]
+            fd[self.ewc_star_ph[name]] = star_dict[name]
+        sess.run(self.ewc_assign, feed_dict=fd)

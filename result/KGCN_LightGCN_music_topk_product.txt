@@ -123,3 +123,18 @@ epoch: 7 test R@2:0.0283	R@10:0.1085	R@50:0.2803	R@100:0.3688
 epoch: 8 eval precision: 0.0250	0.0220	0.0132	0.0084	eval recall: 0.0187	0.0853	0.2808	0.3663	
 epoch: 8 test precision: 0.0250	0.0230	0.0112	0.0084	test recall: 0.0258	0.1085	0.2737	0.3708	
 epoch: 8 test R@2:0.0258	R@10:0.1085	R@50:0.2737	R@100:0.3708
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:2 neighbor_sample_size:8 dim:16 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[16] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:1 logging:save pretrain:0 topk_user_num:50 topk_k_list:[2,10,50,100] report_ndcg:1 structured_out:1 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0500	0.0240	0.0112	0.0084	eval recall: 0.0483	0.0967	0.2363	0.3977	
+epoch: 0 test precision: 0.0400	0.0180	0.0120	0.0080	test recall: 0.0467	0.0823	0.2953	0.3843	
+epoch: 0 eval ndcg: 0.0481	0.0668	0.1061	0.1362	
+test ndcg: 0.0404	0.0555	0.1135	0.1311	
+epoch: 0 test R@2:0.0467	N@2:0.0404	R@10:0.0823	N@10:0.0555	R@50:0.2953	N@50:0.1135	R@100:0.3843	N@100:0.1311
+epoch: 1 eval precision: 0.0300	0.0240	0.0128	0.0086	eval recall: 0.0267	0.0967	0.2687	0.4077	
+epoch: 1 test precision: 0.0300	0.0160	0.0124	0.0080	test recall: 0.0267	0.0723	0.3003	0.3843	
+epoch: 1 eval ndcg: 0.0277	0.0598	0.1074	0.1329	
+test ndcg: 0.0277	0.0469	0.1102	0.1267	
+epoch: 1 test R@2:0.0267	N@2:0.0277	R@10:0.0723	N@10:0.0469	R@50:0.3003	N@50:0.1102	R@100:0.3843	N@100:0.1267

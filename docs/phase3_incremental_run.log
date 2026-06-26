@@ -1,0 +1,57 @@
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-06-18 21:32:27.685632: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-18 21:32:27.705833: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2026-06-18 21:32:27.708246: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: matrix-80
+2026-06-18 21:32:27.708327: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: matrix-80
+2026-06-18 21:32:27.750735: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+temporal data loaded: 6036 users, 2254 items, 753774 interactions
+temporal protocol: mode=incremental  windows=6  (sizes=[125629, 125629, 125629, 125629, 125629, 125629])
+already create adjacency matrix (8290, 8290) 0.5440258979797363
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.0693809986114502
+Attention: product
+[incremental] eval window 1  train_rows=125629  AUC=0.5385 F1=0.5173 R@10=0.0634 NDCG@10=0.1304
+already create adjacency matrix (8290, 8290) 0.7072112560272217
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.12227725982666016
+Attention: product
+[incremental] eval window 2  train_rows=125629  AUC=0.5750 F1=0.5419 R@10=0.0578 NDCG@10=0.1193
+already create adjacency matrix (8290, 8290) 0.883692741394043
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.18346071243286133
+Attention: product
+[incremental] eval window 3  train_rows=125629  AUC=0.5042 F1=0.4927 R@10=0.0241 NDCG@10=0.0540
+already create adjacency matrix (8290, 8290) 0.908503532409668
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.23772811889648438
+Attention: product
+[incremental] eval window 4  train_rows=125629  AUC=0.5979 F1=0.5518 R@10=0.0559 NDCG@10=0.1877
+already create adjacency matrix (8290, 8290) 0.9319229125976562
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.2865028381347656
+Attention: product
+[incremental] eval window 5  train_rows=125629  AUC=0.7200 F1=0.6566 R@10=0.0663 NDCG@10=0.1999
+temporal results written:
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental.csv
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental.json

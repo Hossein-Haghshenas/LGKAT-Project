@@ -159,6 +159,70 @@ def dataset_split(rating_np, args):
     return train_data, eval_data, test_data
 
 
+'''
+*****************************************
+Temporal / streaming protocol (OL-LGKAT Phase 3)
+*****************************************
+'''
+def temporal_windows(rating_np, n_windows):
+    """Split interactions into n_windows contiguous, equal-count time windows.
+
+    Requires a timestamp column (col 3). Sorted by timestamp with a stable sort so
+    equal-timestamp rows keep a deterministic order. Returns a list of arrays. Because
+    the split is contiguous over time-sorted data, max(ts of window i) <= min(ts of
+    window i+1), which is what guarantees no future->past leakage across windows.
+    """
+    if rating_np.ndim != 2 or rating_np.shape[1] < 4:
+        raise ValueError('temporal split requires a 4-column ratings_final '
+                         '(user item label timestamp); this dataset has no timestamps.')
+    order = np.argsort(rating_np[:, 3], kind='stable')
+    return np.array_split(rating_np[order], n_windows)
+
+
+def build_user_item_adj(args, n_user, n_item, interactions):
+    """Build the (smoothed) normalized UI adjacency from a GIVEN set of interactions.
+
+    Used by the temporal trainer to build a *causal* adjacency per window (only edges
+    from interactions up to the current window). Mirrors the adjacency choice in
+    load_rating so batch/incremental graphs are built exactly like the base model.
+    """
+    R = sp.dok_matrix((n_user, n_item), dtype=np.float32)
+    for i in range(interactions.shape[0]):
+        if interactions[i, 2] > 0.5:
+            R[interactions[i, 0], interactions[i, 1]] = 1
+    plain_adj, norm_adj, mean_adj = create_adj_mat(n_user, n_item, R)
+    if args.adj_type == 'plain':
+        adj = plain_adj
+    elif args.adj_type == 'norm':
+        adj = norm_adj
+    elif args.adj_type == 'gcmc':
+        adj = mean_adj
+    else:
+        adj = mean_adj + sp.eye(mean_adj.shape[0])
+    return adjacency_power(adj, args.smoothing_steps)
+
+
+def load_data_temporal(args):
+    """Loader for the temporal protocol: returns the FULL rating array (with timestamps)
+    instead of a random train/eval/test split. The trainer windows it by time."""
+    rating_file = '../data/' + args.dataset + '/ratings_final'
+    if os.path.exists(rating_file + '.npy'):
+        rating_np = np.load(rating_file + '.npy')
+    else:
+        rating_np = np.loadtxt(rating_file + '.txt', dtype=np.int64)
+        np.save(rating_file + '.npy', rating_np)
+    if rating_np.ndim != 2 or rating_np.shape[1] < 4:
+        raise ValueError('--split temporal requires a timestamped (4-col) dataset; '
+                         '%s has %d column(s). Prepare it with preprocess_temporal.py.'
+                         % (args.dataset, rating_np.shape[1] if rating_np.ndim == 2 else 1))
+    n_user = len(set(rating_np[:, 0]))
+    n_item = len(set(rating_np[:, 1]))
+    n_entity, n_relation, adj_entity, adj_relation = load_kg(args)
+    print('temporal data loaded: %d users, %d items, %d interactions' %
+          (n_user, n_item, rating_np.shape[0]))
+    return n_user, n_item, n_entity, n_relation, rating_np, adj_entity, adj_relation
+
+
 def load_kg(args):
     print('reading KG file ...')
 

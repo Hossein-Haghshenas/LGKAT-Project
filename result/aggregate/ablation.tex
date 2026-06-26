@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Ablation: branches and fusion variants (mean$\pm$std over seeds).}
+\label{tab:ablation}
+\begin{tabular}{lrrrrrr}
+\toprule
+cell & avg\_auc\_mean & avg\_auc\_std & avg\_ndcg10\_mean & avg\_ndcg10\_std & final\_ndcg10\_mean & final\_ndcg10\_std \\
+\midrule
+full\_fixed & 0.5661 & 0.0045 & 0.0996 & 0.0133 & 0.1461 & 0.0152 \\
+full\_gate & 0.5667 & 0.0044 & 0.0994 & 0.0101 & 0.1284 & 0.0051 \\
+full\_forgetting & 0.5666 & 0.0044 & 0.1048 & 0.014 & 0.142 & 0.0153 \\
+no\_kg\_lightgcn & 0.5652 & 0.0024 & 0.0785 & 0.0062 & 0.1423 & 0.0044 \\
+no\_lightgcn\_kgcn & 0.566 & 0.0041 & 0.104 & 0.0019 & 0.1618 & 0.0152 \\
+\bottomrule
+\end{tabular}
+\end{table}

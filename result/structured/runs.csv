@@ -1,0 +1,2 @@
+timestamp,dataset,model_type,att,fusion,alpha,dim,lr,n_epochs,neighbor_sample_size,n_iter,batch_size,runs,auc_mean,auc_std,f1_mean,f1_std,P@2_mean,R@2_mean,N@2_mean,P@10_mean,R@10_mean,N@10_mean,P@50_mean,R@50_mean,N@50_mean,P@100_mean,R@100_mean,N@100_mean
+20260626_094950,music,KGCN_LightGCN,product,fixed,0.5,16,0.005,2,8,1,128,1,0.813596,0.0,0.721952,0.0,0.04,0.046667,0.040356,0.018,0.082333,0.055547,0.012,0.295333,0.113515,0.008,0.384333,0.131094

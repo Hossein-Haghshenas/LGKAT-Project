@@ -1,0 +1,9 @@
+method,dataset,NDCG@10,AUC,source
+Experience Replay,ml1m,0.1227,0.5748,this work (result/)
+OL-LGKAT (forgetting gate),ml1m,0.1082,0.5607,this work (result/)
+Fine-Tune,ml1m,0.1032,0.5601,this work (result/)
+EWC,ml1m,0.1032,0.5601,this work (result/)
+Full-Retrain (batch),ml1m,0.1005,0.5536,this work (result/)
+GraphSAIL,ml1m,,,FILL FROM PUBLISHED PAPER - do not fabricate
+Light-Distillation,ml1m,,,FILL FROM PUBLISHED PAPER - do not fabricate
+CKIN,ml1m,,,FILL FROM PUBLISHED PAPER - do not fabricate

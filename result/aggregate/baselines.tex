@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Continual-learning baselines under the temporal protocol.}
+\label{tab:baselines}
+\begin{tabular}{lrrrrr}
+\toprule
+method & avg\_auc & avg\_ndcg10 & final\_ndcg10 & total\_sec & peak\_train\_rows \\
+\midrule
+Experience Replay & 0.5748 & 0.1227 & 0.1823 & 66.3 & 301510 \\
+OL-LGKAT (forgetting gate) & 0.5607 & 0.1082 & 0.1453 & 62.8 & 150755 \\
+Fine-Tune & 0.5601 & 0.1032 & 0.1527 & 63.1 & 150755 \\
+EWC & 0.5601 & 0.1032 & 0.1527 & 76.5 & 150755 \\
+Full-Retrain (batch) & 0.5536 & 0.1005 & 0.1595 & 66.7 & 603020 \\
+\bottomrule
+\end{tabular}
+\end{table}

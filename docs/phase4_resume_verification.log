@@ -1,0 +1,110 @@
+=== FULL (windows 1,2,3) ===
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-06-19 09:37:18.921567: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-19 09:37:18.969844: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2026-06-19 09:37:18.972628: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: matrix-80
+2026-06-19 09:37:18.972717: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: matrix-80
+2026-06-19 09:37:19.143200: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+temporal data loaded: 6036 users, 2254 items, 753774 interactions
+temporal protocol: mode=incremental fusion=forgetting_gate windows=4 (sizes=[188444, 188444, 188443, 188443]) deterministic=1
+already create adjacency matrix (8290, 8290) 1.1636073589324951
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.18057703971862793
+Attention: product
+[incremental/forgetting_gate] eval window 1  train_rows=188444  AUC=0.5328 F1=0.5150 R@10=0.0490 NDCG@10=0.0692
+already create adjacency matrix (8290, 8290) 1.4198462963104248
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.29565858840942383
+Attention: product
+[incremental/forgetting_gate] eval window 2  train_rows=188444  AUC=0.5148 F1=0.5055 R@10=0.0469 NDCG@10=0.0583
+already create adjacency matrix (8290, 8290) 1.7146522998809814
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.46855950355529785
+Attention: product
+[incremental/forgetting_gate] eval window 3  train_rows=188443  AUC=0.6701 F1=0.6101 R@10=0.0088 NDCG@10=0.0497
+temporal results written:
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental_forgetting_gate.csv
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental_forgetting_gate.json
+=== PARTIAL (stop after window index 1) ===
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-06-19 09:38:32.172768: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-19 09:38:32.219319: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2026-06-19 09:38:32.225071: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: matrix-80
+2026-06-19 09:38:32.225156: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: matrix-80
+2026-06-19 09:38:32.290058: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+temporal data loaded: 6036 users, 2254 items, 753774 interactions
+temporal protocol: mode=incremental fusion=forgetting_gate windows=4 (sizes=[188444, 188444, 188443, 188443]) deterministic=1
+already create adjacency matrix (8290, 8290) 1.1524322032928467
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.15637445449829102
+Attention: product
+[incremental/forgetting_gate] eval window 1  train_rows=188444  12.2s  AUC=0.5328 F1=0.5150 R@10=0.0490 NDCG@10=0.0692
+already create adjacency matrix (8290, 8290) 1.8465344905853271
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.4534921646118164
+Attention: product
+[incremental/forgetting_gate] eval window 2  train_rows=188444  17.3s  AUC=0.5148 F1=0.5055 R@10=0.0469 NDCG@10=0.0583
+[stop] stopping after window index 1 (--stop_after_window)
+temporal results written:
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental_forgetting_gate.csv
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental_forgetting_gate.json
+=== RESUME (window 3) ===
+D:\projects\current-git-project\LGKAT-Project\src\data_loader.py:109: RuntimeWarning: divide by zero encountered in power
+  d_inv = np.power(rowsum, -1).flatten()
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-06-19 09:39:22.123132: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-19 09:39:22.156893: E tensorflow/stream_executor/cuda/cuda_driver.cc:271] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2026-06-19 09:39:22.162599: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: matrix-80
+2026-06-19 09:39:22.162874: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: matrix-80
+2026-06-19 09:39:22.249574: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+temporal data loaded: 6036 users, 2254 items, 753774 interactions
+temporal protocol: mode=incremental fusion=forgetting_gate windows=4 (sizes=[188444, 188444, 188443, 188443]) deterministic=1
+[resume] continuing temporal run from window index 2
+already create adjacency matrix (8290, 8290) 1.7866332530975342
+generate single-normalized adjacency matrix.
+generate single-normalized adjacency matrix.
+already normalize adjacency matrix 0.5170354843139648
+Attention: product
+[incremental/forgetting_gate] eval window 3  train_rows=188443  19.0s  AUC=0.6701 F1=0.6101 R@10=0.0088 NDCG@10=0.0497
+temporal results written:
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental_forgetting_gate.csv
+  ../result/temporal\KGCN_LightGCN_ml1m_incremental_forgetting_gate.json
+=== COMPARE ===
+full windows [1, 2, 3] | resumed windows [1, 2, 3]
+MAX_ABS_DIFF=0.000e+00
+VERDICT IDENTICAL
+
+DONE_RESUME_VERIFY
