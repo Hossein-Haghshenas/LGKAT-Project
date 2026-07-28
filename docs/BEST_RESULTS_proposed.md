@@ -1,4 +1,8 @@
-# Best proposed results vs Scientific Reports (LGKAT Product)
+# Best results — proposed model (`major-version-1`)
+
+Scoreboard for the **proposed** LGKAT variant on this branch: paper Product baseline
+plus flag-gated upgrades (fusion gate / fixed, cross-view CL, SimGCL, LR decay, early
+stop, `--fast_eval`). Sibling docs for later models: `docs/BEST_RESULTS_<model>.md`.
 
 Snapshot date: **2026-07-28**.  
 Paper baselines = Product LGKAT row in Tables 2–3 (`scripts/paper_targets_product.py`).  
