@@ -136,6 +136,22 @@ parser.add_argument('--cl_lambda', type=float, default=0.1,
 parser.add_argument('--cl_tau', type=float, default=0.2,
                     help='temperature tau for the InfoNCE cosine similarity')
 
+# SimGCL-style noise contrastive on CF embeddings (Yu et al.). Off by default.
+parser.add_argument('--use_simgcl', type=int, default=0,
+                    help='1: add SimGCL noise InfoNCE on CF user/item embeddings; 0: off')
+parser.add_argument('--simgcl_lambda', type=float, default=0.1,
+                    help='weight of the SimGCL loss in the multi-task objective')
+parser.add_argument('--simgcl_eps', type=float, default=0.1,
+                    help='noise magnitude eps for SimGCL embedding perturbation')
+
+# training schedule helpers (off by default — fixed 39 epochs + constant lr = paper path)
+parser.add_argument('--lr_decay', type=float, default=1.0,
+                    help='per-epoch exponential LR decay factor; 1.0 = no decay (e.g. 0.95)')
+parser.add_argument('--early_stop', type=int, default=0,
+                    help='patience in epochs on eval R@10 (or eval AUC if top-K off); 0 = disabled')
+parser.add_argument('--early_stop_min_epoch', type=int, default=0,
+                    help='do not early-stop before this epoch (warmup for slow-start datasets like book)')
+
 # Task 2: ablation switches.
 #   --fusion: item-embedding fusion for weighted_avg. 'fixed' = alpha-blend (paper
 #     default, base reproduction). 'gate' = adaptive gate (ablation 2c), identity-
@@ -145,6 +161,12 @@ parser.add_argument('--cl_tau', type=float, default=0.2,
 #     separate files. Empty (default) keeps the legacy filenames byte-for-byte.
 parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate} item-embedding fusion')
 parser.add_argument('--exp_tag', nargs='?', default='', help='optional suffix for result filenames (ablation variants)')
+
+# Eval-only speedup: materialize LightGCN user/item tables once per epoch (dropout off)
+# and reuse them for CTR/top-K scoring so full-graph sparse propagation is not repeated
+# on every scoring batch. Off by default — training graph and default-flag results unchanged.
+parser.add_argument('--fast_eval', type=int, default=0,
+                    help='1: cache LightGCN embeddings once per epoch for CTR/top-K; 0: legacy eval')
 
 # Task 3: cold-start / data-sparsity evaluation. When on, after training each run the
 # top-K test users are grouped by their number of positive training interactions and
@@ -174,7 +196,8 @@ parser.add_argument(
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
-            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'fusion\',\'exp_tag\','
+            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
+            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'fast_eval\','
             '\'sparsity_eval\',\'sparsity_buckets\','
             '\'interpret\',\'interpret_user\',\'interpret_topk\']',
     help='paramerts')

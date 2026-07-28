@@ -30,10 +30,14 @@ def load_rating(args):
     *****************************************
     Rating Matrix for NGCF
     '''
-    R = sp.dok_matrix((n_user, n_item), dtype=np.float32)
-    for i in range(train_data.shape[0]):
-        if train_data[i, 2]>0.5:
-            R[train_data[i, 0], train_data[i, 1]] = 1
+    # keep R sparse end-to-end (dok loop + lil block-assign densifies ~n_user*n_item)
+    pos = train_data[train_data[:, 2] > 0.5]
+    R = sp.coo_matrix(
+        (np.ones(pos.shape[0], dtype=np.float32), (pos[:, 0], pos[:, 1])),
+        shape=(n_user, n_item),
+        dtype=np.float32,
+    ).tocsr()
+    R.data[:] = 1.0  # binary like dok overwrite if duplicate (u,i) pairs appear
 
     plain_adj, norm_adj, mean_adj = get_adj_mat(args, n_user, n_item, R)
     if args.adj_type == 'plain':
@@ -66,36 +70,34 @@ From NGCF
 def get_adj_mat(args, n_user, n_item, R):
     path = '../data/{}'.format(args.dataset)
     print('Creating UI Graph ...')
-    adj_mat, norm_adj_mat, mean_adj_mat = create_adj_mat(n_user, n_item, R)
+    try:
+        t1 = time()
+        adj_mat = sp.load_npz(path + '/s_adj_mat.npz')
+        norm_adj_mat = sp.load_npz(path + '/s_norm_adj_mat.npz')
+        mean_adj_mat = sp.load_npz(path + '/s_mean_adj_mat.npz')
+        print('already load adj matrix', adj_mat.shape, time() - t1)
+    except Exception:
+        adj_mat, norm_adj_mat, mean_adj_mat = create_adj_mat(n_user, n_item, R)
+        sp.save_npz(path + '/s_adj_mat.npz', adj_mat)
+        sp.save_npz(path + '/s_norm_adj_mat.npz', norm_adj_mat)
+        sp.save_npz(path + '/s_mean_adj_mat.npz', mean_adj_mat)
     print('Finish Creating Adjacency Matrix of UI Graph.')
-
     return adj_mat, norm_adj_mat, mean_adj_mat
 
-# def get_adj_mat(args, n_user, n_item, R):
-#     path = '../Dataset/{}'.format(args.dataset)
-#     try:
-#         t1 = time()
-#         adj_mat = sp.load_npz(path + '/s_adj_mat.npz')
-#         norm_adj_mat = sp.load_npz(path + '/s_norm_adj_mat.npz')
-#         mean_adj_mat = sp.load_npz(path + '/s_mean_adj_mat.npz')
-#         print('already load adj matrix', adj_mat.shape, time() - t1)
-
-#     except Exception:
-#         adj_mat, norm_adj_mat, mean_adj_mat = create_adj_mat(n_user, n_item, R)
-#         sp.save_npz(path + '/s_adj_mat.npz', adj_mat)
-#         sp.save_npz(path + '/s_norm_adj_mat.npz', norm_adj_mat)
-#         sp.save_npz(path + '/s_mean_adj_mat.npz', mean_adj_mat)
-#     return adj_mat, norm_adj_mat, mean_adj_mat
 
 def create_adj_mat(n_user, n_item, R):
+    # scipy lil block-assign calls toarray() on R → ~11.7GiB densify on restaurant.
+    # build the bipartite block via COO index concat (values identical, stays sparse).
     t1 = time()
-    adj_mat = sp.dok_matrix((n_user + n_item, n_user + n_item), dtype=np.float32)
-    adj_mat = adj_mat.tolil()
-    R = R.tolil()
-
-    adj_mat[:n_user, n_user:] = R
-    adj_mat[n_user:, :n_user] = R.T
-    adj_mat = adj_mat.todok()
+    R_coo = R.tocoo()
+    rows = np.concatenate([R_coo.row, R_coo.col + n_user])
+    cols = np.concatenate([R_coo.col + n_user, R_coo.row])
+    data = np.concatenate([R_coo.data, R_coo.data]).astype(np.float32)
+    adj_mat = sp.coo_matrix(
+        (data, (rows, cols)),
+        shape=(n_user + n_item, n_user + n_item),
+        dtype=np.float32,
+    ).tocsr()
     print('already create adjacency matrix', adj_mat.shape, time() - t1)
 
     t2 = time()
@@ -111,19 +113,11 @@ def create_adj_mat(n_user, n_item, R):
         d_mat_inv = sp.diags(d_inv)
 
         norm_adj = d_mat_inv.dot(adj)
-        # norm_adj = adj.dot(d_mat_inv)
         print('generate single-normalized adjacency matrix.')
         return norm_adj.tocoo()
 
-    def check_adj_if_equal(adj):
-        dense_A = np.array(adj.todense())
-        degree = np.sum(dense_A, axis=1, keepdims=False)
-
-        temp = np.dot(np.diag(np.power(degree, -1)), dense_A)
-        print('check normalized adjacency matrix whether equal to this laplacian matrix.')
-        return temp
-
-    norm_adj_mat = normalized_adj_single(adj_mat + sp.eye(adj_mat.shape[0]))
+    eye = sp.eye(adj_mat.shape[0], dtype=np.float32, format='csr')
+    norm_adj_mat = normalized_adj_single(adj_mat + eye)
     mean_adj_mat = normalized_adj_single(adj_mat)
 
     print('already normalize adjacency matrix', time() - t2)

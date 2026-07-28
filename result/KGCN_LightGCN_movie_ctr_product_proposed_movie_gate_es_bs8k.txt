@@ -1,0 +1,47 @@
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:8192 l2_weight:5e-06 ls_weight:0 lr:0.02 ratio:1 layer_size:[32] adj_type:plain alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:gate exp_tag:proposed_movie_gate_es_bs8k fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.9778 train_f1:0.9424 eval_auc:0.9649 eval_f1:0.9171 test_auc:0.9652 test_f1:0.9173
+epoch: 1 train_auc:0.9782 train_f1:0.9420 eval_auc:0.9653 eval_f1:0.9172 test_auc:0.9655 test_f1:0.9176
+epoch: 2 train_auc:0.9740 train_f1:0.9353 eval_auc:0.9590 eval_f1:0.9066 test_auc:0.9591 test_f1:0.9067
+epoch: 3 train_auc:0.9787 train_f1:0.9429 eval_auc:0.9653 eval_f1:0.9192 test_auc:0.9655 test_f1:0.9195
+epoch: 4 train_auc:0.9779 train_f1:0.9420 eval_auc:0.9640 eval_f1:0.9162 test_auc:0.9642 test_f1:0.9165
+epoch: 5 train_auc:0.9796 train_f1:0.9437 eval_auc:0.9669 eval_f1:0.9197 test_auc:0.9670 test_f1:0.9195
+epoch: 6 train_auc:0.9742 train_f1:0.9349 eval_auc:0.9582 eval_f1:0.9027 test_auc:0.9583 test_f1:0.9029
+epoch: 7 train_auc:0.9715 train_f1:0.9324 eval_auc:0.9562 eval_f1:0.9040 test_auc:0.9562 test_f1:0.9042
+epoch: 8 train_auc:0.9807 train_f1:0.9450 eval_auc:0.9675 eval_f1:0.9187 test_auc:0.9677 test_f1:0.9190
+epoch: 9 train_auc:0.9808 train_f1:0.9462 eval_auc:0.9687 eval_f1:0.9229 test_auc:0.9689 test_f1:0.9230
+epoch:10 train_auc:0.9808 train_f1:0.9461 eval_auc:0.9685 eval_f1:0.9227 test_auc:0.9687 test_f1:0.9228
+epoch:11 train_auc:0.9812 train_f1:0.9466 eval_auc:0.9689 eval_f1:0.9236 test_auc:0.9692 test_f1:0.9241
+epoch:12 train_auc:0.9813 train_f1:0.9466 eval_auc:0.9688 eval_f1:0.9224 test_auc:0.9691 test_f1:0.9225
+epoch:13 train_auc:0.9817 train_f1:0.9472 eval_auc:0.9696 eval_f1:0.9245 test_auc:0.9697 test_f1:0.9248
+epoch:14 train_auc:0.9815 train_f1:0.9469 eval_auc:0.9691 eval_f1:0.9230 test_auc:0.9694 test_f1:0.9233
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:8192 l2_weight:5e-06 ls_weight:0 lr:0.02 ratio:1 layer_size:[32] adj_type:plain alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:gate exp_tag:proposed_movie_gate_es_bs8k fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.9777 train_f1:0.9412 eval_auc:0.9643 eval_f1:0.9157 test_auc:0.9646 test_f1:0.9159
+epoch: 1 train_auc:0.9771 train_f1:0.9404 eval_auc:0.9638 eval_f1:0.9159 test_auc:0.9640 test_f1:0.9161
+epoch: 2 train_auc:0.9788 train_f1:0.9428 eval_auc:0.9657 eval_f1:0.9195 test_auc:0.9658 test_f1:0.9200
+epoch: 3 train_auc:0.9784 train_f1:0.9429 eval_auc:0.9645 eval_f1:0.9165 test_auc:0.9646 test_f1:0.9168
+epoch: 4 train_auc:0.9773 train_f1:0.9422 eval_auc:0.9631 eval_f1:0.9150 test_auc:0.9632 test_f1:0.9151
+epoch: 5 train_auc:0.9813 train_f1:0.9467 eval_auc:0.9693 eval_f1:0.9247 test_auc:0.9694 test_f1:0.9248
+epoch: 6 train_auc:0.9811 train_f1:0.9464 eval_auc:0.9690 eval_f1:0.9257 test_auc:0.9693 test_f1:0.9257
+epoch: 7 train_auc:0.9799 train_f1:0.9443 eval_auc:0.9669 eval_f1:0.9201 test_auc:0.9671 test_f1:0.9201
+epoch: 8 train_auc:0.9805 train_f1:0.9457 eval_auc:0.9680 eval_f1:0.9219 test_auc:0.9681 test_f1:0.9221
+epoch: 9 train_auc:0.9807 train_f1:0.9456 eval_auc:0.9684 eval_f1:0.9234 test_auc:0.9684 test_f1:0.9235
+epoch:10 train_auc:0.9809 train_f1:0.9466 eval_auc:0.9686 eval_f1:0.9236 test_auc:0.9688 test_f1:0.9242
+epoch:11 train_auc:0.9651 train_f1:0.9256 eval_auc:0.9453 eval_f1:0.8935 test_auc:0.9456 test_f1:0.8939
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:8192 l2_weight:5e-06 ls_weight:0 lr:0.02 ratio:1 layer_size:[32] adj_type:plain alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:gate exp_tag:proposed_movie_gate_es_bs8k fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.9779 train_f1:0.9433 eval_auc:0.9659 eval_f1:0.9208 test_auc:0.9661 test_f1:0.9211
+epoch: 1 train_auc:0.9784 train_f1:0.9424 eval_auc:0.9655 eval_f1:0.9160 test_auc:0.9656 test_f1:0.9163
+epoch: 2 train_auc:0.9715 train_f1:0.9322 eval_auc:0.9575 eval_f1:0.9031 test_auc:0.9576 test_f1:0.9032
+epoch: 3 train_auc:0.9786 train_f1:0.9438 eval_auc:0.9651 eval_f1:0.9189 test_auc:0.9652 test_f1:0.9187
+epoch: 4 train_auc:0.9828 train_f1:0.9494 eval_auc:0.9712 eval_f1:0.9276 test_auc:0.9713 test_f1:0.9278
+epoch: 5 train_auc:0.9817 train_f1:0.9480 eval_auc:0.9702 eval_f1:0.9272 test_auc:0.9705 test_f1:0.9274
+epoch: 6 train_auc:0.9757 train_f1:0.9403 eval_auc:0.9606 eval_f1:0.9129 test_auc:0.9609 test_f1:0.9129
+epoch: 7 train_auc:0.9786 train_f1:0.9430 eval_auc:0.9653 eval_f1:0.9190 test_auc:0.9656 test_f1:0.9194

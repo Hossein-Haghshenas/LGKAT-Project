@@ -1,0 +1,8 @@
+epoch: 0 train_loss:0.4354
+epoch: 1 train_loss:0.3604
+epoch: 2 train_loss:0.3108
+epoch: 3 train_loss:0.2768
+epoch: 4 train_loss:0.2541
+epoch: 5 train_loss:0.2392
+epoch: 6 train_loss:0.2290
+epoch: 7 train_loss:0.2218

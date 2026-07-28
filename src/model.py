@@ -83,6 +83,10 @@ class KGCN(object):
         self.use_cl = bool(getattr(args, 'use_cl', 0))
         self.cl_lambda = float(getattr(args, 'cl_lambda', 0.1))
         self.cl_tau = float(getattr(args, 'cl_tau', 0.2))
+        # SimGCL-style noise CL on CF embeddings (off by default).
+        self.use_simgcl = bool(getattr(args, 'use_simgcl', 0))
+        self.simgcl_lambda = float(getattr(args, 'simgcl_lambda', 0.1))
+        self.simgcl_eps = float(getattr(args, 'simgcl_eps', 0.1))
         if self.agg_type in ['gcn', 'graphsage', 'bi']:
             self.weights_agg = self._init_weights_agg()
 
@@ -109,6 +113,10 @@ class KGCN(object):
                                                      name='node_dropout_{}'.format(self.model_type))
         self.mess_dropout = tf.compat.v1.placeholder(tf.float32, shape=[None],
                                                      name='mess_dropout_{}'.format(self.model_type))
+        # feedable LR (defaults to args.lr). train_n_runs feeds a decayed value when
+        # --lr_decay < 1; when unused, Adam sees the same constant as before.
+        self.lr_ph = tf.compat.v1.placeholder_with_default(
+            tf.constant(self.lr, dtype=tf.float32), shape=[], name='lr_{}'.format(self.model_type))
         '''
         *****************************************
         '''
@@ -643,6 +651,34 @@ class KGCN(object):
         loss_kg2cf = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=tf.transpose(a=logits))
         return tf.reduce_mean(input_tensor=0.5 * (loss_cf2kg + loss_kg2cf))
 
+    def _noise_augment(self, emb):
+        # SimGCL: e' = e + eps * ||e||_2 * (noise / ||noise||_2)
+        noise = tf.random.uniform(shape=tf.shape(input=emb), minval=0.0, maxval=1.0, dtype=emb.dtype)
+        noise = tf.nn.l2_normalize(noise, axis=1)
+        emb_norm = tf.norm(tensor=emb, axis=1, keepdims=True) + 1e-12
+        return emb + self.simgcl_eps * emb_norm * noise
+
+    def _infonce_pair(self, z1, z2, tau):
+        logits = tf.matmul(z1, z2, transpose_b=True) / tau
+        labels = tf.range(tf.shape(input=logits)[0])
+        loss_12 = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=logits)
+        loss_21 = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=labels, logits=tf.transpose(a=logits))
+        return tf.reduce_mean(input_tensor=0.5 * (loss_12 + loss_21))
+
+    def _create_simgcl_loss(self):
+        # noise-perturbed CF views (user + item final LightGCN lookups in the batch)
+        u1 = tf.nn.l2_normalize(self._noise_augment(self.user_embeddings_final), axis=1)
+        u2 = tf.nn.l2_normalize(self._noise_augment(self.user_embeddings_final), axis=1)
+        loss_u = self._infonce_pair(u1, u2, self.cl_tau)
+        if self.model_type in ['KGCN_NGCF', 'KGCN_LightGCN']:
+            i1 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_cf), axis=1)
+            i2 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_cf), axis=1)
+        else:
+            i1 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_final), axis=1)
+            i2 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_final), axis=1)
+        loss_i = self._infonce_pair(i1, i2, self.cl_tau)
+        return 0.5 * (loss_u + loss_i)
+
     '''
     *****************************************
     '''
@@ -704,10 +740,19 @@ class KGCN(object):
             else:
                 print('[CL] --use_cl ignored: model_type {} has no separate CF/KG item views'.format(self.model_type))
 
-        self.optimizer = tf.compat.v1.train.AdamOptimizer(self.lr).minimize(self.loss)
+        # SimGCL noise CL (independent of cross-view CL; both may be on).
+        self.simgcl_loss = tf.constant(0.0, dtype=tf.float32)
+        if self.use_simgcl:
+            if self.model_type in ['KGCN_NGCF', 'KGCN_LightGCN', 'LightGCN', 'NGCF']:
+                self.simgcl_loss = self._create_simgcl_loss()
+                self.loss = self.loss + self.simgcl_lambda * self.simgcl_loss
+            else:
+                print('[SimGCL] --use_simgcl ignored: model_type {} has no CF embeddings'.format(self.model_type))
+
+        self.optimizer = tf.compat.v1.train.AdamOptimizer(self.lr_ph).minimize(self.loss)
 
     def train(self, sess, feed_dict):
-        return sess.run([self.optimizer, self.base_loss, self.cl_loss], feed_dict)
+        return sess.run([self.optimizer, self.base_loss, self.cl_loss, self.simgcl_loss], feed_dict)
 
     def eval(self, sess, feed_dict):
         labels, scores = sess.run([self.labels, self.scores_normalized], feed_dict)
@@ -719,6 +764,82 @@ class KGCN(object):
 
     def get_scores(self, sess, feed_dict):
         return sess.run([self.item_indices, self.scores_normalized], feed_dict)
+
+    def supports_cf_cache(self):
+        # LightGCN/NGCF tables exist; personalized KG branch (if any) still runs per batch.
+        return self.model_type in ['KGCN_LightGCN', 'KGCN_NGCF', 'LightGCN', 'NGCF']
+
+    def cache_cf_embeddings(self, sess):
+        # one full-graph CF forward with dropout off; reused for all eval scoring this epoch
+        feed_dict = {
+            self.node_dropout: [0.] * self.n_layers,
+            self.mess_dropout: [0.] * self.n_layers,
+        }
+        ua, ia = sess.run([self.ua_embeddings, self.ia_embeddings], feed_dict=feed_dict)
+        cache = {'ua': ua, 'ia': ia, 'gate_W': None, 'gate_b': None, 'agg': None}
+        if self.fusion == 'gate' and self.agg_type == 'weighted_avg':
+            cache['gate_W'], cache['gate_b'] = sess.run(
+                [self.weights_gate['gate_W'], self.weights_gate['gate_b']])
+        if self.agg_type in ['gcn', 'graphsage', 'bi']:
+            keys = sorted(self.weights_agg.keys())
+            vals = sess.run([self.weights_agg[k] for k in keys])
+            cache['agg'] = {k: v for k, v in zip(keys, vals)}
+        return cache
+
+    @staticmethod
+    def _sigmoid_np(x):
+        x = np.asarray(x, dtype=np.float64)
+        out = np.empty_like(x, dtype=np.float64)
+        pos = x >= 0
+        out[pos] = 1.0 / (1.0 + np.exp(-x[pos]))
+        exp_x = np.exp(x[~pos])
+        out[~pos] = exp_x / (1.0 + exp_x)
+        return out.astype(np.float32)
+
+    def _fuse_item_embeddings_np(self, item_cf, item_kg, cache):
+        if self.agg_type == 'weighted_avg':
+            if self.fusion == 'gate' and cache.get('gate_W') is not None:
+                gate_in = np.concatenate([item_cf, item_kg], axis=-1)
+                logits = gate_in.dot(cache['gate_W']) + cache['gate_b']
+                alpha = self._sigmoid_np(logits)
+                return alpha * item_cf + (1.0 - alpha) * item_kg
+            return self.alpha * item_cf + (1.0 - self.alpha) * item_kg
+        agg = cache.get('agg') or {}
+        if self.agg_type == 'gcn':
+            h = item_cf + item_kg
+            return np.maximum(0.2 * h.dot(agg['agg_w_1']), h.dot(agg['agg_w_1']))
+        if self.agg_type == 'graphsage':
+            h = np.concatenate([item_cf, item_kg], axis=-1)
+            return np.maximum(0.2 * h.dot(agg['agg_w_1']), h.dot(agg['agg_w_1']))
+        if self.agg_type == 'bi':
+            h1 = item_cf + item_kg
+            h2 = item_cf * item_kg
+            y1 = np.maximum(0.2 * h1.dot(agg['agg_w_1']), h1.dot(agg['agg_w_1']))
+            y2 = np.maximum(0.2 * h2.dot(agg['agg_w_2']), h2.dot(agg['agg_w_2']))
+            return y1 + y2
+        raise Exception('Unknown agg_type for fast_eval: ' + str(self.agg_type))
+
+    def get_scores_cached(self, sess, feed_dict, cache):
+        users = np.asarray(feed_dict[self.user_indices], dtype=np.int64)
+        items = np.asarray(feed_dict[self.item_indices], dtype=np.int64)
+        user_final = cache['ua'][users]
+        item_cf = cache['ia'][items]
+        if self.model_type in ['KGCN_LightGCN', 'KGCN_NGCF']:
+            item_kg = sess.run(self.item_embeddings_kg, feed_dict)
+            item_final = self._fuse_item_embeddings_np(item_cf, item_kg, cache)
+        else:
+            item_final = item_cf
+        logits = np.sum(user_final * item_final, axis=1)
+        scores = self._sigmoid_np(logits)
+        return items, scores
+
+    def eval_cached(self, sess, feed_dict, cache):
+        labels = np.asarray(feed_dict[self.labels])
+        _, scores = self.get_scores_cached(sess, feed_dict, cache)
+        auc = roc_auc_score(y_true=labels, y_score=scores)
+        pred = (scores >= 0.5).astype(np.float32)
+        f1 = f1_score(y_true=labels, y_pred=pred)
+        return auc, f1
 
     def get_attention(self, sess, feed_dict):
         # Task 6: item -> direct KG-neighbor attention weights, [batch_size, 1, n_neighbor]

@@ -107,21 +107,32 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
 
                 epoch_train_loss = []  # New: To store the loss for each epoch
                 epoch_cl_loss = []  # Task 8: contrastive loss per minibatch
+                epoch_simgcl_loss = []
+
+                lr_decay = float(getattr(args, 'lr_decay', 1.0))
+                cur_lr = args.lr * (lr_decay ** step) if lr_decay < 1.0 else None
 
                 while start + args.batch_size <= train_data.shape[0]:
-                    _, loss, cl_loss = model.train(sess, get_feed_dict(args, model, train_data, start, start + args.batch_size))
+                    _, loss, cl_loss, simgcl_loss = model.train(
+                        sess, get_feed_dict(args, model, train_data, start, start + args.batch_size, lr=cur_lr))
                     epoch_train_loss.append(loss)
                     epoch_cl_loss.append(cl_loss)
+                    epoch_simgcl_loss.append(simgcl_loss)
                     start += args.batch_size
                     if show_loss:
                         print(start, loss)
 
                 avg_train_loss = np.mean(epoch_train_loss)  #  Calculate the average loss for the epoch
                 avg_cl_loss = float(np.mean(epoch_cl_loss)) if len(epoch_cl_loss) else 0.0
+                avg_simgcl_loss = float(np.mean(epoch_simgcl_loss)) if len(epoch_simgcl_loss) else 0.0
+                loss_bits = ['epoch %d    train_loss: %.4f' % (step, avg_train_loss)]
                 if getattr(args, 'use_cl', 0):
-                    print('epoch %d    train_loss: %.4f    cl_loss: %.4f' % (step, avg_train_loss, avg_cl_loss))
-                else:
-                    print('epoch %d    train_loss: %.4f' % (step, avg_train_loss))  # New: Print the average loss
+                    loss_bits.append('cl_loss: %.4f' % avg_cl_loss)
+                if getattr(args, 'use_simgcl', 0):
+                    loss_bits.append('simgcl_loss: %.4f' % avg_simgcl_loss)
+                if cur_lr is not None:
+                    loss_bits.append('lr: %.6f' % cur_lr)
+                print('    '.join(loss_bits))
 
                 train_losses.append(avg_train_loss)  # Store the average loss
                 cl_losses.append(avg_cl_loss)
@@ -134,10 +145,15 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                         else:
                             f.write('epoch:{:2d} train_loss:{:.4f}\n'.format(index, train_losses[index]))
 
+                # cache LightGCN/NGCF tables once for this epoch's CTR + top-K (eval only)
+                cf_cache = None
+                if getattr(args, 'fast_eval', 0) and model.supports_cf_cache():
+                    cf_cache = model.cache_cf_embeddings(sess)
+
                 if show_ctr:
-                    train_auc, train_f1 = ctr_eval(args, sess, model, train_data, args.batch_size)
-                    eval_auc, eval_f1 = ctr_eval(args, sess, model, eval_data, args.batch_size)
-                    test_auc, test_f1 = ctr_eval(args, sess, model, test_data, args.batch_size)
+                    train_auc, train_f1 = ctr_eval(args, sess, model, train_data, args.batch_size, cf_cache)
+                    eval_auc, eval_f1 = ctr_eval(args, sess, model, eval_data, args.batch_size, cf_cache)
+                    test_auc, test_f1 = ctr_eval(args, sess, model, test_data, args.batch_size, cf_cache)
 
                     print('epoch %d    train auc: %.4f  f1: %.4f    eval auc: %.4f  f1: %.4f    test auc: %.4f  f1: %.4f'
                           % (step, train_auc, train_f1, eval_auc, eval_f1, test_auc, test_f1))
@@ -158,9 +174,11 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
 
                 if show_topk:
                     eval_precision, eval_recall, eval_ndcg = topk_eval(
-                        args, sess, model, user_list_eval, train_record_eval, test_record_eval, item_set_eval, k_list_eval, args.batch_size)
+                        args, sess, model, user_list_eval, train_record_eval, test_record_eval,
+                        item_set_eval, k_list_eval, args.batch_size, cf_cache)
                     test_precision, test_recall, test_ndcg = topk_eval(
-                        args, sess, model, user_list_test, train_record_test, test_record_test, item_set_test, k_list_test, args.batch_size)
+                        args, sess, model, user_list_test, train_record_test, test_record_test,
+                        item_set_test, k_list_test, args.batch_size, cf_cache)
 
                     eval_logging_topk(args, step, k_list_eval, eval_precision, eval_recall, test_precision, test_recall, eval_ndcg, test_ndcg)
                     if eval_recall[idx_eval_r10] > best_r10_eval:
@@ -170,11 +188,37 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
                         best_precision = test_precision
                         best_ndcg = test_ndcg
 
+                # early stop: prefer eval R@10 when top-K is on, else eval AUC.
+                # warmup (--early_stop_min_epoch) avoids killing slow-start runs.
+                # if ranking never left zero, do not stop (book-style stuck-at-chance).
+                patience = int(getattr(args, 'early_stop', 0) or 0)
+                min_ep = int(getattr(args, 'early_stop_min_epoch', 0) or 0)
+                if patience > 0 and step >= min_ep:
+                    if show_topk and (step - best_recall_epoch) >= patience:
+                        if best_r10_eval <= 0.0:
+                            if step == min_ep or step % 5 == 0:
+                                print('Early stop deferred: eval R@10 still %.4f at epoch %d '
+                                      '(need ranking signal before patience applies)'
+                                      % (best_r10_eval, step))
+                        else:
+                            print('Early stopping at epoch %d: no eval R@10 improvement for %d epochs '
+                                  '(best epoch %d, eval R@10 %.4f)'
+                                  % (step, patience, best_recall_epoch, best_r10_eval))
+                            break
+                    if (not show_topk) and show_ctr and (step - best_auc_epoch) >= patience:
+                        print('Early stopping at epoch %d: no eval AUC improvement for %d epochs '
+                              '(best epoch %d, eval auc %.4f)'
+                              % (step, patience, best_auc_epoch, best_auc_eval))
+                        break
+
             # Task 3: per-bucket cold-start eval using the final-epoch model
             if getattr(args, 'sparsity_eval', 0) and show_topk:
+                end_cache = None
+                if getattr(args, 'fast_eval', 0) and model.supports_cf_cache():
+                    end_cache = model.cache_cf_embeddings(sess)
                 sparsity_runs.append(topk_eval_buckets(
                     args, sess, model, user_list_test, train_record_test, test_record_test,
-                    item_set_test, k_list_test, args.batch_size, user_pos_count, sparsity_edges))
+                    item_set_test, k_list_test, args.batch_size, user_pos_count, sparsity_edges, end_cache))
 
             # Task 6: attention interpretability case study (first run only)
             if getattr(args, 'interpret', 0) and show_topk and r == 0:
@@ -507,7 +551,7 @@ def topk_settings(show_topk, train_data, test_data, n_item, seed=555, args=None)
         return [None] * 5
 
 
-def get_feed_dict(args, model, data, start, end, flag=True):
+def get_feed_dict(args, model, data, start, end, flag=True, lr=None):
     if flag:
         feed_dict = {model.user_indices: data[start:end, 0],
                      model.item_indices: data[start:end, 1],
@@ -520,15 +564,21 @@ def get_feed_dict(args, model, data, start, end, flag=True):
                      model.labels: data[start:end, 2],
                      model.node_dropout: [0.]*len(eval(args.layer_size)),
                      model.mess_dropout: [0.]*len(eval(args.layer_size))}
+    if lr is not None:
+        feed_dict[model.lr_ph] = lr
     return feed_dict
 
 
-def ctr_eval(args, sess, model, data, batch_size):
+def ctr_eval(args, sess, model, data, batch_size, cf_cache=None):
     start = 0
     auc_list = []
     f1_list = []
     while start + batch_size <= data.shape[0]:
-        auc, f1 = model.eval(sess, get_feed_dict(args, model, data, start, start + batch_size, flag=False))
+        feed = get_feed_dict(args, model, data, start, start + batch_size, flag=False)
+        if cf_cache is not None:
+            auc, f1 = model.eval_cached(sess, feed, cf_cache)
+        else:
+            auc, f1 = model.eval(sess, feed)
         auc_list.append(auc)
         f1_list.append(f1)
         start += batch_size
@@ -549,29 +599,37 @@ def ndcg_at_k(item_sorted, test_set, k):
     return dcg / idcg if idcg > 0 else 0.0
 
 
-def _score_user_items(args, sess, model, user, train_record, item_set, batch_size):
+def _score_user_items(args, sess, model, user, train_record, item_set, batch_size, cf_cache=None):
     # Rank all candidate items (catalog minus the user's training items) by model score.
     # Shared by the standard top-K eval and the cold-start per-bucket eval (Task 3).
     test_item_list = list(item_set - train_record[user])
     item_score_map = dict()
+    drop0 = [0.] * len(eval(args.layer_size))
     start = 0
     while start + batch_size <= len(test_item_list):
-        items, scores = model.get_scores(sess, {model.user_indices: [user] * batch_size,
-                                                model.item_indices: test_item_list[start:start + batch_size],
-                                                model.node_dropout: [0.]*len(eval(args.layer_size)),
-                                                model.mess_dropout: [0.]*len(eval(args.layer_size))})
+        feed = {model.user_indices: [user] * batch_size,
+                model.item_indices: test_item_list[start:start + batch_size],
+                model.node_dropout: drop0,
+                model.mess_dropout: drop0}
+        if cf_cache is not None:
+            items, scores = model.get_scores_cached(sess, feed, cf_cache)
+        else:
+            items, scores = model.get_scores(sess, feed)
         for item, score in zip(items, scores):
             item_score_map[item] = score
         start += batch_size
 
     # padding the last incomplete minibatch if exists
     if start < len(test_item_list):
-        items, scores = model.get_scores(
-            sess, {model.user_indices: [user] * batch_size,
-                   model.item_indices: test_item_list[start:] + [test_item_list[-1]] * (
-                           batch_size - len(test_item_list) + start),
-                   model.node_dropout: [0.]*len(eval(args.layer_size)),
-                   model.mess_dropout: [0.]*len(eval(args.layer_size))})
+        feed = {model.user_indices: [user] * batch_size,
+                model.item_indices: test_item_list[start:] + [test_item_list[-1]] * (
+                        batch_size - len(test_item_list) + start),
+                model.node_dropout: drop0,
+                model.mess_dropout: drop0}
+        if cf_cache is not None:
+            items, scores = model.get_scores_cached(sess, feed, cf_cache)
+        else:
+            items, scores = model.get_scores(sess, feed)
         for item, score in zip(items, scores):
             item_score_map[item] = score
 
@@ -579,13 +637,14 @@ def _score_user_items(args, sess, model, user, train_record, item_set, batch_siz
     return [i[0] for i in item_score_pair_sorted]
 
 
-def topk_eval(args, sess, model, user_list, train_record, test_record, item_set, k_list, batch_size):
+def topk_eval(args, sess, model, user_list, train_record, test_record, item_set, k_list, batch_size, cf_cache=None):
     precision_list = {k: [] for k in k_list}
     recall_list = {k: [] for k in k_list}
     ndcg_list = {k: [] for k in k_list}
 
     for user in user_list:
-        item_sorted = _score_user_items(args, sess, model, user, train_record, item_set, batch_size)
+        item_sorted = _score_user_items(
+            args, sess, model, user, train_record, item_set, batch_size, cf_cache)
         for k in k_list:
             hit_num = len(set(item_sorted[:k]) & test_record[user])
             precision_list[k].append(hit_num / k)
@@ -632,7 +691,7 @@ def get_user_pos_count(train_data):
 
 
 def topk_eval_buckets(args, sess, model, user_list, train_record, test_record, item_set,
-                      k_list, batch_size, user_pos_count, edges):
+                      k_list, batch_size, user_pos_count, edges, cf_cache=None):
     names = bucket_names(edges)
     prec = {b: {k: [] for k in k_list} for b in names}
     rec = {b: {k: [] for k in k_list} for b in names}
@@ -641,7 +700,8 @@ def topk_eval_buckets(args, sess, model, user_list, train_record, test_record, i
 
     for user in user_list:
         b = bucket_label(user_pos_count.get(user, 0), edges)
-        item_sorted = _score_user_items(args, sess, model, user, train_record, item_set, batch_size)
+        item_sorted = _score_user_items(
+            args, sess, model, user, train_record, item_set, batch_size, cf_cache)
         counts[b] += 1
         for k in k_list:
             hit_num = len(set(item_sorted[:k]) & test_record[user])
