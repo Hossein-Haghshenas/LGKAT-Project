@@ -140,6 +140,39 @@ class Aggregator(object):
 
                 user_relation_scores_normalized = tf.nn.softmax(scores, axis=-1)
 
+            if self.weights_att['att'] == 'product_mh':
+                # multi-head product scoring (channel-split subspaces); same neighbor mix as product
+                print('Attention: product_mh')
+                n_heads = int(self.weights_att.get('n_heads', 4))
+                head_dim = self.dim // n_heads
+                shape_2 = [self.batch_size, -1, self.n_neighbor]
+
+                h_embeddings = tf.reshape(self_vectors, [self.batch_size, -1, 1, self.dim])
+                h_embeddings = tf.tile(h_embeddings, [1, 1, self.n_neighbor, 1])
+
+                u_e = tf.tile(user_embeddings, [1, self.n_neighbor ** (hops - 1), self.n_neighbor, 1])
+                # [batch, seq, n_neighbor, n_heads, head_dim]
+                u_h = tf.reshape(u_e, [self.batch_size, -1, self.n_neighbor, n_heads, head_dim])
+                ei_h = tf.reshape(h_embeddings, [self.batch_size, -1, self.n_neighbor, n_heads, head_dim])
+                r_h = tf.reshape(neighbor_relations,
+                                 [self.batch_size, -1, self.n_neighbor, n_heads, head_dim])
+                ej_h = tf.reshape(neighbor_vectors,
+                                  [self.batch_size, -1, self.n_neighbor, n_heads, head_dim])
+                z_h = tf.concat([u_h, r_h * ei_h, ej_h], axis=-1)
+
+                scale = tf.sqrt(tf.cast(head_dim, tf.float32))
+                head_scores = []
+                for h in range(n_heads):
+                    z_flat = tf.reshape(z_h[:, :, :, h, :], [-1, 3 * head_dim])
+                    s = tf.nn.leaky_relu(
+                        tf.matmul(z_flat, self.weights_att['att_w_mh_%d' % h])
+                        + self.weights_att['att_b_mh_%d' % h])
+                    s = tf.reshape(s, shape_2) / scale
+                    head_scores.append(s)
+
+                scores = tf.add_n(head_scores) / float(n_heads)
+                user_relation_scores_normalized = tf.nn.softmax(scores, axis=-1)
+
             if self.weights_att['att'] == 'ur_ht_mlp':
                 # u-r inner product, h-t MLP
                 print('Attention: ur_ht_mlp')

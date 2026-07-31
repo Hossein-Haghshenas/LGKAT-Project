@@ -65,10 +65,17 @@ class KGCN(object):
             self.weights_ngcf = self._init_weights_ngcf()
 
         self.att = args.att  # or 'u_r'
+        self.n_heads = int(getattr(args, 'n_heads', 4))
+        if self.att == 'product_mh':
+            if self.dim % self.n_heads != 0:
+                raise ValueError(
+                    'product_mh requires dim %% n_heads == 0 (got dim=%d, n_heads=%d)'
+                    % (self.dim, self.n_heads))
         if self.att in ['h_ur_t', 'h_r_t', 'hrt_add', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
-                        'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product']:
+                        'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh']:
             self.weights_att = self._init_weights_att()
             self.weights_att['att'] = self.att
+            self.weights_att['n_heads'] = self.n_heads
         else:
             self.weights_att = dict()
             self.weights_att['att'] = self.att
@@ -238,6 +245,11 @@ class KGCN(object):
         if self.att in ['h_ur_t', 'product']:
             shape_w_1 = [3 * self.dim, 1]
 
+        elif self.att == 'product_mh':
+            # per-head W on channel-split product features; created only for this att
+            head_dim = self.dim // self.n_heads
+            shape_w_mh = [3 * head_dim, 1]
+
         elif self.att == 'h_r_t':
             shape_w_1 = [3 * self.dim, 1]
 
@@ -281,6 +293,15 @@ class KGCN(object):
                     shape=shape_w_1, initializer=KGCN.get_initializer(), name='att_w_1_{}'.format(self.model_type))
                 all_weights['att_b_1'] = tf.compat.v1.get_variable(
                     shape=[1], initializer=KGCN.get_initializer(), name='att_b_1_{}'.format(self.model_type))
+
+            if self.att == 'product_mh':
+                for h in range(self.n_heads):
+                    all_weights['att_w_mh_%d' % h] = tf.compat.v1.get_variable(
+                        shape=shape_w_mh, initializer=KGCN.get_initializer(),
+                        name='att_w_mh_%d_%s' % (h, self.model_type))
+                    all_weights['att_b_mh_%d' % h] = tf.compat.v1.get_variable(
+                        shape=[1], initializer=KGCN.get_initializer(),
+                        name='att_b_mh_%d_%s' % (h, self.model_type))
 
             if self.att in ['uhrt_bi']:
                 all_weights['att_w_1'] = tf.compat.v1.get_variable(
@@ -698,7 +719,7 @@ class KGCN(object):
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.weights)
 
             if self.weights_att['att'] in ['h_ur_t', 'h_r_t', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
-                                           'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product']:
+                                           'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh']:
                 for weights in self.weights_att.keys():
                     if weights.startswith('att_w'):
                         self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_att[weights])
