@@ -90,14 +90,14 @@ parser.add_argument('--mess_dropout', nargs='?', default='[0.1, 0.1]',
 
 parser.add_argument('--model_type', nargs='?', default='KGCN', help='{KGCN, KGCN+NGCF, KGCN+GCMC, KGCN+GCN}.')
 parser.add_argument('--att', nargs='?', default='u_r',
-                    help='{avg, u_r, product, product_mh, ...} KG attention; product_mh = multi-head product')  # attention types
+                    help='{avg, u_r, product, product_mh, kg_transformer, ...} KG attention')  # attention types
 parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in gcn layer.')
 # '''
 parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in gcn layer.')
 parser.add_argument('--runs', type=int, default=3, help='the number of epochs')
 parser.add_argument('--gpu_id', type=int, default=0, help='gpu id')
 parser.add_argument('--att', nargs='?', default='u_r',
-                    help='{avg, u_r, product, product_mh, ...} KG attention; product_mh = multi-head product')  # attention types
+                    help='{avg, u_r, product, product_mh, kg_transformer, ...} KG attention')  # attention types
 '''
 ******************************************************************************
 Methods for combining items embeddings from KGCN and CF (GCMC, NGCF or GCN)
@@ -164,10 +164,18 @@ parser.add_argument('--early_stop_min_epoch', type=int, default=0,
 parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate} item-embedding fusion')
 parser.add_argument('--exp_tag', nargs='?', default='', help='optional suffix for result filenames (ablation variants)')
 
-# thesis: multi-head product attention (--att product_mh). unused unless that att is selected;
-# default --att path does not create these weights.
+# thesis: multi-head product (--att product_mh) or KG Transformer (--att kg_transformer).
+# unused unless that att is selected; default --att path does not create these weights.
 parser.add_argument('--n_heads', type=int, default=4,
-                    help='heads for --att product_mh (require dim %% n_heads == 0); ignored otherwise')
+                    help='heads for product_mh / kg_transformer (require dim %% n_heads == 0)')
+# Phase-4 P1: kg_transformer neighbor token. default rel_ej = v1 (byte-stable for old tags);
+# product = concat(u, r⊙ei, ej) like paper Product features.
+parser.add_argument('--kgtr_token', nargs='?', default='rel_ej',
+                    help="{rel_ej, product} token for --att kg_transformer; ignored otherwise")
+# Phase-4 P2: how to form neighbors_agg. transformed = mean(LN(X+AttnV)) v1;
+# raw = QKV scores only, mix raw neighbor_vectors (Product/GAT-style).
+parser.add_argument('--kgtr_pool', nargs='?', default='transformed',
+                    help="{transformed, raw} pool for --att kg_transformer; ignored otherwise")
 
 # Eval-only speedup: materialize LightGCN user/item tables once per epoch (dropout off)
 # and reuse them for CTR/top-K scoring so full-graph sparse propagation is not repeated
@@ -204,7 +212,7 @@ parser.add_argument(
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
             '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
-            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'fast_eval\','
+            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'fast_eval\','
             '\'sparsity_eval\',\'sparsity_buckets\','
             '\'interpret\',\'interpret_user\',\'interpret_topk\']',
     help='paramerts')

@@ -1,0 +1,14 @@
+
+******************************************************************************
+dataset:restaurant aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:8 n_iter:2 batch_size:32768 l2_weight:1e-07 ls_weight:0 lr:0.02 ratio:1 layer_size:[8] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_kgtr_restaurant_pool_raw_fixed_bs32k n_heads:2 kgtr_token:rel_ej kgtr_pool:raw fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+average auc: 0.8730+\-0.0005
+average f1 : 0.7841+\-0.0014
+average recall   : 0.0497+\-0.0315 0.1473+\-0.0282 0.3681+\-0.0359 0.5358+\-0.0339 
+average precision: 0.0500+\-0.0187 0.0297+\-0.0040 0.0177+\-0.0022 0.0131+\-0.0012 
+average ndcg     : 0.0577+\-0.0228 0.0885+\-0.0163 0.1486+\-0.0203 0.1827+\-0.0206 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0497+-0.0315  precision: 0.0500+-0.0187  ndcg: 0.0577+-0.0228
+  R@10 recall: 0.1473+-0.0282  precision: 0.0297+-0.0040  ndcg: 0.0885+-0.0163
+  R@50 recall: 0.3681+-0.0359  precision: 0.0177+-0.0022  ndcg: 0.1486+-0.0203
+  R@100 recall: 0.5358+-0.0339  precision: 0.0131+-0.0012  ndcg: 0.1827+-0.0206

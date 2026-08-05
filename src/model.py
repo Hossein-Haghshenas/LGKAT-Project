@@ -66,16 +66,27 @@ class KGCN(object):
 
         self.att = args.att  # or 'u_r'
         self.n_heads = int(getattr(args, 'n_heads', 4))
-        if self.att == 'product_mh':
+        self.kgtr_token = getattr(args, 'kgtr_token', 'rel_ej')
+        self.kgtr_pool = getattr(args, 'kgtr_pool', 'transformed')
+        if self.att in ('product_mh', 'kg_transformer'):
             if self.dim % self.n_heads != 0:
                 raise ValueError(
-                    'product_mh requires dim %% n_heads == 0 (got dim=%d, n_heads=%d)'
-                    % (self.dim, self.n_heads))
+                    '%s requires dim %% n_heads == 0 (got dim=%d, n_heads=%d)'
+                    % (self.att, self.dim, self.n_heads))
+        if self.att == 'kg_transformer' and self.kgtr_token not in ('rel_ej', 'product'):
+            raise ValueError(
+                "kgtr_token must be 'rel_ej' or 'product' (got %r)" % (self.kgtr_token,))
+        if self.att == 'kg_transformer' and self.kgtr_pool not in ('transformed', 'raw'):
+            raise ValueError(
+                "kgtr_pool must be 'transformed' or 'raw' (got %r)" % (self.kgtr_pool,))
         if self.att in ['h_ur_t', 'h_r_t', 'hrt_add', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
-                        'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh']:
+                        'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh',
+                        'kg_transformer']:
             self.weights_att = self._init_weights_att()
             self.weights_att['att'] = self.att
             self.weights_att['n_heads'] = self.n_heads
+            self.weights_att['kgtr_token'] = self.kgtr_token
+            self.weights_att['kgtr_pool'] = self.kgtr_pool
         else:
             self.weights_att = dict()
             self.weights_att['att'] = self.att
@@ -250,6 +261,10 @@ class KGCN(object):
             head_dim = self.dim // self.n_heads
             shape_w_mh = [3 * head_dim, 1]
 
+        elif self.att == 'kg_transformer':
+            # QKV + residual LN over neighbors; created only for this att
+            pass
+
         elif self.att == 'h_r_t':
             shape_w_1 = [3 * self.dim, 1]
 
@@ -302,6 +317,27 @@ class KGCN(object):
                     all_weights['att_b_mh_%d' % h] = tf.compat.v1.get_variable(
                         shape=[1], initializer=KGCN.get_initializer(),
                         name='att_b_mh_%d_%s' % (h, self.model_type))
+
+            if self.att == 'kg_transformer':
+                d = self.dim
+                # rel_ej: concat(r⊙ei, ej); product: concat(u, r⊙ei, ej)
+                in_dim = 3 * d if self.kgtr_token == 'product' else 2 * d
+                all_weights['att_w_in'] = tf.compat.v1.get_variable(
+                    shape=[in_dim, d], initializer=KGCN.get_initializer(),
+                    name='att_w_in_{}'.format(self.model_type))
+                all_weights['att_b_in'] = tf.compat.v1.get_variable(
+                    shape=[d], initializer=KGCN.get_initializer(),
+                    name='att_b_in_{}'.format(self.model_type))
+                for name in ['att_w_q', 'att_w_k', 'att_w_v', 'att_w_u', 'att_w_o']:
+                    all_weights[name] = tf.compat.v1.get_variable(
+                        shape=[d, d], initializer=KGCN.get_initializer(),
+                        name='{}_{}'.format(name, self.model_type))
+                all_weights['att_ln_gamma'] = tf.compat.v1.get_variable(
+                    shape=[d], initializer=tf.compat.v1.ones_initializer(),
+                    name='att_ln_gamma_{}'.format(self.model_type))
+                all_weights['att_ln_beta'] = tf.compat.v1.get_variable(
+                    shape=[d], initializer=tf.compat.v1.zeros_initializer(),
+                    name='att_ln_beta_{}'.format(self.model_type))
 
             if self.att in ['uhrt_bi']:
                 all_weights['att_w_1'] = tf.compat.v1.get_variable(
@@ -719,7 +755,8 @@ class KGCN(object):
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(aggregator.weights)
 
             if self.weights_att['att'] in ['h_ur_t', 'h_r_t', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
-                                           'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh']:
+                                           'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh',
+                                           'kg_transformer']:
                 for weights in self.weights_att.keys():
                     if weights.startswith('att_w'):
                         self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_att[weights])

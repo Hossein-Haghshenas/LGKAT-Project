@@ -1,6 +1,10 @@
 # LGKAT — Thesis & code roadmap
 
-Living handoff for future chats/agents. Last updated: **2026-07-28**.
+Living handoff for future chats/agents. Last updated: **2026-07-31**.
+
+**Thesis Transformer track (active):** branch `thesis-transformer` — full map in
+[THESIS_KG_TRANSFORMER_ROADMAP.md](THESIS_KG_TRANSFORMER_ROADMAP.md)
+(`product_mh` done; `kg_transformer` in progress).
 
 Operational rules (how to work in this repo) stay in [CLAUDE.md](../CLAUDE.md) /
 [AGENTS.md](../AGENTS.md). Deep engineering analysis stays in
@@ -132,9 +136,11 @@ Rules on that branch (same as repo contract):
 
 Fill the proposal gap first; accuracy gain is secondary:
 
-1. **Transformer-style KG attention** (preferred incremental path: multi-head product
-   attention salvaged/cleaned from `with-multi-head-attention`, flag-gated).
-2. Optionally **MOKAR relation mask** as KG denoise (independent ablation).
+1. **Transformer-style KG attention** — **done (MH-A):** `--att product_mh` on
+   `thesis-transformer` ([BEST_RESULTS_product_mh.md](BEST_RESULTS_product_mh.md)).
+   **In progress (MH-B):** `--att kg_transformer` (QKV + residual + LN) — see
+   [THESIS_KG_TRANSFORMER_ROADMAP.md](THESIS_KG_TRANSFORMER_ROADMAP.md).
+2. Optionally **MOKAR relation mask** as KG denoise (independent ablation; after kgtr).
 3. Keep proposed training tricks available (`--fusion`, `--use_cl`, `--use_simgcl`,
    `--lr_decay`, `--early_stop`, `--fast_eval`) so the new module is tested both alone and
    stacked on the champion recipe.
@@ -171,6 +177,8 @@ Fill the proposal gap first; accuracy gain is secondary:
 | Repo work rules | `CLAUDE.md` / `AGENTS.md` |
 | Architecture, bottlenecks, branch atlas | `docs/KNOWLEDGE_BASE.md` |
 | Champion numbers + commands | `docs/BEST_RESULTS_proposed.md` |
+| Thesis Transformer roadmap | `docs/THESIS_KG_TRANSFORMER_ROADMAP.md` |
+| product_mh / kg_transformer scoreboards | `docs/BEST_RESULTS_product_mh.md`, `docs/BEST_RESULTS_kg_transformer.md` |
 | Paper target constants | `scripts/paper_targets_product.py` |
 | Compare a result file to paper | `python scripts/compare_run_to_paper.py result/….txt <dataset>` |
 | Paired significance | `scripts/significance_test.py` |

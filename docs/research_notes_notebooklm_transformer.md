@@ -167,3 +167,17 @@ Future scoreboard after runs: `docs/BEST_RESULTS_product_mh.md` (do not overwrit
 ## 9. Waiting on
 
 Hossein GPU smoke runs (commands in chat / below). Agents do not launch training.
+
+---
+
+## 10. Follow-up (2026-07-31) — MH-B unlocked
+
+`product_mh` complete (F1 WIN vs paper all sets; R@ MIXED on book/restaurant).
+User approved **`--att kg_transformer` (approach A)** and full roadmap docs:
+
+- `docs/THESIS_KG_TRANSFORMER_ROADMAP.md`
+- `docs/superpowers/specs/2026-07-31-kg-transformer-design.md`
+- `docs/superpowers/plans/2026-07-31-kg-transformer.md`
+
+**Code landed** on `thesis-transformer`: `aggregators.py` / `model.py` / `main.py`
+(`--att kg_transformer`, flag-gated). Phase 4 backlog applies only if Wave 1–2 is weak.

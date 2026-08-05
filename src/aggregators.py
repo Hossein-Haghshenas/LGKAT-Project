@@ -173,6 +173,75 @@ class Aggregator(object):
                 scores = tf.add_n(head_scores) / float(n_heads)
                 user_relation_scores_normalized = tf.nn.softmax(scores, axis=-1)
 
+            if self.weights_att['att'] == 'kg_transformer':
+                # personalized QKV self-attn over T neighbors; early-return mix
+                kgtr_token = self.weights_att.get('kgtr_token', 'rel_ej')
+                kgtr_pool = self.weights_att.get('kgtr_pool', 'transformed')
+                print('Attention: kg_transformer (token=%s, pool=%s)' % (kgtr_token, kgtr_pool))
+                n_heads = int(self.weights_att.get('n_heads', 4))
+                head_dim = self.dim // n_heads
+                t_size = self.n_neighbor
+
+                # [batch, seq, T, dim]
+                ei = tf.reshape(self_vectors, [self.batch_size, -1, 1, self.dim])
+                ei = tf.tile(ei, [1, 1, t_size, 1])
+                r_mul_ei = neighbor_relations * ei
+                u_e = tf.tile(user_embeddings, [1, self.n_neighbor ** (hops - 1), t_size, 1])
+                if kgtr_token == 'product':
+                    tok_in = tf.concat([u_e, r_mul_ei, neighbor_vectors], axis=-1)
+                    tok_width = 3 * self.dim
+                else:
+                    tok_in = tf.concat([r_mul_ei, neighbor_vectors], axis=-1)
+                    tok_width = 2 * self.dim
+                tok_flat = tf.reshape(tok_in, [-1, tok_width])
+                x = tf.matmul(tok_flat, self.weights_att['att_w_in']) + self.weights_att['att_b_in']
+                x = tf.reshape(x, [self.batch_size, -1, t_size, self.dim])
+                n_seq = tf.shape(x)[1]
+                n_flat = self.batch_size * n_seq
+                x = tf.reshape(x, [n_flat, t_size, self.dim])
+
+                u = tf.reshape(u_e, [n_flat, t_size, self.dim])
+
+                q = tf.matmul(x, self.weights_att['att_w_q']) + tf.matmul(u, self.weights_att['att_w_u'])
+                k = tf.matmul(x, self.weights_att['att_w_k'])
+
+                def _split_heads(t):
+                    t = tf.reshape(t, [n_flat, t_size, n_heads, head_dim])
+                    return tf.transpose(t, [0, 2, 1, 3])
+
+                qh, kh = _split_heads(q), _split_heads(k)
+                scale = tf.sqrt(tf.cast(head_dim, tf.float32))
+                # [N, H, T, T]
+                logits = tf.matmul(qh, kh, transpose_b=True) / scale
+                attn = tf.nn.softmax(logits, axis=-1)
+
+                # interpret / raw-pool weights: mean over heads and queries -> [N, T]
+                attn_nb = tf.reduce_mean(attn, axis=[1, 2])
+                self.attention_scores = tf.reshape(
+                    attn_nb, [self.batch_size, -1, t_size])
+
+                if kgtr_pool == 'raw':
+                    # Phase-4 P2: GAT-style — QKV scores, mix raw e_j (same as product)
+                    nb = tf.reshape(neighbor_vectors, [n_flat, t_size, self.dim])
+                    w = tf.expand_dims(attn_nb, axis=-1)
+                    neighbors_aggregated = tf.reduce_mean(w * nb, axis=1)
+                else:
+                    v = tf.matmul(x, self.weights_att['att_w_v'])
+                    vh = _split_heads(v)
+                    oh = tf.matmul(attn, vh)
+                    oh = tf.transpose(oh, [0, 2, 1, 3])
+                    oh = tf.reshape(oh, [n_flat, t_size, self.dim])
+                    o = tf.matmul(oh, self.weights_att['att_w_o'])
+                    y = x + o
+                    mean, var = tf.nn.moments(y, axes=[-1], keepdims=True)
+                    h = self.weights_att['att_ln_gamma'] * (y - mean) / tf.sqrt(var + 1e-6) \
+                        + self.weights_att['att_ln_beta']
+                    neighbors_aggregated = tf.reduce_mean(h, axis=1)
+
+                neighbors_aggregated = tf.reshape(
+                    neighbors_aggregated, [self.batch_size, -1, self.dim])
+                return neighbors_aggregated
+
             if self.weights_att['att'] == 'ur_ht_mlp':
                 # u-r inner product, h-t MLP
                 print('Attention: ur_ht_mlp')
