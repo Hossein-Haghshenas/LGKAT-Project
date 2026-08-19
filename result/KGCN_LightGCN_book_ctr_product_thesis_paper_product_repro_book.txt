@@ -1,0 +1,7 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:3 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_paper_product_repro_book n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.8298 train_f1:0.7582 eval_auc:0.5923 eval_f1:0.6080 test_auc:0.5883 test_f1:0.6116
+epoch: 1 train_auc:0.8705 train_f1:0.7912 eval_auc:0.7050 eval_f1:0.6483 test_auc:0.7018 test_f1:0.6494
+epoch: 2 train_auc:0.8736 train_f1:0.7930 eval_auc:0.7164 eval_f1:0.6566 test_auc:0.7126 test_f1:0.6552

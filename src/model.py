@@ -71,6 +71,8 @@ class KGCN(object):
         self.kgtr_center = int(getattr(args, 'kgtr_center', 0))
         self.kgtr_ffn = int(getattr(args, 'kgtr_ffn', 0))
         self.kgtr_temp = float(getattr(args, 'kgtr_temp', 1.0))
+        self.kgtr_rel_bias = int(getattr(args, 'kgtr_rel_bias', 0))
+        self.kgtr_dot = int(getattr(args, 'kgtr_dot', 0))
         if self.att in ('product_mh', 'kg_transformer'):
             if self.dim % self.n_heads != 0:
                 raise ValueError(
@@ -95,6 +97,8 @@ class KGCN(object):
             self.weights_att['kgtr_center'] = self.kgtr_center
             self.weights_att['kgtr_ffn'] = self.kgtr_ffn
             self.weights_att['kgtr_temp'] = self.kgtr_temp
+            self.weights_att['kgtr_rel_bias'] = self.kgtr_rel_bias
+            self.weights_att['kgtr_dot'] = self.kgtr_dot
         else:
             self.weights_att = dict()
             self.weights_att['att'] = self.att
@@ -366,6 +370,11 @@ class KGCN(object):
                     all_weights['att_ffn_ln_beta'] = tf.compat.v1.get_variable(
                         shape=[d], initializer=tf.compat.v1.zeros_initializer(),
                         name='att_ffn_ln_beta_{}'.format(self.model_type))
+                # Phase-6 v4: additive relation bias on attn logits (only when --kgtr_rel_bias 1)
+                if self.kgtr_rel_bias:
+                    all_weights['att_w_rel_bias'] = tf.compat.v1.get_variable(
+                        shape=[d], initializer=tf.compat.v1.zeros_initializer(),
+                        name='att_w_rel_bias_{}'.format(self.model_type))
 
             if self.att in ['uhrt_bi']:
                 all_weights['att_w_1'] = tf.compat.v1.get_variable(

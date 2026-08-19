@@ -38,6 +38,7 @@ result files. New runs → new `--exp_tag`. Agents never launch training — cop
 | Phase 3b — MH-B `kg_transformer` | **Wave 2 DONE — WIN vs paper ×4** | Champion = `pool=raw` |
 | Phase 4 — Improve if weak | **P2 succeeded** (P1 rejected) | Optional: significance / all-users |
 | Phase 5 — v3 lift (+1.5% rel mean F1) | **Closed — miss** | Only music wins; mean ≈0.7858 vs target 0.7944 |
+| Phase 6 — v4 relation bias | **Book miss** | `rel_bias` / `dot` ≈ v2; stop book logit ablations |
 | Phase 5 — Thesis write-up | **Later** | Tables, paired tests, interpret cases |
 
 ### Phase 3a result (short)

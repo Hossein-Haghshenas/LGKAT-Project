@@ -112,15 +112,17 @@ python main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor
 | `thesis_kgtr_v3_book_center_only` | Book F1 0.6544 ≤ v2 0.6559 — no lift |
 | `thesis_kgtr_v3_movie_center_ffn` | Movie F1 0.9394 ≤ v2 0.9409; R@10 0.1917 < v2 0.2032 |
 | `thesis_kgtr_v3_restaurant_center_ffn` | Rest. F1 0.7801 < v2 0.7841 / paper 0.7816; R@10 0.1375 < v2 |
+| `thesis_kgtr_v4_rel_bias_book` | Book F1 0.6550 ≈ v2 0.6559; R@10 0.0669 < v2 0.0708 — no lift |
+| `thesis_kgtr_v4_dot_book` | Book F1 0.6552 ≈ v2; R@10 0.0669 identical to rel_bias — scoring knobs exhausted |
 
 **Phase 5 verdict:** Approach A (center+ffn) helps **music only**. Keep per-dataset champions: music=v3, book/movie/restaurant=v2 raw. Mean F1 ≈ **0.7858** (+0.4% vs 0.7827) — **misses** +1.5% target 0.7944.
 
 ---
 
-## Next (Phase 5 closed)
+## Next (Phase 6 closed on book)
 
-Approach A done on all 4 datasets. Only music wins. +1.5% mean F1 **not met**.
-Next: new architecture idea, or thesis narrative = per-dataset knobs (music v3).
+Scoring-only v4 (`rel_bias`, `dot`) **no lift** on book. Champion stays `thesis_kgtr_book_pool_raw_gate_es`.
+Do not keep ablating book logits. Remaining choices: lock per-dataset (music v3, rest v2), or a new idea that is **not** another logit term.
 
 ---
 

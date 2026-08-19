@@ -183,6 +183,10 @@ parser.add_argument('--kgtr_ffn', type=int, default=0,
                     help='1: residual FFN+LN after neighbor pool (kg_transformer); 0: off')
 parser.add_argument('--kgtr_temp', type=float, default=1.0,
                     help='attention temperature for kg_transformer logits (must be > 0)')
+parser.add_argument('--kgtr_rel_bias', type=int, default=0,
+                    help='1: add relation-embedding bias to kg_transformer logits; 0: off')
+parser.add_argument('--kgtr_dot', type=int, default=0,
+                    help='1: add scaled e_i·e_j to kg_transformer logits; 0: off')
 
 # Eval-only speedup: materialize LightGCN user/item tables once per epoch (dropout off)
 # and reuse them for CTR/top-K scoring so full-graph sparse propagation is not repeated
@@ -219,7 +223,7 @@ parser.add_argument(
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
             '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
-            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'kgtr_center\',\'kgtr_ffn\',\'kgtr_temp\',\'fast_eval\','
+            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'kgtr_center\',\'kgtr_ffn\',\'kgtr_temp\',\'kgtr_rel_bias\',\'kgtr_dot\',\'fast_eval\','
             '\'sparsity_eval\',\'sparsity_buckets\','
             '\'interpret\',\'interpret_user\',\'interpret_topk\']',
     help='paramerts')

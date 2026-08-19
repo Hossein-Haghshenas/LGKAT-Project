@@ -180,8 +180,10 @@ class Aggregator(object):
                 kgtr_center = int(self.weights_att.get('kgtr_center', 0))
                 kgtr_ffn = int(self.weights_att.get('kgtr_ffn', 0))
                 kgtr_temp = float(self.weights_att.get('kgtr_temp', 1.0))
-                print('Attention: kg_transformer (token=%s, pool=%s, center=%d, ffn=%d, temp=%.3f)'
-                      % (kgtr_token, kgtr_pool, kgtr_center, kgtr_ffn, kgtr_temp))
+                kgtr_rel_bias = int(self.weights_att.get('kgtr_rel_bias', 0))
+                kgtr_dot = int(self.weights_att.get('kgtr_dot', 0))
+                print('Attention: kg_transformer (token=%s, pool=%s, center=%d, ffn=%d, temp=%.3f, rel_bias=%d, dot=%d)'
+                      % (kgtr_token, kgtr_pool, kgtr_center, kgtr_ffn, kgtr_temp, kgtr_rel_bias, kgtr_dot))
                 n_heads = int(self.weights_att.get('n_heads', 4))
                 head_dim = self.dim // n_heads
                 t_size = self.n_neighbor
@@ -226,14 +228,32 @@ class Aggregator(object):
                         u_c, self.weights_att['att_w_u'])
                     qh = _split_heads(q)  # [N, H, 1, d_h]
                     logits = tf.matmul(qh, kh, transpose_b=True) / scale  # [N, H, 1, T]
-                    attn = tf.nn.softmax(logits, axis=-1)
-                    attn_nb = tf.reduce_mean(attn, axis=1)  # [N, 1, T]
-                    attn_nb = tf.squeeze(attn_nb, axis=1)   # [N, T]
                 else:
                     q = tf.matmul(x, self.weights_att['att_w_q']) + tf.matmul(
                         u, self.weights_att['att_w_u'])
                     qh = _split_heads(q)
                     logits = tf.matmul(qh, kh, transpose_b=True) / scale
+
+                if kgtr_rel_bias:
+                    # Phase-6: additive relation bias on the key axis (zero-init w)
+                    r_nb = tf.reshape(neighbor_relations, [n_flat, t_size, self.dim])
+                    rel_bias = tf.reduce_sum(
+                        r_nb * self.weights_att['att_w_rel_bias'], axis=-1)
+                    logits = logits + rel_bias[:, tf.newaxis, tf.newaxis, :]
+
+                if kgtr_dot:
+                    # Phase-6 B: content match e_i·e_j (no extra params; not center-Q)
+                    ei_nb = tf.reshape(ei, [n_flat, t_size, self.dim])
+                    ej_nb = tf.reshape(neighbor_vectors, [n_flat, t_size, self.dim])
+                    dot_scale = tf.sqrt(tf.cast(self.dim, tf.float32))
+                    dot_bias = tf.reduce_sum(ei_nb * ej_nb, axis=-1) / dot_scale
+                    logits = logits + dot_bias[:, tf.newaxis, tf.newaxis, :]
+
+                if kgtr_center:
+                    attn = tf.nn.softmax(logits, axis=-1)
+                    attn_nb = tf.reduce_mean(attn, axis=1)  # [N, 1, T]
+                    attn_nb = tf.squeeze(attn_nb, axis=1)   # [N, T]
+                else:
                     attn = tf.nn.softmax(logits, axis=-1)
                     attn_nb = tf.reduce_mean(attn, axis=[1, 2])  # [N, T]
 
