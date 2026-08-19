@@ -1,0 +1,14 @@
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:1 cl_lambda:0.02 cl_tau:0.2 use_simgcl:1 simgcl_lambda:0.02 simgcl_eps:0.05 lr_decay:0.98 early_stop:12 early_stop_min_epoch:25 fusion:gate exp_tag:thesis_kgtr_v3_center_ffn_es25 n_heads:4 kgtr_token:rel_ej kgtr_pool:raw kgtr_center:1 kgtr_ffn:1 kgtr_temp:1.0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+average auc: 0.8454+\-0.0018
+average f1 : 0.7621+\-0.0019
+average recall   : 0.0682+\-0.0252 0.1745+\-0.0248 0.3717+\-0.0460 0.4675+\-0.0355 
+average precision: 0.0717+\-0.0143 0.0400+\-0.0051 0.0179+\-0.0011 0.0114+\-0.0004 
+average ndcg     : 0.0812+\-0.0225 0.1208+\-0.0145 0.1770+\-0.0157 0.1971+\-0.0166 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0682+-0.0252  precision: 0.0717+-0.0143  ndcg: 0.0812+-0.0225
+  R@10 recall: 0.1745+-0.0248  precision: 0.0400+-0.0051  ndcg: 0.1208+-0.0145
+  R@50 recall: 0.3717+-0.0460  precision: 0.0179+-0.0011  ndcg: 0.1770+-0.0157
+  R@100 recall: 0.4675+-0.0355  precision: 0.0114+-0.0004  ndcg: 0.1971+-0.0166

@@ -68,6 +68,9 @@ class KGCN(object):
         self.n_heads = int(getattr(args, 'n_heads', 4))
         self.kgtr_token = getattr(args, 'kgtr_token', 'rel_ej')
         self.kgtr_pool = getattr(args, 'kgtr_pool', 'transformed')
+        self.kgtr_center = int(getattr(args, 'kgtr_center', 0))
+        self.kgtr_ffn = int(getattr(args, 'kgtr_ffn', 0))
+        self.kgtr_temp = float(getattr(args, 'kgtr_temp', 1.0))
         if self.att in ('product_mh', 'kg_transformer'):
             if self.dim % self.n_heads != 0:
                 raise ValueError(
@@ -79,6 +82,8 @@ class KGCN(object):
         if self.att == 'kg_transformer' and self.kgtr_pool not in ('transformed', 'raw'):
             raise ValueError(
                 "kgtr_pool must be 'transformed' or 'raw' (got %r)" % (self.kgtr_pool,))
+        if self.att == 'kg_transformer' and self.kgtr_temp <= 0:
+            raise ValueError('kgtr_temp must be > 0 (got %r)' % (self.kgtr_temp,))
         if self.att in ['h_ur_t', 'h_r_t', 'hrt_add', 'ur_ht_mlp', 'u_r_mlp', 'uhrt_concat', 'uhrt_add',
                         'uhrt_add_2', 'uhrt_bi', 'u_h_r_t_mlp', 'product', 'product_mh',
                         'kg_transformer']:
@@ -87,6 +92,9 @@ class KGCN(object):
             self.weights_att['n_heads'] = self.n_heads
             self.weights_att['kgtr_token'] = self.kgtr_token
             self.weights_att['kgtr_pool'] = self.kgtr_pool
+            self.weights_att['kgtr_center'] = self.kgtr_center
+            self.weights_att['kgtr_ffn'] = self.kgtr_ffn
+            self.weights_att['kgtr_temp'] = self.kgtr_temp
         else:
             self.weights_att = dict()
             self.weights_att['att'] = self.att
@@ -338,6 +346,26 @@ class KGCN(object):
                 all_weights['att_ln_beta'] = tf.compat.v1.get_variable(
                     shape=[d], initializer=tf.compat.v1.zeros_initializer(),
                     name='att_ln_beta_{}'.format(self.model_type))
+                # Phase-5 v3: FFN after neighbor pool (only when --kgtr_ffn 1)
+                if self.kgtr_ffn:
+                    all_weights['att_w_ffn1'] = tf.compat.v1.get_variable(
+                        shape=[d, d], initializer=KGCN.get_initializer(),
+                        name='att_w_ffn1_{}'.format(self.model_type))
+                    all_weights['att_b_ffn1'] = tf.compat.v1.get_variable(
+                        shape=[d], initializer=KGCN.get_initializer(),
+                        name='att_b_ffn1_{}'.format(self.model_type))
+                    all_weights['att_w_ffn2'] = tf.compat.v1.get_variable(
+                        shape=[d, d], initializer=KGCN.get_initializer(),
+                        name='att_w_ffn2_{}'.format(self.model_type))
+                    all_weights['att_b_ffn2'] = tf.compat.v1.get_variable(
+                        shape=[d], initializer=KGCN.get_initializer(),
+                        name='att_b_ffn2_{}'.format(self.model_type))
+                    all_weights['att_ffn_ln_gamma'] = tf.compat.v1.get_variable(
+                        shape=[d], initializer=tf.compat.v1.ones_initializer(),
+                        name='att_ffn_ln_gamma_{}'.format(self.model_type))
+                    all_weights['att_ffn_ln_beta'] = tf.compat.v1.get_variable(
+                        shape=[d], initializer=tf.compat.v1.zeros_initializer(),
+                        name='att_ffn_ln_beta_{}'.format(self.model_type))
 
             if self.att in ['uhrt_bi']:
                 all_weights['att_w_1'] = tf.compat.v1.get_variable(

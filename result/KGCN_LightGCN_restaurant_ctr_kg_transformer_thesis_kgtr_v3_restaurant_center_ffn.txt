@@ -1,0 +1,39 @@
+
+******************************************************************************
+dataset:restaurant aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:8 n_iter:2 batch_size:32768 l2_weight:1e-07 ls_weight:0 lr:0.02 ratio:1 layer_size:[8] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_kgtr_v3_restaurant_center_ffn n_heads:2 kgtr_token:rel_ej kgtr_pool:raw kgtr_center:1 kgtr_ffn:1 kgtr_temp:1.0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.9478 train_f1:0.8803 eval_auc:0.8695 eval_f1:0.7831 test_auc:0.8693 test_f1:0.7827
+epoch: 1 train_auc:0.9648 train_f1:0.9024 eval_auc:0.8737 eval_f1:0.7799 test_auc:0.8736 test_f1:0.7796
+epoch: 2 train_auc:0.9714 train_f1:0.9127 eval_auc:0.8714 eval_f1:0.7745 test_auc:0.8713 test_f1:0.7743
+epoch: 3 train_auc:0.9747 train_f1:0.9180 eval_auc:0.8710 eval_f1:0.7828 test_auc:0.8707 test_f1:0.7825
+epoch: 4 train_auc:0.9766 train_f1:0.9214 eval_auc:0.8696 eval_f1:0.7803 test_auc:0.8694 test_f1:0.7801
+epoch: 5 train_auc:0.9779 train_f1:0.9236 eval_auc:0.8692 eval_f1:0.7776 test_auc:0.8690 test_f1:0.7773
+
+******************************************************************************
+dataset:restaurant aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:8 n_iter:2 batch_size:32768 l2_weight:1e-07 ls_weight:0 lr:0.02 ratio:1 layer_size:[8] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_kgtr_v3_restaurant_center_ffn n_heads:2 kgtr_token:rel_ej kgtr_pool:raw kgtr_center:1 kgtr_ffn:1 kgtr_temp:1.0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.9448 train_f1:0.8779 eval_auc:0.8671 eval_f1:0.7751 test_auc:0.8671 test_f1:0.7751
+epoch: 1 train_auc:0.9617 train_f1:0.8994 eval_auc:0.8717 eval_f1:0.7791 test_auc:0.8716 test_f1:0.7789
+epoch: 2 train_auc:0.9681 train_f1:0.9087 eval_auc:0.8711 eval_f1:0.7756 test_auc:0.8711 test_f1:0.7756
+epoch: 3 train_auc:0.9718 train_f1:0.9141 eval_auc:0.8701 eval_f1:0.7823 test_auc:0.8701 test_f1:0.7822
+epoch: 4 train_auc:0.9737 train_f1:0.9172 eval_auc:0.8697 eval_f1:0.7791 test_auc:0.8696 test_f1:0.7790
+epoch: 5 train_auc:0.9753 train_f1:0.9199 eval_auc:0.8692 eval_f1:0.7765 test_auc:0.8692 test_f1:0.7764
+epoch: 6 train_auc:0.9763 train_f1:0.9216 eval_auc:0.8692 eval_f1:0.7762 test_auc:0.8691 test_f1:0.7761
+epoch: 7 train_auc:0.9775 train_f1:0.9236 eval_auc:0.8676 eval_f1:0.7758 test_auc:0.8675 test_f1:0.7755
+epoch: 8 train_auc:0.9784 train_f1:0.9251 eval_auc:0.8676 eval_f1:0.7760 test_auc:0.8676 test_f1:0.7758
+epoch: 9 train_auc:0.9793 train_f1:0.9267 eval_auc:0.8667 eval_f1:0.7760 test_auc:0.8667 test_f1:0.7761
+epoch:10 train_auc:0.9798 train_f1:0.9276 eval_auc:0.8657 eval_f1:0.7695 test_auc:0.8657 test_f1:0.7694
+epoch:11 train_auc:0.9804 train_f1:0.9286 eval_auc:0.8660 eval_f1:0.7758 test_auc:0.8661 test_f1:0.7760
+
+******************************************************************************
+dataset:restaurant aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:8 n_iter:2 batch_size:32768 l2_weight:1e-07 ls_weight:0 lr:0.02 ratio:1 layer_size:[8] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_kgtr_v3_restaurant_center_ffn n_heads:2 kgtr_token:rel_ej kgtr_pool:raw kgtr_center:1 kgtr_ffn:1 kgtr_temp:1.0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.9455 train_f1:0.8767 eval_auc:0.8672 eval_f1:0.7722 test_auc:0.8672 test_f1:0.7721
+epoch: 1 train_auc:0.9641 train_f1:0.9012 eval_auc:0.8724 eval_f1:0.7813 test_auc:0.8726 test_f1:0.7816
+epoch: 2 train_auc:0.9701 train_f1:0.9101 eval_auc:0.8711 eval_f1:0.7735 test_auc:0.8712 test_f1:0.7736
+epoch: 3 train_auc:0.9736 train_f1:0.9160 eval_auc:0.8701 eval_f1:0.7779 test_auc:0.8703 test_f1:0.7781
+epoch: 4 train_auc:0.9756 train_f1:0.9197 eval_auc:0.8685 eval_f1:0.7727 test_auc:0.8686 test_f1:0.7728
+epoch: 5 train_auc:0.9770 train_f1:0.9216 eval_auc:0.8682 eval_f1:0.7710 test_auc:0.8683 test_f1:0.7709
+epoch: 6 train_auc:0.9780 train_f1:0.9235 eval_auc:0.8680 eval_f1:0.7760 test_auc:0.8680 test_f1:0.7758
+epoch: 7 train_auc:0.9790 train_f1:0.9254 eval_auc:0.8675 eval_f1:0.7758 test_auc:0.8674 test_f1:0.7758
+epoch: 8 train_auc:0.9797 train_f1:0.9266 eval_auc:0.8667 eval_f1:0.7740 test_auc:0.8667 test_f1:0.7743

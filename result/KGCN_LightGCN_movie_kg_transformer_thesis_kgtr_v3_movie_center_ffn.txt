@@ -1,0 +1,28 @@
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:8192 l2_weight:5e-06 ls_weight:0 lr:0.0025 ratio:1 layer_size:[32] adj_type:plain alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.0 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:8 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_kgtr_v3_movie_center_ffn n_heads:4 kgtr_token:rel_ej kgtr_pool:raw kgtr_center:1 kgtr_ffn:1 kgtr_temp:1.0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+average auc: 0.9826+\-0.0002
+average f1 : 0.9400+\-0.0009
+average recall   : 0.0697+\-0.0114 0.1852+\-0.0295 0.4482+\-0.0222 0.5923+\-0.0092 
+average precision: 0.1850+\-0.0147 0.1263+\-0.0119 0.0718+\-0.0017 0.0514+\-0.0010 
+average ndcg     : 0.1962+\-0.0198 0.1969+\-0.0243 0.2747+\-0.0170 0.3198+\-0.0168 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0697+-0.0114  precision: 0.1850+-0.0147  ndcg: 0.1962+-0.0198
+  R@10 recall: 0.1852+-0.0295  precision: 0.1263+-0.0119  ndcg: 0.1969+-0.0243
+  R@50 recall: 0.4482+-0.0222  precision: 0.0718+-0.0017  ndcg: 0.2747+-0.0170
+  R@100 recall: 0.5923+-0.0092  precision: 0.0514+-0.0010  ndcg: 0.3198+-0.0168
+
+******************************************************************************
+dataset:movie aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:32 n_iter:2 batch_size:8192 l2_weight:5e-06 ls_weight:0 lr:0.0025 ratio:1 layer_size:[32] adj_type:plain alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:kg_transformer agg_type:weighted_avg alpha:0.0 smoothing_steps:1 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:8 early_stop_min_epoch:0 fusion:fixed exp_tag:thesis_kgtr_v3_movie_center_ffn n_heads:4 kgtr_token:rel_ej kgtr_pool:raw kgtr_center:1 kgtr_ffn:1 kgtr_temp:1.0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+average auc: 0.9817+\-0.0004
+average f1 : 0.9394+\-0.0015
+average recall   : 0.0600+\-0.0167 0.1917+\-0.0159 0.4441+\-0.0144 0.5953+\-0.0078 
+average precision: 0.1833+\-0.0062 0.1297+\-0.0097 0.0718+\-0.0012 0.0517+\-0.0007 
+average ndcg     : 0.1857+\-0.0105 0.1969+\-0.0141 0.2732+\-0.0162 0.3190+\-0.0171 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0600+-0.0167  precision: 0.1833+-0.0062  ndcg: 0.1857+-0.0105
+  R@10 recall: 0.1917+-0.0159  precision: 0.1297+-0.0097  ndcg: 0.1969+-0.0141
+  R@50 recall: 0.4441+-0.0144  precision: 0.0718+-0.0012  ndcg: 0.2732+-0.0162
+  R@100 recall: 0.5953+-0.0078  precision: 0.0517+-0.0007  ndcg: 0.3190+-0.0171

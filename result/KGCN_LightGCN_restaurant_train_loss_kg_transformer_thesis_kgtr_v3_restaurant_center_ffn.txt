@@ -1,0 +1,27 @@
+epoch: 0 train_loss:0.4054
+epoch: 1 train_loss:0.3159
+epoch: 2 train_loss:0.2827
+epoch: 3 train_loss:0.2673
+epoch: 4 train_loss:0.2570
+epoch: 5 train_loss:0.2491
+epoch: 6 train_loss:0.4082
+epoch: 7 train_loss:0.3212
+epoch: 8 train_loss:0.2885
+epoch: 9 train_loss:0.2734
+epoch:10 train_loss:0.2639
+epoch:11 train_loss:0.2566
+epoch:12 train_loss:0.2505
+epoch:13 train_loss:0.2455
+epoch:14 train_loss:0.2408
+epoch:15 train_loss:0.2365
+epoch:16 train_loss:0.2324
+epoch:17 train_loss:0.2289
+epoch:18 train_loss:0.4045
+epoch:19 train_loss:0.3159
+epoch:20 train_loss:0.2835
+epoch:21 train_loss:0.2685
+epoch:22 train_loss:0.2587
+epoch:23 train_loss:0.2515
+epoch:24 train_loss:0.2457
+epoch:25 train_loss:0.2406
+epoch:26 train_loss:0.2364

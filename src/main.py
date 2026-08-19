@@ -176,6 +176,13 @@ parser.add_argument('--kgtr_token', nargs='?', default='rel_ej',
 # raw = QKV scores only, mix raw neighbor_vectors (Product/GAT-style).
 parser.add_argument('--kgtr_pool', nargs='?', default='transformed',
                     help="{transformed, raw} pool for --att kg_transformer; ignored otherwise")
+# Phase-5 v3: center-query attention, post-pool FFN, attention temperature (all off/neutral by default)
+parser.add_argument('--kgtr_center', type=int, default=0,
+                    help='1: Q from center e_i+user only (kg_transformer); 0: legacy mean-over-queries')
+parser.add_argument('--kgtr_ffn', type=int, default=0,
+                    help='1: residual FFN+LN after neighbor pool (kg_transformer); 0: off')
+parser.add_argument('--kgtr_temp', type=float, default=1.0,
+                    help='attention temperature for kg_transformer logits (must be > 0)')
 
 # Eval-only speedup: materialize LightGCN user/item tables once per epoch (dropout off)
 # and reuse them for CTR/top-K scoring so full-graph sparse propagation is not repeated
@@ -212,7 +219,7 @@ parser.add_argument(
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
             '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
-            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'fast_eval\','
+            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'kgtr_center\',\'kgtr_ffn\',\'kgtr_temp\',\'fast_eval\','
             '\'sparsity_eval\',\'sparsity_buckets\','
             '\'interpret\',\'interpret_user\',\'interpret_topk\']',
     help='paramerts')

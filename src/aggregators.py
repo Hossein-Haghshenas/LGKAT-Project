@@ -177,7 +177,11 @@ class Aggregator(object):
                 # personalized QKV self-attn over T neighbors; early-return mix
                 kgtr_token = self.weights_att.get('kgtr_token', 'rel_ej')
                 kgtr_pool = self.weights_att.get('kgtr_pool', 'transformed')
-                print('Attention: kg_transformer (token=%s, pool=%s)' % (kgtr_token, kgtr_pool))
+                kgtr_center = int(self.weights_att.get('kgtr_center', 0))
+                kgtr_ffn = int(self.weights_att.get('kgtr_ffn', 0))
+                kgtr_temp = float(self.weights_att.get('kgtr_temp', 1.0))
+                print('Attention: kg_transformer (token=%s, pool=%s, center=%d, ffn=%d, temp=%.3f)'
+                      % (kgtr_token, kgtr_pool, kgtr_center, kgtr_ffn, kgtr_temp))
                 n_heads = int(self.weights_att.get('n_heads', 4))
                 head_dim = self.dim // n_heads
                 t_size = self.n_neighbor
@@ -201,42 +205,76 @@ class Aggregator(object):
                 x = tf.reshape(x, [n_flat, t_size, self.dim])
 
                 u = tf.reshape(u_e, [n_flat, t_size, self.dim])
+                # center entity (first tile along T is enough; all equal)
+                ei_c = tf.reshape(ei, [n_flat, t_size, self.dim])[:, 0:1, :]
+                u_c = u[:, 0:1, :]
 
-                q = tf.matmul(x, self.weights_att['att_w_q']) + tf.matmul(u, self.weights_att['att_w_u'])
                 k = tf.matmul(x, self.weights_att['att_w_k'])
 
                 def _split_heads(t):
-                    t = tf.reshape(t, [n_flat, t_size, n_heads, head_dim])
+                    # t: [N, S, d] -> [N, H, S, d_h]
+                    s = tf.shape(t)[1]
+                    t = tf.reshape(t, [n_flat, s, n_heads, head_dim])
                     return tf.transpose(t, [0, 2, 1, 3])
 
-                qh, kh = _split_heads(q), _split_heads(k)
-                scale = tf.sqrt(tf.cast(head_dim, tf.float32))
-                # [N, H, T, T]
-                logits = tf.matmul(qh, kh, transpose_b=True) / scale
-                attn = tf.nn.softmax(logits, axis=-1)
+                kh = _split_heads(k)
+                scale = tf.sqrt(tf.cast(head_dim, tf.float32)) * kgtr_temp
 
-                # interpret / raw-pool weights: mean over heads and queries -> [N, T]
-                attn_nb = tf.reduce_mean(attn, axis=[1, 2])
+                if kgtr_center:
+                    # Phase-5: single query from center e_i + user
+                    q = tf.matmul(ei_c, self.weights_att['att_w_q']) + tf.matmul(
+                        u_c, self.weights_att['att_w_u'])
+                    qh = _split_heads(q)  # [N, H, 1, d_h]
+                    logits = tf.matmul(qh, kh, transpose_b=True) / scale  # [N, H, 1, T]
+                    attn = tf.nn.softmax(logits, axis=-1)
+                    attn_nb = tf.reduce_mean(attn, axis=1)  # [N, 1, T]
+                    attn_nb = tf.squeeze(attn_nb, axis=1)   # [N, T]
+                else:
+                    q = tf.matmul(x, self.weights_att['att_w_q']) + tf.matmul(
+                        u, self.weights_att['att_w_u'])
+                    qh = _split_heads(q)
+                    logits = tf.matmul(qh, kh, transpose_b=True) / scale
+                    attn = tf.nn.softmax(logits, axis=-1)
+                    attn_nb = tf.reduce_mean(attn, axis=[1, 2])  # [N, T]
+
                 self.attention_scores = tf.reshape(
                     attn_nb, [self.batch_size, -1, t_size])
 
                 if kgtr_pool == 'raw':
-                    # Phase-4 P2: GAT-style — QKV scores, mix raw e_j (same as product)
                     nb = tf.reshape(neighbor_vectors, [n_flat, t_size, self.dim])
                     w = tf.expand_dims(attn_nb, axis=-1)
                     neighbors_aggregated = tf.reduce_mean(w * nb, axis=1)
                 else:
                     v = tf.matmul(x, self.weights_att['att_w_v'])
                     vh = _split_heads(v)
-                    oh = tf.matmul(attn, vh)
-                    oh = tf.transpose(oh, [0, 2, 1, 3])
-                    oh = tf.reshape(oh, [n_flat, t_size, self.dim])
-                    o = tf.matmul(oh, self.weights_att['att_w_o'])
-                    y = x + o
+                    if kgtr_center:
+                        oh = tf.matmul(attn, vh)  # [N, H, 1, d_h]
+                        oh = tf.transpose(oh, [0, 2, 1, 3])
+                        oh = tf.reshape(oh, [n_flat, 1, self.dim])
+                        o = tf.matmul(oh, self.weights_att['att_w_o'])
+                        y = ei_c + o
+                    else:
+                        oh = tf.matmul(attn, vh)
+                        oh = tf.transpose(oh, [0, 2, 1, 3])
+                        oh = tf.reshape(oh, [n_flat, t_size, self.dim])
+                        o = tf.matmul(oh, self.weights_att['att_w_o'])
+                        y = x + o
                     mean, var = tf.nn.moments(y, axes=[-1], keepdims=True)
                     h = self.weights_att['att_ln_gamma'] * (y - mean) / tf.sqrt(var + 1e-6) \
                         + self.weights_att['att_ln_beta']
                     neighbors_aggregated = tf.reduce_mean(h, axis=1)
+
+                if kgtr_ffn:
+                    # residual FFN + LN on pooled neighbor vector
+                    h1 = tf.nn.relu(
+                        tf.matmul(neighbors_aggregated, self.weights_att['att_w_ffn1'])
+                        + self.weights_att['att_b_ffn1'])
+                    h2 = tf.matmul(h1, self.weights_att['att_w_ffn2']) + self.weights_att['att_b_ffn2']
+                    yf = neighbors_aggregated + h2
+                    mean_f, var_f = tf.nn.moments(yf, axes=[-1], keepdims=True)
+                    neighbors_aggregated = (
+                        self.weights_att['att_ffn_ln_gamma'] * (yf - mean_f)
+                        / tf.sqrt(var_f + 1e-6) + self.weights_att['att_ffn_ln_beta'])
 
                 neighbors_aggregated = tf.reshape(
                     neighbors_aggregated, [self.batch_size, -1, self.dim])

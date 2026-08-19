@@ -16,7 +16,8 @@ and [BEST_RESULTS_product_mh.md](BEST_RESULTS_product_mh.md).
 
 | Dataset | Best tag | F1 kgtr / paper / proposed / product_mh | R@10 kgtr / paper / proposed / product_mh | vs paper | Notes |
 |---------|----------|------------------------------------------|---------------------------------------------|----------|-------|
-| **music** | **`thesis_kgtr_v2_pool_raw_es25`** | **0.7499** / 0.7418 / 0.7522 / 0.7525 | **0.1580** / 0.1407 / 0.1648 / 0.1564 | **WIN** | ≈ proposed; R@10 ≥ product_mh |
+| **music** | **`thesis_kgtr_v3_center_ffn_es25`** | **0.7621** / 0.7418 / 0.7522 / 0.7525 | **0.1745** / 0.1407 / 0.1648 / 0.1564 | **WIN** | v3 center+ffn; +1.63% F1 vs v2 raw |
+| music (v2) | `thesis_kgtr_v2_pool_raw_es25` | 0.7499 / … | 0.1580 / … | WIN | previous champion |
 | **book** | **`thesis_kgtr_book_pool_raw_gate_es`** | **0.6559** / 0.6495 / 0.6559 / 0.6549 | **0.0708** / 0.0696 / 0.0635 / 0.0604 | **WIN** | F1 = proposed; **R@10 beats all three** |
 | **movie** | **`thesis_kgtr_movie_pool_raw_fixed_bs8k`** | **0.9409** / 0.9375 / 0.9410 / 0.9408 | **0.2032** / 0.1966 / 0.2014 / 0.2081 | **WIN*** | R@2 slight ↓ vs paper; else ↑ |
 | **restaurant** | **`thesis_kgtr_restaurant_pool_raw_fixed_bs32k`** | **0.7841** / 0.7816 / 0.7850 / 0.7855 | **0.1473** / 0.1406 / 0.1498 / 0.1233 | **WIN** | Beats paper R@; ≫ product_mh R@10; ≈ proposed |
@@ -29,15 +30,22 @@ Rejected: v1 `transformed` pool, P1 `kgtr_token product` (music only).
 
 ---
 
-## Music — `thesis_kgtr_v2_pool_raw_es25`
+## Music — `thesis_kgtr_v3_center_ffn_es25` (current best)
 
-| Metric | kgtr | Paper | proposed | product_mh | Δ paper |
-|--------|------|-------|----------|------------|---------|
-| F1 | **0.7499 ± 0.0009** | 0.7418 | 0.7522 | 0.7525 | **+0.0081** |
-| R@10 | **0.1580 ± 0.0316** | 0.1407 | 0.1648 | 0.1564 | **+0.0173** |
-| R@100 | **0.4240 ± 0.0198** | 0.4009 | 0.4124 | — | **+0.0231** |
+| Metric | kgtr v3 | Paper | proposed | product_mh | v2 raw | Δ paper |
+|--------|---------|-------|----------|------------|--------|---------|
+| F1 | **0.7621 ± 0.0019** | 0.7418 | 0.7522 | 0.7525 | 0.7499 | **+0.0203** |
+| R@10 | **0.1745 ± 0.0248** | 0.1407 | 0.1648 | 0.1564 | 0.1580 | **+0.0338** |
 
-Stack: gate + CL + SimGCL + `early_stop_min_epoch 25`.
+Stack: gate + CL + SimGCL + `early_stop_min_epoch 25` + `--kgtr_center 1 --kgtr_ffn 1 --kgtr_temp 1.0`.
+Result: `result/KGCN_LightGCN_music_kg_transformer_thesis_kgtr_v3_center_ffn_es25.txt`
+
+### Music — previous v2 `thesis_kgtr_v2_pool_raw_es25`
+
+| Metric | kgtr | Paper | Δ paper |
+|--------|------|-------|---------|
+| F1 | 0.7499 ± 0.0009 | 0.7418 | +0.0081 |
+| R@10 | 0.1580 ± 0.0316 | 0.1407 | +0.0173 |
 
 ---
 
@@ -100,15 +108,19 @@ python main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor
 |-----|-----|
 | `thesis_kgtr_v3stack_es25` (v1 transformed) | Music ranking below paper |
 | `thesis_kgtr_v2_token_u_es25` (P1) | Music F1 ≤ paper |
+| `thesis_kgtr_v3_book_center_ffn` | Book F1 0.6283 ≪ v2 0.6559 / paper 0.6495 — reject full center+ffn |
+| `thesis_kgtr_v3_book_center_only` | Book F1 0.6544 ≤ v2 0.6559 — no lift |
+| `thesis_kgtr_v3_movie_center_ffn` | Movie F1 0.9394 ≤ v2 0.9409; R@10 0.1917 < v2 0.2032 |
+| `thesis_kgtr_v3_restaurant_center_ffn` | Rest. F1 0.7801 < v2 0.7841 / paper 0.7816; R@10 0.1375 < v2 |
+
+**Phase 5 verdict:** Approach A (center+ffn) helps **music only**. Keep per-dataset champions: music=v3, book/movie/restaurant=v2 raw. Mean F1 ≈ **0.7858** (+0.4% vs 0.7827) — **misses** +1.5% target 0.7944.
 
 ---
 
-## Next (optional)
+## Next (Phase 5 closed)
 
-- Paired significance vs proposed where close (`scripts/significance_test.py`).
-- Thesis tables: paper vs proposed vs `product_mh` vs `kg_transformer` (`pool=raw`).
-- Optional `--topk_user_num 0` confirm for final claims.
-- Commit result files + docs with the code that produced them.
+Approach A done on all 4 datasets. Only music wins. +1.5% mean F1 **not met**.
+Next: new architecture idea, or thesis narrative = per-dataset knobs (music v3).
 
 ---
 

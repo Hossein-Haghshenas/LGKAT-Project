@@ -37,6 +37,7 @@ result files. New runs → new `--exp_tag`. Agents never launch training — cop
 | Phase 3a — MH-A `product_mh` | **Done** | Multi-head **product scoring**; scoreboard [BEST_RESULTS_product_mh.md](BEST_RESULTS_product_mh.md) |
 | Phase 3b — MH-B `kg_transformer` | **Wave 2 DONE — WIN vs paper ×4** | Champion = `pool=raw` |
 | Phase 4 — Improve if weak | **P2 succeeded** (P1 rejected) | Optional: significance / all-users |
+| Phase 5 — v3 lift (+1.5% rel mean F1) | **Closed — miss** | Only music wins; mean ≈0.7858 vs target 0.7944 |
 | Phase 5 — Thesis write-up | **Later** | Tables, paired tests, interpret cases |
 
 ### Phase 3a result (short)
