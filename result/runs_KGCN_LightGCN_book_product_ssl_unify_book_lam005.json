@@ -1,0 +1,82 @@
+{
+  "model_type": "KGCN_LightGCN",
+  "dataset": "book",
+  "att": "product",
+  "exp_tag": "ssl_unify_book_lam005",
+  "k_list": [
+    2,
+    10,
+    50,
+    100
+  ],
+  "runs": 1,
+  "auc": [
+    0.5113751172373047
+  ],
+  "f1": [
+    0.5297439072752178
+  ],
+  "recall": [
+    [
+      0.0,
+      0.0,
+      0.0007692307692307692,
+      0.0007692307692307692
+    ]
+  ],
+  "precision": [
+    [
+      0.0,
+      0.0,
+      0.0002,
+      0.0001
+    ]
+  ],
+  "ndcg": [
+    [
+      0.0,
+      0.0,
+      0.0003884210089598009,
+      0.0003884210089598009
+    ]
+  ],
+  "n_attempted": 1,
+  "n_valid": 1,
+  "run_records": [
+    {
+      "run_index": 0,
+      "status": "ok",
+      "seed_eval": 556,
+      "seed_test": 557,
+      "error": null,
+      "train_seconds": 421.05077150000005,
+      "total_seconds": 616.1678850000001,
+      "peak_vram_bytes": 6039797760,
+      "peak_vram_mb": 5760.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 2,
+      "best_recall_epoch": 3,
+      "rank_ckpt": "r10",
+      "auc": 0.5113751172373047,
+      "f1": 0.5297439072752178,
+      "recall": [
+        0.0,
+        0.0,
+        0.0007692307692307692,
+        0.0007692307692307692
+      ],
+      "precision": [
+        0.0,
+        0.0,
+        0.0002,
+        0.0001
+      ],
+      "ndcg": [
+        0.0,
+        0.0,
+        0.0003884210089598009,
+        0.0003884210089598009
+      ]
+    }
+  ]
+}

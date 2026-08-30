@@ -5,3 +5,4 @@ dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:
 epoch: 0 train_auc:0.8298 train_f1:0.7582 eval_auc:0.5923 eval_f1:0.6080 test_auc:0.5883 test_f1:0.6116
 epoch: 1 train_auc:0.8705 train_f1:0.7912 eval_auc:0.7050 eval_f1:0.6483 test_auc:0.7018 test_f1:0.6494
 epoch: 2 train_auc:0.8736 train_f1:0.7930 eval_auc:0.7164 eval_f1:0.6566 test_auc:0.7126 test_f1:0.6552
+epoch: 3 train_auc:0.8774 train_f1:0.7949 eval_auc:0.7151 eval_f1:0.6553 test_auc:0.7123 test_f1:0.6566

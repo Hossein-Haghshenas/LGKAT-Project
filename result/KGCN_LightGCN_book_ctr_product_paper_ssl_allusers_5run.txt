@@ -1,0 +1,15 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:5 logging:save pretrain:0 topk_user_num:0 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:gate exp_tag:paper_ssl_allusers_5run n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.8253 train_f1:0.7647 eval_auc:0.6264 eval_f1:0.6167 test_auc:0.6210 test_f1:0.6182
+epoch: 1 train_auc:0.8688 train_f1:0.7868 eval_auc:0.7119 eval_f1:0.6507 test_auc:0.7091 test_f1:0.6547
+epoch: 2 train_auc:0.8764 train_f1:0.7916 eval_auc:0.7176 eval_f1:0.6539 test_auc:0.7149 test_f1:0.6558
+epoch: 3 train_auc:0.8838 train_f1:0.7965 eval_auc:0.7152 eval_f1:0.6535 test_auc:0.7132 test_f1:0.6570
+epoch: 4 train_auc:0.8894 train_f1:0.7990 eval_auc:0.7124 eval_f1:0.6517 test_auc:0.7110 test_f1:0.6560
+epoch: 5 train_auc:0.8938 train_f1:0.8005 eval_auc:0.7103 eval_f1:0.6522 test_auc:0.7090 test_f1:0.6551
+epoch: 6 train_auc:0.8973 train_f1:0.8026 eval_auc:0.7084 eval_f1:0.6519 test_auc:0.7075 test_f1:0.6551
+epoch: 7 train_auc:0.9000 train_f1:0.8036 eval_auc:0.7064 eval_f1:0.6510 test_auc:0.7057 test_f1:0.6542
+epoch: 8 train_auc:0.9023 train_f1:0.8047 eval_auc:0.7049 eval_f1:0.6514 test_auc:0.7041 test_f1:0.6536
+epoch: 9 train_auc:0.9042 train_f1:0.8054 eval_auc:0.7035 eval_f1:0.6516 test_auc:0.7028 test_f1:0.6536
+epoch:10 train_auc:0.9056 train_f1:0.8052 eval_auc:0.7021 eval_f1:0.6512 test_auc:0.7016 test_f1:0.6536

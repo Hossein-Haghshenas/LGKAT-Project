@@ -1,0 +1,7 @@
+epoch: 0 train_loss:0.4439 cl_loss:2.6628
+epoch: 1 train_loss:0.3155 cl_loss:2.4945
+epoch: 2 train_loss:0.2820 cl_loss:2.4636
+epoch: 3 train_loss:0.2687 cl_loss:2.4547
+epoch: 4 train_loss:0.2606 cl_loss:2.4525
+epoch: 5 train_loss:0.2547 cl_loss:2.4547
+epoch: 6 train_loss:0.2502 cl_loss:2.4571

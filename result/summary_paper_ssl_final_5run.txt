@@ -1,0 +1,55 @@
+LGKAT-SSL final aggregation  exp_tag=paper_ssl_final_5run  att=product  min_runs=5
+mean ± std uses np.std (population, same as train_n_runs.py)
+
+=== music ===
+file: result/runs_KGCN_LightGCN_music_product_paper_ssl_final_5run.json
+valid runs: 5/5  excluded: 0
+  AUC          0.8294 ± 0.0019  (n=5)
+  F1           0.7505 ± 0.0016  (n=5)
+  Recall@2     0.0644 ± 0.0117  (n=5)
+  Recall@10    0.1646 ± 0.0355  (n=5)
+  Recall@50    0.3236 ± 0.0272  (n=5)
+  Recall@100   0.4122 ± 0.0209  (n=5)
+  train_s      620.2 ± 97.6 s  (n=5)
+  total_s      964.7 ± 134.4 s  (n=5)
+  peak_vram    3861.6 ± 54.9 MiB  (n=5)
+
+=== book ===
+file: result/runs_KGCN_LightGCN_book_product_paper_ssl_final_5run.json
+valid runs: 5/5  excluded: 0
+  AUC          0.7147 ± 0.0006  (n=5)
+  F1           0.6558 ± 0.0010  (n=5)
+  Recall@2     0.0428 ± 0.0156  (n=5)
+  Recall@10    0.0663 ± 0.0199  (n=5)
+  Recall@50    0.1156 ± 0.0229  (n=5)
+  Recall@100   0.1519 ± 0.0243  (n=5)
+  train_s      388.9 ± 72.5 s  (n=5)
+  total_s      581.2 ± 107.4 s  (n=5)
+  peak_vram    6125.6 ± 17.5 MiB  (n=5)
+
+=== movie ===
+file: result/runs_KGCN_LightGCN_movie_product_paper_ssl_final_5run.json
+valid runs: 5/5  excluded: 0
+  AUC          0.9806 ± 0.0001  (n=5)
+  F1           0.9413 ± 0.0006  (n=5)
+  Recall@2     0.0706 ± 0.0185  (n=5)
+  Recall@10    0.2001 ± 0.0282  (n=5)
+  Recall@50    0.4616 ± 0.0199  (n=5)
+  Recall@100   0.5968 ± 0.0102  (n=5)
+  train_s      1295.3 ± 260.5 s  (n=5)
+  total_s      1874.7 ± 364.4 s  (n=5)
+  peak_vram    6310.2 ± 180.2 MiB  (n=5)
+
+=== restaurant ===
+file: result/runs_KGCN_LightGCN_restaurant_product_paper_ssl_final_5run.json
+valid runs: 5/5  excluded: 0
+  AUC          0.8723 ± 0.0006  (n=5)
+  F1           0.7855 ± 0.0015  (n=5)
+  Recall@2     0.0384 ± 0.0245  (n=5)
+  Recall@10    0.1368 ± 0.0395  (n=5)
+  Recall@50    0.3535 ± 0.0362  (n=5)
+  Recall@100   0.5311 ± 0.0408  (n=5)
+  train_s      607.7 ± 172.0 s  (n=5)
+  total_s      959.4 ± 237.1 s  (n=5)
+  peak_vram    15559.2 ± 82.6 MiB  (n=5)
+

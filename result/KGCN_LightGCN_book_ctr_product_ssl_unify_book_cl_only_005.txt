@@ -1,0 +1,16 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:1 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:1 cl_lambda:0.005 cl_tau:0.2 use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:gate exp_tag:ssl_unify_book_cl_only_005 n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.8602 train_f1:0.7698 eval_auc:0.5078 eval_f1:0.5239 test_auc:0.5083 test_f1:0.5279
+epoch: 1 train_auc:0.9314 train_f1:0.8420 eval_auc:0.5208 eval_f1:0.5294 test_auc:0.5185 test_f1:0.5356
+epoch: 2 train_auc:0.9503 train_f1:0.8694 eval_auc:0.5309 eval_f1:0.5378 test_auc:0.5317 test_f1:0.5415
+epoch: 3 train_auc:0.8912 train_f1:0.8282 eval_auc:0.5251 eval_f1:0.5389 test_auc:0.5331 test_f1:0.5473
+epoch: 4 train_auc:0.9230 train_f1:0.8603 eval_auc:0.5420 eval_f1:0.5486 test_auc:0.5441 test_f1:0.5500
+epoch: 5 train_auc:0.9325 train_f1:0.8750 eval_auc:0.5396 eval_f1:0.5457 test_auc:0.5423 test_f1:0.5530
+epoch: 6 train_auc:0.9398 train_f1:0.8868 eval_auc:0.5498 eval_f1:0.5539 test_auc:0.5565 test_f1:0.5626
+epoch: 7 train_auc:0.9366 train_f1:0.8872 eval_auc:0.5581 eval_f1:0.5595 test_auc:0.5570 test_f1:0.5632
+epoch: 8 train_auc:0.9307 train_f1:0.8837 eval_auc:0.5620 eval_f1:0.5668 test_auc:0.5690 test_f1:0.5748
+epoch: 9 train_auc:0.9188 train_f1:0.8758 eval_auc:0.5753 eval_f1:0.5744 test_auc:0.5849 test_f1:0.5820
+epoch:10 train_auc:0.8932 train_f1:0.8536 eval_auc:0.5960 eval_f1:0.5883 test_auc:0.6016 test_f1:0.5958
+epoch:11 train_auc:0.8660 train_f1:0.8222 eval_auc:0.6223 eval_f1:0.6090 test_auc:0.6217 test_f1:0.6092

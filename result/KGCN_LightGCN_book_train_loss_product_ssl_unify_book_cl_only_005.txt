@@ -1,0 +1,12 @@
+epoch: 0 train_loss:0.6931 cl_loss:1.6279
+epoch: 1 train_loss:0.6931 cl_loss:1.2481
+epoch: 2 train_loss:0.6929 cl_loss:1.2101
+epoch: 3 train_loss:0.6893 cl_loss:1.3924
+epoch: 4 train_loss:0.6853 cl_loss:1.3907
+epoch: 5 train_loss:0.6835 cl_loss:1.3460
+epoch: 6 train_loss:0.6821 cl_loss:1.3552
+epoch: 7 train_loss:0.6805 cl_loss:1.3889
+epoch: 8 train_loss:0.6782 cl_loss:1.4665
+epoch: 9 train_loss:0.6747 cl_loss:1.6193
+epoch:10 train_loss:0.6672 cl_loss:1.9520
+epoch:11 train_loss:0.6502 cl_loss:2.6478

@@ -1,0 +1,330 @@
+{
+  "exp_tag": "paper_ssl_rank_auc_5run",
+  "att": "product",
+  "min_runs": 5,
+  "datasets": {
+    "book": {
+      "dataset": "book",
+      "path": "result/runs_KGCN_LightGCN_book_product_paper_ssl_rank_auc_5run.json",
+      "ok": true,
+      "errors": [],
+      "n_attempted": 5,
+      "n_valid": 5,
+      "n_excluded": 0,
+      "has_run_records": true,
+      "excluded": [],
+      "metrics": {
+        "AUC": {
+          "mean": 0.7144842935868142,
+          "std": 0.0005588751762919252,
+          "n": 5,
+          "text": "0.7145 \u00b1 0.0006  (n=5)"
+        },
+        "F1": {
+          "mean": 0.6555072480722286,
+          "std": 0.0017057338464083619,
+          "n": 5,
+          "text": "0.6555 \u00b1 0.0017  (n=5)"
+        },
+        "Recall@2": {
+          "mean": 0.04836487276750435,
+          "std": 0.01343867236690201,
+          "n": 5,
+          "text": "0.0484 \u00b1 0.0134  (n=5)"
+        },
+        "Recall@10": {
+          "mean": 0.07299949598160645,
+          "std": 0.02977443151080203,
+          "n": 5,
+          "text": "0.0730 \u00b1 0.0298  (n=5)"
+        },
+        "Recall@50": {
+          "mean": 0.12319140670841475,
+          "std": 0.029299695200005593,
+          "n": 5,
+          "text": "0.1232 \u00b1 0.0293  (n=5)"
+        },
+        "Recall@100": {
+          "mean": 0.16452194333811104,
+          "std": 0.021851154785298494,
+          "n": 5,
+          "text": "0.1645 \u00b1 0.0219  (n=5)"
+        }
+      },
+      "resources": {
+        "train_seconds": {
+          "mean": 346.0771092199999,
+          "std": 2.7873379127673674,
+          "n": 5,
+          "text": "346.1 \u00b1 2.8 s  (n=5)"
+        },
+        "total_seconds": {
+          "mean": 514.9357553399999,
+          "std": 4.743220878297947,
+          "n": 5,
+          "text": "514.9 \u00b1 4.7 s  (n=5)"
+        },
+        "peak_vram_mb": {
+          "mean": 6231.0,
+          "std": 1.7888543819998317,
+          "n": 5,
+          "text": "6231.0 \u00b1 1.8 MiB  (n=5)"
+        }
+      },
+      "per_run": [
+        {
+          "run_index": 0,
+          "seed_eval": 556,
+          "seed_test": 557,
+          "auc": 0.7139627102196134,
+          "f1": 0.6528663585152253,
+          "recall": [
+            0.04027777777777777,
+            0.07429700854700853,
+            0.12153846153846154,
+            0.15235470085470085
+          ],
+          "train_seconds": 351.4005964,
+          "total_seconds": 523.9409341,
+          "peak_vram_mb": 6233.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 1,
+          "seed_eval": 558,
+          "seed_test": 559,
+          "auc": 0.7140705641163674,
+          "f1": 0.655919246293415,
+          "recall": [
+            0.0561036036036036,
+            0.08179904394190109,
+            0.12933887203530062,
+            0.15424790096218666
+          ],
+          "train_seconds": 345.7963143000002,
+          "total_seconds": 513.7592418,
+          "peak_vram_mb": 6231.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 2,
+          "seed_eval": 560,
+          "seed_test": 561,
+          "auc": 0.7141596341403825,
+          "f1": 0.6544747157100512,
+          "recall": [
+            0.037000000000000005,
+            0.04449206349206349,
+            0.09508531746031747,
+            0.16885750360750362
+          ],
+          "train_seconds": 345.0639657000004,
+          "total_seconds": 510.2019143,
+          "peak_vram_mb": 6233.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 3,
+          "seed_eval": 562,
+          "seed_test": 563,
+          "auc": 0.7147831323332434,
+          "f1": 0.6578517646002182,
+          "recall": [
+            0.07125,
+            0.12326149425287358,
+            0.17489162561576355,
+            0.20480829228243022
+          ],
+          "train_seconds": 344.8632125999993,
+          "total_seconds": 514.5747397999999,
+          "peak_vram_mb": 6229.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 4,
+          "seed_eval": 564,
+          "seed_test": 565,
+          "auc": 0.715445427124464,
+          "f1": 0.6564241552422331,
+          "recall": [
+            0.037192982456140354,
+            0.04114786967418546,
+            0.09510275689223059,
+            0.1423413189837338
+          ],
+          "train_seconds": 343.26145709999946,
+          "total_seconds": 512.2019467,
+          "peak_vram_mb": 6229.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        }
+      ]
+    },
+    "restaurant": {
+      "dataset": "restaurant",
+      "path": "result/runs_KGCN_LightGCN_restaurant_product_paper_ssl_rank_auc_5run.json",
+      "ok": true,
+      "errors": [],
+      "n_attempted": 5,
+      "n_valid": 5,
+      "n_excluded": 0,
+      "has_run_records": true,
+      "excluded": [],
+      "metrics": {
+        "AUC": {
+          "mean": 0.8728115801214269,
+          "std": 0.0007311667408750952,
+          "n": 5,
+          "text": "0.8728 \u00b1 0.0007  (n=5)"
+        },
+        "F1": {
+          "mean": 0.7862096335180857,
+          "std": 0.0012833567513448952,
+          "n": 5,
+          "text": "0.7862 \u00b1 0.0013  (n=5)"
+        },
+        "Recall@2": {
+          "mean": 0.03497647907647908,
+          "std": 0.018236296862684964,
+          "n": 5,
+          "text": "0.0350 \u00b1 0.0182  (n=5)"
+        },
+        "Recall@10": {
+          "mean": 0.13127758223589425,
+          "std": 0.030308819305487258,
+          "n": 5,
+          "text": "0.1313 \u00b1 0.0303  (n=5)"
+        },
+        "Recall@50": {
+          "mean": 0.37556647898847384,
+          "std": 0.04495377080562342,
+          "n": 5,
+          "text": "0.3756 \u00b1 0.0450  (n=5)"
+        },
+        "Recall@100": {
+          "mean": 0.5139641428051914,
+          "std": 0.03893813762555925,
+          "n": 5,
+          "text": "0.5140 \u00b1 0.0389  (n=5)"
+        }
+      },
+      "resources": {
+        "train_seconds": {
+          "mean": 484.58554759999987,
+          "std": 57.72348925404047,
+          "n": 5,
+          "text": "484.6 \u00b1 57.7 s  (n=5)"
+        },
+        "total_seconds": {
+          "mean": 785.7487126400001,
+          "std": 81.46713841875103,
+          "n": 5,
+          "text": "785.7 \u00b1 81.5 s  (n=5)"
+        },
+        "peak_vram_mb": {
+          "mean": 15011.6,
+          "std": 394.8395117006402,
+          "n": 5,
+          "text": "15011.6 \u00b1 394.8 MiB  (n=5)"
+        }
+      },
+      "per_run": [
+        {
+          "run_index": 0,
+          "seed_eval": 556,
+          "seed_test": 557,
+          "auc": 0.8730536702929453,
+          "f1": 0.7878204262941898,
+          "recall": [
+            0.028004329004329004,
+            0.13617532467532467,
+            0.3453073593073593,
+            0.5046688311688311
+          ],
+          "train_seconds": 593.5022397999998,
+          "total_seconds": 931.7565098,
+          "peak_vram_mb": 15776.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 1,
+          "seed_eval": 558,
+          "seed_test": 559,
+          "auc": 0.8716420334753041,
+          "f1": 0.7842915038064746,
+          "recall": [
+            0.057512626262626265,
+            0.11289544605721076,
+            0.45726525761819886,
+            0.5866309736015619
+          ],
+          "train_seconds": 494.12956880000047,
+          "total_seconds": 818.8226211000001,
+          "peak_vram_mb": 15007.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 2,
+          "seed_eval": 560,
+          "seed_test": 561,
+          "auc": 0.8733134442085276,
+          "f1": 0.7858426351330313,
+          "recall": [
+            0.007138888888888888,
+            0.09128113553113554,
+            0.33698229548229547,
+            0.46880647130647135
+          ],
+          "train_seconds": 449.34979769999995,
+          "total_seconds": 733.3061036000001,
+          "peak_vram_mb": 14801.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 3,
+          "seed_eval": 562,
+          "seed_test": 563,
+          "auc": 0.8723520129446213,
+          "f1": 0.7856526267208116,
+          "recall": [
+            0.05242857142857143,
+            0.1825273469071423,
+            0.34743007993711317,
+            0.5027436587283135
+          ],
+          "train_seconds": 442.1617298999995,
+          "total_seconds": 723.7244103000003,
+          "peak_vram_mb": 14737.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        },
+        {
+          "run_index": 4,
+          "seed_eval": 564,
+          "seed_test": 565,
+          "auc": 0.8736967396857361,
+          "f1": 0.7874409756359214,
+          "recall": [
+            0.029797979797979796,
+            0.13350865800865802,
+            0.3908474025974026,
+            0.5069707792207793
+          ],
+          "train_seconds": 443.78440180000007,
+          "total_seconds": 721.1339183999999,
+          "peak_vram_mb": 14737.0,
+          "vram_source": "nvidia-smi+tf.get_memory_info",
+          "status": "ok"
+        }
+      ]
+    }
+  },
+  "all_ok": true
+}

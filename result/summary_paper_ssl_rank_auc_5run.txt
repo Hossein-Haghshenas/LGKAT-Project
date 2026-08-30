@@ -1,0 +1,29 @@
+LGKAT-SSL final aggregation  exp_tag=paper_ssl_rank_auc_5run  att=product  min_runs=5
+mean ± std uses np.std (population, same as train_n_runs.py)
+
+=== book ===
+file: result/runs_KGCN_LightGCN_book_product_paper_ssl_rank_auc_5run.json
+valid runs: 5/5  excluded: 0
+  AUC          0.7145 ± 0.0006  (n=5)
+  F1           0.6555 ± 0.0017  (n=5)
+  Recall@2     0.0484 ± 0.0134  (n=5)
+  Recall@10    0.0730 ± 0.0298  (n=5)
+  Recall@50    0.1232 ± 0.0293  (n=5)
+  Recall@100   0.1645 ± 0.0219  (n=5)
+  train_s      346.1 ± 2.8 s  (n=5)
+  total_s      514.9 ± 4.7 s  (n=5)
+  peak_vram    6231.0 ± 1.8 MiB  (n=5)
+
+=== restaurant ===
+file: result/runs_KGCN_LightGCN_restaurant_product_paper_ssl_rank_auc_5run.json
+valid runs: 5/5  excluded: 0
+  AUC          0.8728 ± 0.0007  (n=5)
+  F1           0.7862 ± 0.0013  (n=5)
+  Recall@2     0.0350 ± 0.0182  (n=5)
+  Recall@10    0.1313 ± 0.0303  (n=5)
+  Recall@50    0.3756 ± 0.0450  (n=5)
+  Recall@100   0.5140 ± 0.0389  (n=5)
+  train_s      484.6 ± 57.7 s  (n=5)
+  total_s      785.7 ± 81.5 s  (n=5)
+  peak_vram    15011.6 ± 394.8 MiB  (n=5)
+

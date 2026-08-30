@@ -137,6 +137,10 @@ parser.add_argument('--cl_lambda', type=float, default=0.1,
                     help='weight of the contrastive loss in the multi-task objective')
 parser.add_argument('--cl_tau', type=float, default=0.2,
                     help='temperature tau for the InfoNCE cosine similarity')
+parser.add_argument('--cl_sample_size', type=int, default=0,
+                    help='InfoNCE in-batch negatives: 0 = full batch (default); >0 = random subset (large-batch GPU)')
+parser.add_argument('--cl_detach', nargs='?', default='none',
+                    help="{none, kg, cf} stop-grad one CL view; kg = only CF matches frozen KG")
 
 # SimGCL-style noise contrastive on CF embeddings (Yu et al.). Off by default.
 parser.add_argument('--use_simgcl', type=int, default=0,
@@ -153,6 +157,11 @@ parser.add_argument('--early_stop', type=int, default=0,
                     help='patience in epochs on eval R@10 (or eval AUC if top-K off); 0 = disabled')
 parser.add_argument('--early_stop_min_epoch', type=int, default=0,
                     help='do not early-stop before this epoch (warmup for slow-start datasets like book)')
+# ranking snapshot / early-stop metric. default r10 keeps proposed_* and
+# paper_ssl_final_5run byte-stable. auc = report Recall@K from the same
+# epoch as F1 (eval AUC), and early-stop on eval AUC instead of noisy R@10.
+parser.add_argument('--rank_ckpt', nargs='?', default='r10',
+                    help="{r10, auc} which eval metric snapshots test Recall@K; r10 = legacy")
 
 # Task 2: ablation switches.
 #   --fusion: item-embedding fusion for weighted_avg. 'fixed' = alpha-blend (paper
@@ -161,8 +170,12 @@ parser.add_argument('--early_stop_min_epoch', type=int, default=0,
 #   --exp_tag: optional suffix appended to all result filenames so ablation variants
 #     that share a model_type (e.g. fixed vs gate, w/o-cl vs with-cl) write to
 #     separate files. Empty (default) keeps the legacy filenames byte-for-byte.
-parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate} item-embedding fusion')
+parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate, residual} item-embedding fusion')
 parser.add_argument('--exp_tag', nargs='?', default='', help='optional suffix for result filenames (ablation variants)')
+
+# final-paper resource logging. off by default: default-flag result text/json stay unchanged.
+parser.add_argument('--log_resources', type=int, default=0,
+                    help='1: per-run wall-clock + peak GPU VRAM, isolate crashed runs, extra json fields; 0: off')
 
 # thesis: multi-head product (--att product_mh) or KG Transformer (--att kg_transformer).
 # unused unless that att is selected; default --att path does not create these weights.
@@ -222,7 +235,7 @@ parser.add_argument(
             '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
             '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
             '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
-            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
+            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'cl_sample_size\',\'cl_detach\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
             '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'kgtr_center\',\'kgtr_ffn\',\'kgtr_temp\',\'kgtr_rel_bias\',\'kgtr_dot\',\'fast_eval\','
             '\'sparsity_eval\',\'sparsity_buckets\','
             '\'interpret\',\'interpret_user\',\'interpret_topk\']',

@@ -1,0 +1,41 @@
+
+******************************************************************************
+dataset:restaurant aggregator:concat n_epochs:39 neighbor_sample_size:4 dim:8 n_iter:2 batch_size:32768 l2_weight:1e-07 ls_weight:0 lr:0.02 ratio:1 layer_size:[8] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:1 runs:1 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:1 cl_lambda:0.02 cl_tau:0.2 cl_sample_size:256 cl_detach:kg use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:gate exp_tag:ssl_unify_restaurant_gate_cl256_detkg n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+k_list (Recall@K): [2, 10, 50, 100]
+******************************************************************************
+epoch: 0 eval precision: 0.0450	0.0250	0.0164	0.0118	eval recall: 0.0349	0.0973	0.3349	0.4626	eval ndcg: 0.0420	0.0601	0.1198	0.1468	
+epoch: 0 test precision: 0.0550	0.0230	0.0138	0.0102	test recall: 0.0776	0.1398	0.3117	0.4544	test ndcg: 0.0751	0.0979	0.1465	0.1748	
+epoch: 0 test R@2:0.0776	R@10:0.1398	R@50:0.3117	R@100:0.4544	N@2:0.0751	N@10:0.0979	N@50:0.1465	N@100:0.1748
+epoch: 1 eval precision: 0.0400	0.0280	0.0150	0.0124	eval recall: 0.0430	0.1177	0.3050	0.4909	eval ndcg: 0.0479	0.0754	0.1238	0.1620	
+epoch: 1 test precision: 0.0450	0.0310	0.0156	0.0117	test recall: 0.0692	0.1665	0.3586	0.5156	test ndcg: 0.0614	0.1005	0.1513	0.1833	
+epoch: 1 test R@2:0.0692	R@10:0.1665	R@50:0.3586	R@100:0.5156	N@2:0.0614	N@10:0.1005	N@50:0.1513	N@100:0.1833
+epoch: 2 eval precision: 0.0300	0.0270	0.0154	0.0125	eval recall: 0.0364	0.1174	0.3008	0.4853	eval ndcg: 0.0388	0.0722	0.1187	0.1567	
+epoch: 2 test precision: 0.0300	0.0280	0.0166	0.0117	test recall: 0.0500	0.1506	0.3807	0.5224	test ndcg: 0.0389	0.0842	0.1467	0.1748	
+epoch: 2 test R@2:0.0500	R@10:0.1506	R@50:0.3807	R@100:0.5224	N@2:0.0389	N@10:0.0842	N@50:0.1467	N@100:0.1748
+epoch: 3 eval precision: 0.0300	0.0250	0.0146	0.0116	eval recall: 0.0314	0.1112	0.2837	0.4210	eval ndcg: 0.0377	0.0713	0.1163	0.1463	
+epoch: 3 test precision: 0.0300	0.0310	0.0168	0.0118	test recall: 0.0414	0.1792	0.3728	0.5111	test ndcg: 0.0328	0.0878	0.1410	0.1695	
+epoch: 3 test R@2:0.0414	R@10:0.1792	R@50:0.3728	R@100:0.5111	N@2:0.0328	N@10:0.0878	N@50:0.1410	N@100:0.1695
+epoch: 4 eval precision: 0.0350	0.0220	0.0144	0.0125	eval recall: 0.0414	0.1067	0.2612	0.4630	eval ndcg: 0.0426	0.0688	0.1118	0.1534	
+epoch: 4 test precision: 0.0250	0.0250	0.0160	0.0121	test recall: 0.0325	0.1311	0.3502	0.5083	test ndcg: 0.0265	0.0692	0.1282	0.1607	
+epoch: 4 test R@2:0.0325	R@10:0.1311	R@50:0.3502	R@100:0.5083	N@2:0.0265	N@10:0.0692	N@50:0.1282	N@100:0.1607
+epoch: 5 eval precision: 0.0450	0.0210	0.0136	0.0118	eval recall: 0.0530	0.1096	0.2553	0.4324	eval ndcg: 0.0624	0.0811	0.1212	0.1587	
+epoch: 5 test precision: 0.0300	0.0250	0.0176	0.0123	test recall: 0.0317	0.1518	0.3887	0.5293	test ndcg: 0.0326	0.0779	0.1445	0.1734	
+epoch: 5 test R@2:0.0317	R@10:0.1518	R@50:0.3887	R@100:0.5293	N@2:0.0326	N@10:0.0779	N@50:0.1445	N@100:0.1734
+epoch: 6 eval precision: 0.0300	0.0210	0.0146	0.0122	eval recall: 0.0458	0.1244	0.2987	0.4745	eval ndcg: 0.0412	0.0708	0.1188	0.1558	
+epoch: 6 test precision: 0.0300	0.0300	0.0164	0.0123	test recall: 0.0433	0.1552	0.3527	0.5508	test ndcg: 0.0328	0.0827	0.1377	0.1763	
+epoch: 6 test R@2:0.0433	R@10:0.1552	R@50:0.3527	R@100:0.5508	N@2:0.0328	N@10:0.0827	N@50:0.1377	N@100:0.1763
+epoch: 7 eval precision: 0.0350	0.0210	0.0136	0.0126	eval recall: 0.0489	0.1116	0.2681	0.4547	eval ndcg: 0.0524	0.0757	0.1188	0.1596	
+epoch: 7 test precision: 0.0250	0.0230	0.0156	0.0121	test recall: 0.0276	0.1180	0.3575	0.5272	test ndcg: 0.0288	0.0619	0.1283	0.1634	
+epoch: 7 test R@2:0.0276	R@10:0.1180	R@50:0.3575	R@100:0.5272	N@2:0.0288	N@10:0.0619	N@50:0.1283	N@100:0.1634
+epoch: 8 eval precision: 0.0250	0.0210	0.0148	0.0119	eval recall: 0.0383	0.1182	0.2746	0.4403	eval ndcg: 0.0386	0.0735	0.1176	0.1521	
+epoch: 8 test precision: 0.0300	0.0320	0.0148	0.0122	test recall: 0.0459	0.1586	0.3221	0.5259	test ndcg: 0.0412	0.0877	0.1324	0.1734	
+epoch: 8 test R@2:0.0459	R@10:0.1586	R@50:0.3221	R@100:0.5259	N@2:0.0412	N@10:0.0877	N@50:0.1324	N@100:0.1734
+epoch: 9 eval precision: 0.0300	0.0210	0.0142	0.0120	eval recall: 0.0483	0.1212	0.2691	0.4404	eval ndcg: 0.0463	0.0755	0.1173	0.1539	
+epoch: 9 test precision: 0.0400	0.0290	0.0162	0.0121	test recall: 0.0384	0.1459	0.3581	0.5313	test ndcg: 0.0418	0.0814	0.1383	0.1727	
+epoch: 9 test R@2:0.0384	R@10:0.1459	R@50:0.3581	R@100:0.5313	N@2:0.0418	N@10:0.0814	N@50:0.1383	N@100:0.1727
+epoch:10 eval precision: 0.0300	0.0210	0.0154	0.0117	eval recall: 0.0367	0.1052	0.2792	0.4215	eval ndcg: 0.0424	0.0685	0.1184	0.1489	
+epoch:10 test precision: 0.0300	0.0290	0.0156	0.0120	test recall: 0.0148	0.1455	0.3572	0.5231	test ndcg: 0.0255	0.0715	0.1289	0.1635	
+epoch:10 test R@2:0.0148	R@10:0.1455	R@50:0.3572	R@100:0.5231	N@2:0.0255	N@10:0.0715	N@50:0.1289	N@100:0.1635
+epoch:11 eval precision: 0.0350	0.0220	0.0140	0.0115	eval recall: 0.0489	0.1199	0.2500	0.4272	eval ndcg: 0.0479	0.0754	0.1143	0.1510	
+epoch:11 test precision: 0.0200	0.0310	0.0170	0.0126	test recall: 0.0275	0.1774	0.3829	0.5486	test ndcg: 0.0226	0.0867	0.1422	0.1762	
+epoch:11 test R@2:0.0275	R@10:0.1774	R@50:0.3829	R@100:0.5486	N@2:0.0226	N@10:0.0867	N@50:0.1422	N@100:0.1762

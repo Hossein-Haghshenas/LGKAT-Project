@@ -4,6 +4,121 @@ import scipy.io as sio
 from model import KGCN
 import os
 import json
+import time
+import subprocess
+import traceback
+
+
+def _is_finite_number(x):
+    try:
+        return bool(np.isfinite(float(x)))
+    except (TypeError, ValueError):
+        return False
+
+
+def _invalid_run_reason(show_ctr, show_topk, best_auc, best_f1, best_recall, k_list):
+    # never treat a low-but-finite score as a failed run.
+    if show_ctr:
+        if not _is_finite_number(best_auc) or not _is_finite_number(best_f1):
+            return 'non-finite auc/f1'
+    if show_topk:
+        if best_recall is None:
+            return 'missing recall'
+        arr = np.asarray(best_recall, dtype=float)
+        if arr.ndim != 1 or arr.size != len(k_list) or not np.all(np.isfinite(arr)):
+            return 'non-finite or incomplete recall'
+    return None
+
+
+def _nvidia_smi_used_bytes(gpu_id):
+    try:
+        out = subprocess.check_output(
+            ['nvidia-smi', '--query-gpu=memory.used', '--format=csv,noheader,nounits',
+             '-i', str(int(gpu_id))],
+            stderr=subprocess.STDOUT, timeout=8)
+        line = out.decode('utf-8', errors='replace').strip().splitlines()[0].strip()
+        mib = float(line)
+        return int(mib * 1024 * 1024)
+    except Exception:
+        return None
+
+
+def _tf_memory_bytes():
+    try:
+        info = tf.config.experimental.get_memory_info('GPU:0')
+        peak = int(info.get('peak') or 0)
+        current = int(info.get('current') or 0)
+        return max(peak, current)
+    except Exception:
+        return None
+
+
+def _tf_reset_peak():
+    try:
+        tf.config.experimental.reset_memory_stats('GPU:0')
+    except Exception:
+        return
+
+
+def _sample_vram(gpu_id, samples):
+    used = _nvidia_smi_used_bytes(gpu_id)
+    if used is not None:
+        samples.append(('nvidia-smi', used))
+    tfb = _tf_memory_bytes()
+    if tfb is not None:
+        samples.append(('tf.get_memory_info', tfb))
+
+
+def _peak_from_samples(samples):
+    if not samples:
+        return None, None, 'unavailable'
+    peak = max(v for _, v in samples)
+    sources = sorted(set(name for name, _ in samples))
+    return int(peak), peak / (1024.0 * 1024.0), '+'.join(sources)
+
+
+def _runs_json_path(args):
+    return '../result/runs_{}_{}_{}.json'.format(args.model_type, args.dataset, _att_tag(args))
+
+
+def _json_safe(x):
+    if x is None:
+        return None
+    if isinstance(x, (float, np.floating)):
+        v = float(x)
+        return v if np.isfinite(v) else None
+    if isinstance(x, (int, np.integer)):
+        return int(x)
+    if isinstance(x, np.ndarray):
+        return [_json_safe(v) for v in x.tolist()]
+    if isinstance(x, (list, tuple)):
+        return [_json_safe(v) for v in x]
+    return x
+
+
+def _dump_runs_json(args, payload):
+    with open(_runs_json_path(args), 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2)
+
+
+def _payload_from_records(args, k_list, run_records, auc, f1_score, recall, precision, ndcg,
+                          include_resources):
+    payload = {
+        'model_type': args.model_type, 'dataset': args.dataset, 'att': args.att,
+        'exp_tag': getattr(args, 'exp_tag', ''), 'k_list': list(k_list),
+        'runs': int(len(auc)),
+        'auc': np.array(auc).tolist() if len(auc) else [],
+        'f1': np.array(f1_score).tolist() if len(f1_score) else [],
+        'recall': np.array(recall).tolist() if len(recall) else [],
+        'precision': np.array(precision).tolist() if len(precision) else [],
+    }
+    if bool(getattr(args, 'report_ndcg', 0)) and len(ndcg) > 0 and ndcg[0] is not None:
+        payload['ndcg'] = np.array(ndcg).tolist()
+    if include_resources:
+        payload['n_attempted'] = int(len(run_records))
+        payload['n_valid'] = int(len(auc))
+        payload['run_records'] = run_records
+    return payload
 
 
 def train_n_runs(args, data, show_loss, show_topk, show_ctr):
@@ -54,240 +169,344 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
     print(args.seed)
     print('----------')
 
+    log_res = bool(int(getattr(args, 'log_resources', 0) or 0))
+    run_records = []
+    k_list_test = eval(args.topk_k_list)
+
     for r in range(RUNS):
-        tf.compat.v1.reset_default_graph()
-
-        model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entity, adj_relation, user_item_adj, pretrain=pretrain)
-
-        saver_ckpt = tf.compat.v1.train.Saver()
-
+        seed_eval = int(args.seed)
         best_auc = 0
         best_f1 = 0
         best_recall = None
         best_precision = None
         best_ndcg = None
-
         best_auc_epoch = 0
         best_recall_epoch = 0
+        train_seconds = 0.0
+        vram_samples = []
+        t_run0 = time.perf_counter()
+        rec = {
+            'run_index': r,
+            'status': 'ok',
+            'seed_eval': seed_eval,
+            'seed_test': None,
+            'error': None,
+        }
 
-        # Init to -1 so the first epoch always populates best_* (a degenerate run
-        # where eval AUC/Recall@10 never exceeds 0 would otherwise leave best_recall
-        # = None and crash the per-run np.array aggregation). No effect on normal runs.
-        best_auc_eval = -1.0
-        best_r10_eval = -1.0
+        try:
+            tf.compat.v1.reset_default_graph()
 
-        user_list_eval, train_record_eval, test_record_eval, \
-            item_set_eval, k_list_eval = topk_settings(
-                show_topk, train_data, eval_data, n_item, seed=args.seed, args=args)
-        args.seed += 1
+            model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entity, adj_relation, user_item_adj, pretrain=pretrain)
 
-        user_list_test, train_record_test, test_record_test, \
-            item_set_test, k_list_test = topk_settings(
-                show_topk, train_data, test_data, n_item, seed=args.seed, args=args)
-        args.seed += 1
+            saver_ckpt = tf.compat.v1.train.Saver()
 
-        idx_eval_r10 = recall_k_index(k_list_eval, 10)
+            # Init to -1 so the first epoch always populates best_* (a degenerate run
+            # where eval AUC/Recall@10 never exceeds 0 would otherwise leave best_recall
+            # = None and crash the per-run np.array aggregation). No effect on normal runs.
+            best_auc_eval = -1.0
+            best_r10_eval = -1.0
 
-        config = tf.compat.v1.ConfigProto()
-        config.gpu_options.allow_growth = True
-        with tf.compat.v1.Session(config=config) as sess:
-            sess.run(tf.compat.v1.global_variables_initializer())
+            user_list_eval, train_record_eval, test_record_eval, \
+                item_set_eval, k_list_eval = topk_settings(
+                    show_topk, train_data, eval_data, n_item, seed=args.seed, args=args)
+            args.seed += 1
 
-            if not (args.logging == 'save'):
-                ckpt = tf.train.get_checkpoint_state(os.path.dirname(ckpt_restore_path + 'checkpoint'))
-                if ckpt and ckpt.model_checkpoint_path:
-                    saver_ckpt.restore(sess, ckpt.model_checkpoint_path)
-                    print('================Done loading======================')
-            else:
-                print('Initialized from scratch')
+            rec['seed_test'] = int(args.seed)
+            user_list_test, train_record_test, test_record_test, \
+                item_set_test, k_list_test = topk_settings(
+                    show_topk, train_data, test_data, n_item, seed=args.seed, args=args)
+            args.seed += 1
 
-            for step in range(args.n_epochs):
-                np.random.shuffle(train_data)
-                start = 0
+            idx_eval_r10 = recall_k_index(k_list_eval, 10)
+            rank_ckpt = str(getattr(args, 'rank_ckpt', 'r10') or 'r10').strip().lower()
+            if rank_ckpt not in ('r10', 'auc'):
+                print('unknown --rank_ckpt %s; using r10' % rank_ckpt)
+                rank_ckpt = 'r10'
+            if rank_ckpt == 'auc':
+                print('rank_ckpt: auc (test Recall@K + early-stop follow eval AUC)')
 
-                epoch_train_loss = []  # New: To store the loss for each epoch
-                epoch_cl_loss = []  # Task 8: contrastive loss per minibatch
-                epoch_simgcl_loss = []
+            config = tf.compat.v1.ConfigProto()
+            config.gpu_options.allow_growth = True
+            with tf.compat.v1.Session(config=config) as sess:
+                sess.run(tf.compat.v1.global_variables_initializer())
 
-                lr_decay = float(getattr(args, 'lr_decay', 1.0))
-                cur_lr = args.lr * (lr_decay ** step) if lr_decay < 1.0 else None
+                if not (args.logging == 'save'):
+                    ckpt = tf.train.get_checkpoint_state(os.path.dirname(ckpt_restore_path + 'checkpoint'))
+                    if ckpt and ckpt.model_checkpoint_path:
+                        saver_ckpt.restore(sess, ckpt.model_checkpoint_path)
+                        print('================Done loading======================')
+                else:
+                    print('Initialized from scratch')
 
-                while start + args.batch_size <= train_data.shape[0]:
-                    _, loss, cl_loss, simgcl_loss = model.train(
-                        sess, get_feed_dict(args, model, train_data, start, start + args.batch_size, lr=cur_lr))
-                    epoch_train_loss.append(loss)
-                    epoch_cl_loss.append(cl_loss)
-                    epoch_simgcl_loss.append(simgcl_loss)
-                    start += args.batch_size
-                    if show_loss:
-                        print(start, loss)
+                if log_res:
+                    _tf_reset_peak()
+                    _sample_vram(args.gpu_id, vram_samples)
 
-                avg_train_loss = np.mean(epoch_train_loss)  #  Calculate the average loss for the epoch
-                avg_cl_loss = float(np.mean(epoch_cl_loss)) if len(epoch_cl_loss) else 0.0
-                avg_simgcl_loss = float(np.mean(epoch_simgcl_loss)) if len(epoch_simgcl_loss) else 0.0
-                loss_bits = ['epoch %d    train_loss: %.4f' % (step, avg_train_loss)]
-                if getattr(args, 'use_cl', 0):
-                    loss_bits.append('cl_loss: %.4f' % avg_cl_loss)
-                if getattr(args, 'use_simgcl', 0):
-                    loss_bits.append('simgcl_loss: %.4f' % avg_simgcl_loss)
-                if cur_lr is not None:
-                    loss_bits.append('lr: %.6f' % cur_lr)
-                print('    '.join(loss_bits))
+                for step in range(args.n_epochs):
+                    np.random.shuffle(train_data)
+                    start = 0
 
-                train_losses.append(avg_train_loss)  # Store the average loss
-                cl_losses.append(avg_cl_loss)
+                    epoch_train_loss = []  # New: To store the loss for each epoch
+                    epoch_cl_loss = []  # Task 8: contrastive loss per minibatch
+                    epoch_simgcl_loss = []
 
-                with open('../result/{}_{}_train_loss_{}.txt'.format(args.model_type, args.dataset, _att_tag(args)), 'w') as f:
-                    for index in range(len(train_losses)):
-                        if getattr(args, 'use_cl', 0):
-                            f.write('epoch:{:2d} train_loss:{:.4f} cl_loss:{:.4f}\n'.format(
-                                index, train_losses[index], cl_losses[index]))
-                        else:
-                            f.write('epoch:{:2d} train_loss:{:.4f}\n'.format(index, train_losses[index]))
+                    lr_decay = float(getattr(args, 'lr_decay', 1.0))
+                    cur_lr = args.lr * (lr_decay ** step) if lr_decay < 1.0 else None
 
-                # cache LightGCN/NGCF tables once for this epoch's CTR + top-K (eval only)
-                cf_cache = None
-                if getattr(args, 'fast_eval', 0) and model.supports_cf_cache():
-                    cf_cache = model.cache_cf_embeddings(sess)
+                    t_tr0 = time.perf_counter()
+                    while start + args.batch_size <= train_data.shape[0]:
+                        _, loss, cl_loss, simgcl_loss = model.train(
+                            sess, get_feed_dict(args, model, train_data, start, start + args.batch_size, lr=cur_lr))
+                        epoch_train_loss.append(loss)
+                        epoch_cl_loss.append(cl_loss)
+                        epoch_simgcl_loss.append(simgcl_loss)
+                        start += args.batch_size
+                        if show_loss:
+                            print(start, loss)
+                    train_seconds += time.perf_counter() - t_tr0
 
-                if show_ctr:
-                    train_auc, train_f1 = ctr_eval(args, sess, model, train_data, args.batch_size, cf_cache)
-                    eval_auc, eval_f1 = ctr_eval(args, sess, model, eval_data, args.batch_size, cf_cache)
-                    test_auc, test_f1 = ctr_eval(args, sess, model, test_data, args.batch_size, cf_cache)
+                    avg_train_loss = np.mean(epoch_train_loss)  #  Calculate the average loss for the epoch
+                    avg_cl_loss = float(np.mean(epoch_cl_loss)) if len(epoch_cl_loss) else 0.0
+                    avg_simgcl_loss = float(np.mean(epoch_simgcl_loss)) if len(epoch_simgcl_loss) else 0.0
+                    loss_bits = ['epoch %d    train_loss: %.4f' % (step, avg_train_loss)]
+                    if getattr(args, 'use_cl', 0):
+                        loss_bits.append('cl_loss: %.4f' % avg_cl_loss)
+                    if getattr(args, 'use_simgcl', 0):
+                        loss_bits.append('simgcl_loss: %.4f' % avg_simgcl_loss)
+                    if cur_lr is not None:
+                        loss_bits.append('lr: %.6f' % cur_lr)
+                    print('    '.join(loss_bits))
 
-                    print('epoch %d    train auc: %.4f  f1: %.4f    eval auc: %.4f  f1: %.4f    test auc: %.4f  f1: %.4f'
-                          % (step, train_auc, train_f1, eval_auc, eval_f1, test_auc, test_f1))
+                    train_losses.append(avg_train_loss)  # Store the average loss
+                    cl_losses.append(avg_cl_loss)
 
-                    eval_logging_ctr(args, step, train_auc, train_f1, eval_auc, eval_f1, test_auc, test_f1)
-                    if eval_auc > best_auc_eval:
-                        best_auc_epoch = step
-                        best_auc_eval = eval_auc
-                        best_auc = test_auc
-                        best_f1 = test_f1
+                    with open('../result/{}_{}_train_loss_{}.txt'.format(args.model_type, args.dataset, _att_tag(args)), 'w') as f:
+                        for index in range(len(train_losses)):
+                            if getattr(args, 'use_cl', 0):
+                                f.write('epoch:{:2d} train_loss:{:.4f} cl_loss:{:.4f}\n'.format(
+                                    index, train_losses[index], cl_losses[index]))
+                            else:
+                                f.write('epoch:{:2d} train_loss:{:.4f}\n'.format(index, train_losses[index]))
 
-                        user_embedding, entity_embedding, relation_embedding = model.get_embeddings(sess)
-                        sio.savemat('../output/{}_{}_emb.mat'.format(args.model_type, args.dataset), \
-                            {'user': user_embedding, 'entity': entity_embedding, 'relation': relation_embedding})
-                        np.save('../output/{}_{}_user_emb.npy'.format(args.model_type, args.dataset), user_embedding)
-                        np.save('../output/{}_{}_entity_emb.npy'.format(args.model_type, args.dataset), entity_embedding)
-                        np.save('../output/{}_{}_relation_emb.npy'.format(args.model_type, args.dataset), relation_embedding)
+                    # cache LightGCN/NGCF tables once for this epoch's CTR + top-K (eval only)
+                    cf_cache = None
+                    if getattr(args, 'fast_eval', 0) and model.supports_cf_cache():
+                        cf_cache = model.cache_cf_embeddings(sess)
 
-                if show_topk:
-                    eval_precision, eval_recall, eval_ndcg = topk_eval(
-                        args, sess, model, user_list_eval, train_record_eval, test_record_eval,
-                        item_set_eval, k_list_eval, args.batch_size, cf_cache)
-                    test_precision, test_recall, test_ndcg = topk_eval(
-                        args, sess, model, user_list_test, train_record_test, test_record_test,
-                        item_set_test, k_list_test, args.batch_size, cf_cache)
+                    if show_ctr:
+                        train_auc, train_f1 = ctr_eval(args, sess, model, train_data, args.batch_size, cf_cache)
+                        eval_auc, eval_f1 = ctr_eval(args, sess, model, eval_data, args.batch_size, cf_cache)
+                        test_auc, test_f1 = ctr_eval(args, sess, model, test_data, args.batch_size, cf_cache)
 
-                    eval_logging_topk(args, step, k_list_eval, eval_precision, eval_recall, test_precision, test_recall, eval_ndcg, test_ndcg)
-                    if eval_recall[idx_eval_r10] > best_r10_eval:
-                        best_recall_epoch = step
-                        best_r10_eval = eval_recall[idx_eval_r10]
-                        best_recall = test_recall
-                        best_precision = test_precision
-                        best_ndcg = test_ndcg
+                        print('epoch %d    train auc: %.4f  f1: %.4f    eval auc: %.4f  f1: %.4f    test auc: %.4f  f1: %.4f'
+                              % (step, train_auc, train_f1, eval_auc, eval_f1, test_auc, test_f1))
 
-                # early stop: prefer eval R@10 when top-K is on, else eval AUC.
-                # warmup (--early_stop_min_epoch) avoids killing slow-start runs.
-                # if ranking never left zero, do not stop (book-style stuck-at-chance).
-                patience = int(getattr(args, 'early_stop', 0) or 0)
-                min_ep = int(getattr(args, 'early_stop_min_epoch', 0) or 0)
-                if patience > 0 and step >= min_ep:
-                    if show_topk and (step - best_recall_epoch) >= patience:
-                        if best_r10_eval <= 0.0:
-                            if step == min_ep or step % 5 == 0:
-                                print('Early stop deferred: eval R@10 still %.4f at epoch %d '
-                                      '(need ranking signal before patience applies)'
-                                      % (best_r10_eval, step))
-                        else:
-                            print('Early stopping at epoch %d: no eval R@10 improvement for %d epochs '
-                                  '(best epoch %d, eval R@10 %.4f)'
-                                  % (step, patience, best_recall_epoch, best_r10_eval))
+                        eval_logging_ctr(args, step, train_auc, train_f1, eval_auc, eval_f1, test_auc, test_f1)
+                        if eval_auc > best_auc_eval:
+                            best_auc_epoch = step
+                            best_auc_eval = eval_auc
+                            best_auc = test_auc
+                            best_f1 = test_f1
+
+                            user_embedding, entity_embedding, relation_embedding = model.get_embeddings(sess)
+                            sio.savemat('../output/{}_{}_emb.mat'.format(args.model_type, args.dataset), \
+                                {'user': user_embedding, 'entity': entity_embedding, 'relation': relation_embedding})
+                            np.save('../output/{}_{}_user_emb.npy'.format(args.model_type, args.dataset), user_embedding)
+                            np.save('../output/{}_{}_entity_emb.npy'.format(args.model_type, args.dataset), entity_embedding)
+                            np.save('../output/{}_{}_relation_emb.npy'.format(args.model_type, args.dataset), relation_embedding)
+
+                    if show_topk:
+                        eval_precision, eval_recall, eval_ndcg = topk_eval(
+                            args, sess, model, user_list_eval, train_record_eval, test_record_eval,
+                            item_set_eval, k_list_eval, args.batch_size, cf_cache)
+                        test_precision, test_recall, test_ndcg = topk_eval(
+                            args, sess, model, user_list_test, train_record_test, test_record_test,
+                            item_set_test, k_list_test, args.batch_size, cf_cache)
+
+                        eval_logging_topk(args, step, k_list_eval, eval_precision, eval_recall, test_precision, test_recall, eval_ndcg, test_ndcg)
+                        # r10: snapshot ranking on eval R@10 (legacy, strict >).
+                        # auc: same epoch as F1 so a run does not mix CTR@ep2 with R@10@ep6.
+                        if rank_ckpt == 'auc':
+                            if eval_recall[idx_eval_r10] > best_r10_eval:
+                                best_r10_eval = eval_recall[idx_eval_r10]
+                            if show_ctr and step == best_auc_epoch:
+                                best_recall_epoch = step
+                                best_recall = test_recall
+                                best_precision = test_precision
+                                best_ndcg = test_ndcg
+                        elif eval_recall[idx_eval_r10] > best_r10_eval:
+                            best_recall_epoch = step
+                            best_r10_eval = eval_recall[idx_eval_r10]
+                            best_recall = test_recall
+                            best_precision = test_precision
+                            best_ndcg = test_ndcg
+
+                    # early stop: r10 + top-K -> eval R@10; otherwise eval AUC.
+                    # warmup (--early_stop_min_epoch) avoids killing slow-start runs.
+                    # if ranking never left zero, do not stop (book-style stuck-at-chance).
+                    patience = int(getattr(args, 'early_stop', 0) or 0)
+                    min_ep = int(getattr(args, 'early_stop_min_epoch', 0) or 0)
+                    es_on_auc = (rank_ckpt == 'auc') or (not show_topk)
+                    if patience > 0 and step >= min_ep:
+                        if (not es_on_auc) and show_topk and (step - best_recall_epoch) >= patience:
+                            if best_r10_eval <= 0.0:
+                                if step == min_ep or step % 5 == 0:
+                                    print('Early stop deferred: eval R@10 still %.4f at epoch %d '
+                                          '(need ranking signal before patience applies)'
+                                          % (best_r10_eval, step))
+                            else:
+                                print('Early stopping at epoch %d: no eval R@10 improvement for %d epochs '
+                                      '(best epoch %d, eval R@10 %.4f)'
+                                      % (step, patience, best_recall_epoch, best_r10_eval))
+                                break
+                        if es_on_auc and show_ctr and (step - best_auc_epoch) >= patience:
+                            print('Early stopping at epoch %d: no eval AUC improvement for %d epochs '
+                                  '(best epoch %d, eval auc %.4f)'
+                                  % (step, patience, best_auc_epoch, best_auc_eval))
                             break
-                    if (not show_topk) and show_ctr and (step - best_auc_epoch) >= patience:
-                        print('Early stopping at epoch %d: no eval AUC improvement for %d epochs '
-                              '(best epoch %d, eval auc %.4f)'
-                              % (step, patience, best_auc_epoch, best_auc_eval))
-                        break
 
-            # Task 3: per-bucket cold-start eval using the final-epoch model
-            if getattr(args, 'sparsity_eval', 0) and show_topk:
-                end_cache = None
-                if getattr(args, 'fast_eval', 0) and model.supports_cf_cache():
-                    end_cache = model.cache_cf_embeddings(sess)
-                sparsity_runs.append(topk_eval_buckets(
-                    args, sess, model, user_list_test, train_record_test, test_record_test,
-                    item_set_test, k_list_test, args.batch_size, user_pos_count, sparsity_edges, end_cache))
+                    if log_res:
+                        _sample_vram(args.gpu_id, vram_samples)
 
-            # Task 6: attention interpretability case study (first run only)
-            if getattr(args, 'interpret', 0) and show_topk and r == 0:
-                export_attention_case_study(
-                    args, sess, model, train_record_test, test_record_test, n_item)
+                # Task 3: per-bucket cold-start eval using the final-epoch model
+                if getattr(args, 'sparsity_eval', 0) and show_topk:
+                    end_cache = None
+                    if getattr(args, 'fast_eval', 0) and model.supports_cf_cache():
+                        end_cache = model.cache_cf_embeddings(sess)
+                    sparsity_runs.append(topk_eval_buckets(
+                        args, sess, model, user_list_test, train_record_test, test_record_test,
+                        item_set_test, k_list_test, args.batch_size, user_pos_count, sparsity_edges, end_cache))
 
-        if show_ctr:
-            auc.append(best_auc)
-            f1_score.append(best_f1)
-            recall.append(best_recall)
-            precision.append(best_precision)
-            ndcg.append(best_ndcg)
+                # Task 6: attention interpretability case study (first run only)
+                if getattr(args, 'interpret', 0) and show_topk and r == 0:
+                    export_attention_case_study(
+                        args, sess, model, train_record_test, test_record_test, n_item)
 
-        if show_topk:
-            epochs_recall.append(best_recall_epoch)
-            epochs_auc.append(best_auc_epoch)
+                if log_res:
+                    _sample_vram(args.gpu_id, vram_samples)
+
+            invalid = _invalid_run_reason(
+                show_ctr, show_topk, best_auc, best_f1, best_recall, k_list_test)
+            if log_res and invalid:
+                rec['status'] = 'invalid'
+                rec['error'] = invalid
+                print('[log_resources] run %d invalid: %s' % (r, invalid))
+            else:
+                rec['status'] = 'ok'
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            if not log_res:
+                raise
+            rec['status'] = 'crashed'
+            rec['error'] = '{}: {}'.format(type(e).__name__, str(e)[:500])
+            traceback.print_exc()
+            print('[log_resources] run %d crashed: %s' % (r, rec['error']))
+
+        rec['train_seconds'] = float(train_seconds)
+        rec['total_seconds'] = float(time.perf_counter() - t_run0)
+        if log_res:
+            peak_b, peak_mb, src = _peak_from_samples(vram_samples)
+        else:
+            peak_b, peak_mb, src = None, None, 'not_requested'
+        rec['peak_vram_bytes'] = peak_b
+        rec['peak_vram_mb'] = None if peak_mb is None else round(float(peak_mb), 1)
+        rec['vram_source'] = src
+        rec['best_auc_epoch'] = int(best_auc_epoch)
+        rec['best_recall_epoch'] = int(best_recall_epoch)
+        rec['rank_ckpt'] = str(getattr(args, 'rank_ckpt', 'r10') or 'r10')
+        rec['auc'] = _json_safe(best_auc) if rec['status'] == 'ok' else None
+        rec['f1'] = _json_safe(best_f1) if rec['status'] == 'ok' else None
+        rec['recall'] = _json_safe(best_recall) if rec['status'] == 'ok' else None
+        rec['precision'] = _json_safe(best_precision) if rec['status'] == 'ok' else None
+        rec['ndcg'] = _json_safe(best_ndcg) if rec['status'] == 'ok' else None
+
+        if rec['status'] == 'ok':
+            if show_ctr:
+                auc.append(best_auc)
+                f1_score.append(best_f1)
+                recall.append(best_recall)
+                precision.append(best_precision)
+                ndcg.append(best_ndcg)
+            if show_topk:
+                epochs_recall.append(best_recall_epoch)
+                epochs_auc.append(best_auc_epoch)
+        elif log_res:
+            print('[log_resources] excluding run %d from mean (%s)' % (r, rec['status']))
+
+        run_records.append(rec)
+        if log_res:
+            _dump_runs_json(
+                args, _payload_from_records(
+                    args, k_list_test, run_records, auc, f1_score, recall, precision, ndcg, True))
 
     if show_ctr and show_topk:
-        auc = np.array(auc)
-        f1_score = np.array(f1_score)
-        recall = np.array(recall)
-        precision = np.array(precision)
+        n_valid = len(auc)
+        if log_res:
+            print('[log_resources] valid runs: {}/{}'.format(n_valid, RUNS))
+        if n_valid == 0:
+            print('[log_resources] no valid runs to aggregate; skipping mean±std')
+            if log_res:
+                _dump_runs_json(
+                    args, _payload_from_records(
+                        args, k_list_test, run_records, auc, f1_score, recall, precision, ndcg, True))
+        else:
+            auc = np.array(auc)
+            f1_score = np.array(f1_score)
+            recall = np.array(recall)
+            precision = np.array(precision)
 
-        print(auc)
-        print(f1_score)
-        print(recall)
-        print(precision)
+            print(auc)
+            print(f1_score)
+            print(recall)
+            print(precision)
 
-        printings_auc = 'average auc: {:.4f}+\\-{:.4f}'.format(np.mean(auc), np.std(auc))
-        printings_f1 = 'average f1 : {:.4f}+\\-{:.4f}'.format(np.mean(f1_score), np.std(f1_score))
+            printings_auc = 'average auc: {:.4f}+\\-{:.4f}'.format(np.mean(auc), np.std(auc))
+            printings_f1 = 'average f1 : {:.4f}+\\-{:.4f}'.format(np.mean(f1_score), np.std(f1_score))
 
-        printings_recall = 'average recall   : '
-        for i in range(len(k_list_test)):
-            printings_recall = printings_recall + '{:.4f}+\\-{:.4f} '.format(np.mean(recall[:, i]), np.std(recall[:, i]))
-        printings_precision = 'average precision: '
-        for i in range(len(k_list_test)):
-            printings_precision = printings_precision + '{:.4f}+\\-{:.4f} '.format(np.mean(precision[:, i]), np.std(precision[:, i]))
-
-        print(printings_auc)
-        print(printings_f1)
-        print(printings_recall)
-        print(printings_precision)
-
-        printings_ndcg = ''
-        if bool(getattr(args, 'report_ndcg', 0)) and len(ndcg) > 0 and ndcg[0] is not None:
-            ndcg_arr = np.array(ndcg)
-            printings_ndcg = 'average ndcg     : '
+            printings_recall = 'average recall   : '
             for i in range(len(k_list_test)):
-                printings_ndcg = printings_ndcg + '{:.4f}+\\-{:.4f} '.format(np.mean(ndcg_arr[:, i]), np.std(ndcg_arr[:, i]))
-            print(printings_ndcg)
+                printings_recall = printings_recall + '{:.4f}+\\-{:.4f} '.format(np.mean(recall[:, i]), np.std(recall[:, i]))
+            printings_precision = 'average precision: '
+            for i in range(len(k_list_test)):
+                printings_precision = printings_precision + '{:.4f}+\\-{:.4f} '.format(np.mean(precision[:, i]), np.std(precision[:, i]))
 
-        printings_paper = format_paper_recall_block(k_list_test, recall, precision, ndcg if printings_ndcg else None)
-        print(printings_paper)
-        logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper, printings_ndcg)
+            print(printings_auc)
+            print(printings_f1)
+            print(printings_recall)
+            print(printings_precision)
 
-        # Task 7: dump per-run results (machine-readable) for the paired significance test.
-        # Additive (a new file); existing logs are unchanged.
-        runs_payload = {
-            'model_type': args.model_type, 'dataset': args.dataset, 'att': args.att,
-            'exp_tag': getattr(args, 'exp_tag', ''), 'k_list': list(k_list_test),
-            'runs': int(len(auc)),
-            'auc': np.array(auc).tolist(), 'f1': np.array(f1_score).tolist(),
-            'recall': np.array(recall).tolist(), 'precision': np.array(precision).tolist(),
-        }
-        if printings_ndcg:
-            runs_payload['ndcg'] = np.array(ndcg).tolist()
-        with open('../result/runs_{}_{}_{}.json'.format(args.model_type, args.dataset, _att_tag(args)),
-                  'w', encoding='utf-8') as f:
-            json.dump(runs_payload, f, indent=2)
+            printings_ndcg = ''
+            if bool(getattr(args, 'report_ndcg', 0)) and len(ndcg) > 0 and ndcg[0] is not None:
+                ndcg_arr = np.array(ndcg)
+                printings_ndcg = 'average ndcg     : '
+                for i in range(len(k_list_test)):
+                    printings_ndcg = printings_ndcg + '{:.4f}+\\-{:.4f} '.format(np.mean(ndcg_arr[:, i]), np.std(ndcg_arr[:, i]))
+                print(printings_ndcg)
+
+            printings_paper = format_paper_recall_block(k_list_test, recall, precision, ndcg if printings_ndcg else None)
+            print(printings_paper)
+            logging_final(args, printings_auc, printings_f1, printings_recall, printings_precision, printings_paper, printings_ndcg)
+
+            if log_res:
+                ok_recs = [x for x in run_records if x.get('status') == 'ok']
+                tr = [x['train_seconds'] for x in ok_recs if x.get('train_seconds') is not None]
+                tot = [x['total_seconds'] for x in ok_recs if x.get('total_seconds') is not None]
+                vrm = [x['peak_vram_mb'] for x in ok_recs if x.get('peak_vram_mb') is not None]
+                if tr:
+                    print('average train_seconds: {:.1f}+\\-{:.1f}'.format(np.mean(tr), np.std(tr)))
+                if tot:
+                    print('average total_seconds: {:.1f}+\\-{:.1f}'.format(np.mean(tot), np.std(tot)))
+                if vrm:
+                    print('average peak_vram_mb: {:.1f}+\\-{:.1f}'.format(np.mean(vrm), np.std(vrm)))
+                else:
+                    print('average peak_vram_mb: unavailable')
+
+            # Task 7: dump per-run results (machine-readable) for the paired significance test.
+            # Additive (a new file); existing logs are unchanged.
+            runs_payload = _payload_from_records(
+                args, k_list_test, run_records, auc, f1_score, recall, precision, ndcg, log_res)
+            _dump_runs_json(args, runs_payload)
 
     if getattr(args, 'sparsity_eval', 0):
         logging_sparsity(args, sparsity_runs, k_list_test, sparsity_edges)

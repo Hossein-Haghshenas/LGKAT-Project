@@ -113,6 +113,12 @@ class KGCN(object):
         self.use_cl = bool(getattr(args, 'use_cl', 0))
         self.cl_lambda = float(getattr(args, 'cl_lambda', 0.1))
         self.cl_tau = float(getattr(args, 'cl_tau', 0.2))
+        # 0 = full-batch InfoNCE (byte-stable). >0 = random subset, for large batches.
+        self.cl_sample_size = max(0, int(getattr(args, 'cl_sample_size', 0) or 0))
+        # none = both views get CL grads (legacy). kg = stop-grad KG so only CF matches
+        # the frozen KG view (BYOL-style; avoids dragging the scoring KG branch).
+        _detach = str(getattr(args, 'cl_detach', 'none') or 'none').strip().lower()
+        self.cl_detach = _detach if _detach in ('none', 'kg', 'cf') else 'none'
         # SimGCL-style noise CL on CF embeddings (off by default).
         self.use_simgcl = bool(getattr(args, 'use_simgcl', 0))
         self.simgcl_lambda = float(getattr(args, 'simgcl_lambda', 0.1))
@@ -122,7 +128,7 @@ class KGCN(object):
 
         # Task 2(c): adaptive fusion gate vs. fixed-alpha weighted average.
         self.fusion = getattr(args, 'fusion', 'fixed')
-        if self.fusion == 'gate' and self.agg_type == 'weighted_avg':
+        if self.fusion in ('gate', 'residual') and self.agg_type == 'weighted_avg':
             self.weights_gate = self._init_weights_gate()
         '''
         *****************************************
@@ -220,15 +226,18 @@ class KGCN(object):
 
             # combine item embeddings from CF & KG
             if self.agg_type == 'weighted_avg':
-                if self.fusion == 'gate':
+                if self.fusion in ('gate', 'residual'):
                     # Adaptive gate (Task 2c): per-item scalar g = sigmoid(W_g[e_cf;e_kg] + b_g).
-                    # Identity init (W_g=0, b_g=logit(alpha)) => g==alpha at step 0, so training
-                    # starts exactly at the fixed-alpha weighted average and adapts from there.
+                    # gate: identity init => g==alpha at step 0 (convex blend).
+                    # residual: e = e_kg + g e_cf with g~0 at step 0 (add CF, do not dilute KG).
                     gate_input = tf.concat([self.item_embeddings_cf, self.item_embeddings_kg], axis=-1)
-                    alpha_dynamic = tf.sigmoid(
+                    g = tf.sigmoid(
                         tf.matmul(gate_input, self.weights_gate['gate_W']) + self.weights_gate['gate_b'])
-                    self.item_embeddings_final = alpha_dynamic * self.item_embeddings_cf + \
-                                                 (1 - alpha_dynamic) * self.item_embeddings_kg
+                    if self.fusion == 'residual':
+                        self.item_embeddings_final = self.item_embeddings_kg + g * self.item_embeddings_cf
+                    else:
+                        self.item_embeddings_final = g * self.item_embeddings_cf + \
+                                                     (1 - g) * self.item_embeddings_kg
                 else:
                     self.item_embeddings_final = self.alpha * self.item_embeddings_cf + (
                                 1 - self.alpha) * self.item_embeddings_kg
@@ -438,11 +447,13 @@ class KGCN(object):
     def _init_weights_gate(self):
         all_weights = dict()
 
-        # Identity initialization: gate_W = 0 and gate_b = logit(alpha) make the gate
-        # output exactly alpha at step 0 (equivalent to the fixed-alpha baseline),
-        # so the proven base model is the starting point and the gate adapts from there.
-        alpha_clamped = min(max(float(self.alpha), 0.01), 0.99)
-        bias_init = float(np.log(alpha_clamped / (1.0 - alpha_clamped)))
+        # Identity initialization: gate_W = 0 and gate_b = logit(g0) so step 0 matches
+        # the intended start (convex blend at alpha, or residual CF weight ~0).
+        if getattr(self, 'fusion', 'fixed') == 'residual':
+            g0 = 0.01
+        else:
+            g0 = min(max(float(self.alpha), 0.01), 0.99)
+        bias_init = float(np.log(g0 / (1.0 - g0)))
 
         with tf.compat.v1.variable_scope('{}'.format(self.model_type)):
             all_weights['gate_W'] = tf.compat.v1.get_variable(
@@ -728,12 +739,26 @@ class KGCN(object):
     Task 8: cross-view contrastive loss (InfoNCE), paper Section 3-3-6
     '''
 
+    def _subsample_aligned(self, *embs):
+        # shared random row index so CF/KG (or user/item) positives stay paired.
+        n = tf.shape(input=embs[0])[0]
+        k = tf.minimum(n, tf.constant(self.cl_sample_size, dtype=n.dtype))
+        idx = tf.random.shuffle(tf.range(n, dtype=n.dtype))[:k]
+        out = [tf.gather(e, idx) for e in embs]
+        return out[0] if len(out) == 1 else tuple(out)
+
     def _create_contrastive_loss(self):
         # The collaborative (CF) and knowledge (KG) views of the SAME item form the
         # positive pair; every other item in the batch is an in-batch negative.
         # Cosine similarity (via L2-normalization) with temperature tau.
         z_cf = tf.nn.l2_normalize(self.item_embeddings_cf, axis=1)  # [batch_size, dim]
         z_kg = tf.nn.l2_normalize(self.item_embeddings_kg, axis=1)  # [batch_size, dim]
+        if self.cl_sample_size > 0:
+            z_cf, z_kg = self._subsample_aligned(z_cf, z_kg)
+        if self.cl_detach == 'kg':
+            z_kg = tf.stop_gradient(z_kg)
+        elif self.cl_detach == 'cf':
+            z_cf = tf.stop_gradient(z_cf)
 
         # [batch_size, batch_size]; entry (i, j) = cos(cf_i, kg_j) / tau
         logits = tf.matmul(z_cf, z_kg, transpose_b=True) / self.cl_tau
@@ -761,15 +786,18 @@ class KGCN(object):
 
     def _create_simgcl_loss(self):
         # noise-perturbed CF views (user + item final LightGCN lookups in the batch)
-        u1 = tf.nn.l2_normalize(self._noise_augment(self.user_embeddings_final), axis=1)
-        u2 = tf.nn.l2_normalize(self._noise_augment(self.user_embeddings_final), axis=1)
-        loss_u = self._infonce_pair(u1, u2, self.cl_tau)
+        u = self.user_embeddings_final
         if self.model_type in ['KGCN_NGCF', 'KGCN_LightGCN']:
-            i1 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_cf), axis=1)
-            i2 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_cf), axis=1)
+            i = self.item_embeddings_cf
         else:
-            i1 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_final), axis=1)
-            i2 = tf.nn.l2_normalize(self._noise_augment(self.item_embeddings_final), axis=1)
+            i = self.item_embeddings_final
+        if self.cl_sample_size > 0:
+            u, i = self._subsample_aligned(u, i)
+        u1 = tf.nn.l2_normalize(self._noise_augment(u), axis=1)
+        u2 = tf.nn.l2_normalize(self._noise_augment(u), axis=1)
+        loss_u = self._infonce_pair(u1, u2, self.cl_tau)
+        i1 = tf.nn.l2_normalize(self._noise_augment(i), axis=1)
+        i2 = tf.nn.l2_normalize(self._noise_augment(i), axis=1)
         loss_i = self._infonce_pair(i1, i2, self.cl_tau)
         return 0.5 * (loss_u + loss_i)
 
@@ -805,7 +833,7 @@ class KGCN(object):
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_agg['agg_w_1']) + \
                                tf.nn.l2_loss(self.weights_agg['agg_w_2'])
 
-            if getattr(self, 'fusion', 'fixed') == 'gate' and self.agg_type == 'weighted_avg':
+            if getattr(self, 'fusion', 'fixed') in ('gate', 'residual') and self.agg_type == 'weighted_avg':
                 self.l2_loss = self.l2_loss + tf.nn.l2_loss(self.weights_gate['gate_W'])
 
         '''
@@ -872,7 +900,7 @@ class KGCN(object):
         }
         ua, ia = sess.run([self.ua_embeddings, self.ia_embeddings], feed_dict=feed_dict)
         cache = {'ua': ua, 'ia': ia, 'gate_W': None, 'gate_b': None, 'agg': None}
-        if self.fusion == 'gate' and self.agg_type == 'weighted_avg':
+        if self.fusion in ('gate', 'residual') and self.agg_type == 'weighted_avg':
             cache['gate_W'], cache['gate_b'] = sess.run(
                 [self.weights_gate['gate_W'], self.weights_gate['gate_b']])
         if self.agg_type in ['gcn', 'graphsage', 'bi']:
@@ -893,11 +921,13 @@ class KGCN(object):
 
     def _fuse_item_embeddings_np(self, item_cf, item_kg, cache):
         if self.agg_type == 'weighted_avg':
-            if self.fusion == 'gate' and cache.get('gate_W') is not None:
+            if self.fusion in ('gate', 'residual') and cache.get('gate_W') is not None:
                 gate_in = np.concatenate([item_cf, item_kg], axis=-1)
                 logits = gate_in.dot(cache['gate_W']) + cache['gate_b']
-                alpha = self._sigmoid_np(logits)
-                return alpha * item_cf + (1.0 - alpha) * item_kg
+                g = self._sigmoid_np(logits)
+                if self.fusion == 'residual':
+                    return item_kg + g * item_cf
+                return g * item_cf + (1.0 - g) * item_kg
             return self.alpha * item_cf + (1.0 - self.alpha) * item_kg
         agg = cache.get('agg') or {}
         if self.agg_type == 'gcn':
