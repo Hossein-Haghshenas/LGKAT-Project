@@ -1,0 +1,10 @@
+Paired significance test -- dataset: music
+proposed = KGCN_LightGCN (kg_transformer_v2_music_hop2)   base = KGCN_LightGCN (kg_transformer_v2_music_hop1)
+paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
+runs paired = 5
+
+metric      proposed            base                delta       t         p         sig   
+AUC         0.4970+-0.0045      0.8293+-0.0009      -0.3323     -160.459  0.0000    ***   
+F1          0.4991+-0.0049      0.7506+-0.0019      -0.2515     -85.418   0.0000    ***   
+Recall@10   0.0050+-0.0055      0.1571+-0.0259      -0.1521     -9.801    0.0006    ***   
+NDCG@10     0.0031+-0.0030      0.1107+-0.0158      -0.1076     -11.851   0.0003    ***   

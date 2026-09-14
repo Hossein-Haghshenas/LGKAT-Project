@@ -118,6 +118,8 @@ def _payload_from_records(args, k_list, run_records, auc, f1_score, recall, prec
         payload['n_attempted'] = int(len(run_records))
         payload['n_valid'] = int(len(auc))
         payload['run_records'] = run_records
+        # complete CLI snapshot for protocol runs (--log_resources 1 only)
+        payload['config'] = {k: _json_safe(getattr(args, k)) for k in sorted(vars(args))}
     return payload
 
 
@@ -405,6 +407,7 @@ def train_n_runs(args, data, show_loss, show_topk, show_ctr):
 
         rec['train_seconds'] = float(train_seconds)
         rec['total_seconds'] = float(time.perf_counter() - t_run0)
+        rec['eval_seconds'] = float(rec['total_seconds'] - rec['train_seconds'])
         if log_res:
             peak_b, peak_mb, src = _peak_from_samples(vram_samples)
         else:
