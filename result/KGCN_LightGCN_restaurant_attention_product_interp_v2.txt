@@ -1,0 +1,34 @@
+Attention case study -- dataset:restaurant model:KGCN_LightGCN att:product
+user:668790  (train items:693  test items:105)
+top-5 recommended items and their KG-neighbor attention:
+
+rank 1: item 486  score=0.9709  
+    neighbor entity    6775  relation   6  attention 0.4855
+    neighbor entity    2142  relation   6  attention 0.4742
+    neighbor entity    1714  relation   6  attention 0.0354
+    neighbor entity    1399  relation   0  attention 0.0049
+
+rank 2: item 383  score=0.9700  
+    neighbor entity    2273  relation   6  attention 0.7201
+    neighbor entity    1403  relation   0  attention 0.2484
+    neighbor entity   17467  relation   6  attention 0.0258
+    neighbor entity    1382  relation   0  attention 0.0057
+
+rank 3: item 34  score=0.9614  
+    neighbor entity    5735  relation   6  attention 0.3237
+    neighbor entity   25776  relation   6  attention 0.3088
+    neighbor entity    9676  relation   6  attention 0.1905
+    neighbor entity   22498  relation   6  attention 0.1769
+
+rank 4: item 30  score=0.9591  
+    neighbor entity    2502  relation   6  attention 0.6664
+    neighbor entity    1381  relation   0  attention 0.2845
+    neighbor entity   10164  relation   6  attention 0.0287
+    neighbor entity    2933  relation   6  attention 0.0204
+
+rank 5: item 165  score=0.9579  
+    neighbor entity   11973  relation   6  attention 0.5421
+    neighbor entity    1416  relation   0  attention 0.4367
+    neighbor entity    1442  relation   0  attention 0.0131
+    neighbor entity    1363  relation   0  attention 0.0081
+

@@ -1,0 +1,54 @@
+Attention case study -- dataset:music model:KGCN_LightGCN att:product
+user:774  (train items:30  test items:9)
+top-5 recommended items and their KG-neighbor attention:
+
+rank 1: item 1572  score=0.5039  
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+    neighbor entity    4332  relation   0  attention 0.1250
+
+rank 2: item 361  score=0.5030  
+    neighbor entity    5989  relation  30  attention 0.1250
+    neighbor entity    7249  relation  12  attention 0.1250
+    neighbor entity    6792  relation   1  attention 0.1250
+    neighbor entity    5989  relation  28  attention 0.1250
+    neighbor entity    7249  relation  17  attention 0.1250
+    neighbor entity    9295  relation  30  attention 0.1250
+    neighbor entity    5215  relation  17  attention 0.1250
+    neighbor entity    9295  relation  28  attention 0.1250
+
+rank 3: item 3259  score=0.5028  
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+    neighbor entity    6346  relation   0  attention 0.1250
+
+rank 4: item 2154  score=0.5028  
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+    neighbor entity    5623  relation   0  attention 0.1250
+
+rank 5: item 2749  score=0.5028  
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+    neighbor entity    6725  relation   0  attention 0.1250
+
