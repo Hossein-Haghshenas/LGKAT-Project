@@ -1,0 +1,14 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 cl_sample_size:0 cl_detach:none use_simgcl:0 simgcl_lambda:0.1 simgcl_eps:0.1 lr_decay:0.98 early_stop:5 early_stop_min_epoch:0 fusion:residual exp_tag:v3_book_res_residual_product n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+average auc: 0.7146+\-0.0008
+average f1 : 0.6564+\-0.0020
+average recall   : 0.0464+\-0.0151 0.0713+\-0.0251 0.1210+\-0.0245 0.1574+\-0.0180 
+average precision: 0.0350+\-0.0089 0.0142+\-0.0040 0.0054+\-0.0009 0.0037+\-0.0005 
+average ndcg     : 0.0543+\-0.0180 0.0612+\-0.0204 0.0735+\-0.0198 0.0806+\-0.0183 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0464+-0.0151  precision: 0.0350+-0.0089  ndcg: 0.0543+-0.0180
+  R@10 recall: 0.0713+-0.0251  precision: 0.0142+-0.0040  ndcg: 0.0612+-0.0204
+  R@50 recall: 0.1210+-0.0245  precision: 0.0054+-0.0009  ndcg: 0.0735+-0.0198
+  R@100 recall: 0.1574+-0.0180  precision: 0.0037+-0.0005  ndcg: 0.0806+-0.0183
