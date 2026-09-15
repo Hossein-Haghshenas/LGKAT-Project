@@ -1,0 +1,581 @@
+STAGE_START 4 ssl-ablation
+================================================================================
+ARM ssl_book_nocl
+SKIP already complete: ssl_book_nocl
+ARM_DONE ssl_book_nocl
+================================================================================
+ARM ssl_book_cl005
+SKIP already complete: ssl_book_cl005
+ARM_DONE ssl_book_cl005
+================================================================================
+ARM ssl_movie_nocl
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset movie --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 32 --n_iter 2 --batch_size 8192 --l2_weight 5e-6 --lr 0.0025 --layer_size [32] --adj_type plain --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 1 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion gate --use_cl 0 --use_simgcl 0 --lr_decay 0.98 --early_stop 8 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag ssl_ablate_3run_movie_nocl
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (155113, 155113) 0.48897290229797363
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2042    lr: 0.002500
+epoch 0    train auc: 0.9852  f1: 0.9508    eval auc: 0.9800  f1: 0.9406    test auc: 0.9802  f1: 0.9408
+epoch 1    train_loss: 0.1610    lr: 0.002450
+epoch 1    train auc: 0.9883  f1: 0.9565    eval auc: 0.9813  f1: 0.9427    test auc: 0.9814  f1: 0.9430
+epoch 2    train_loss: 0.1494    lr: 0.002401
+epoch 2    train auc: 0.9895  f1: 0.9590    eval auc: 0.9810  f1: 0.9415    test auc: 0.9811  f1: 0.9417
+epoch 3    train_loss: 0.1431    lr: 0.002353
+epoch 3    train auc: 0.9901  f1: 0.9605    eval auc: 0.9809  f1: 0.9417    test auc: 0.9811  f1: 0.9419
+epoch 4    train_loss: 0.1393    lr: 0.002306
+epoch 4    train auc: 0.9906  f1: 0.9616    eval auc: 0.9805  f1: 0.9410    test auc: 0.9807  f1: 0.9413
+epoch 5    train_loss: 0.1366    lr: 0.002260
+epoch 5    train auc: 0.9910  f1: 0.9624    eval auc: 0.9802  f1: 0.9398    test auc: 0.9803  f1: 0.9400
+epoch 6    train_loss: 0.1369    lr: 0.002215
+epoch 6    train auc: 0.9907  f1: 0.9621    eval auc: 0.9796  f1: 0.9397    test auc: 0.9798  f1: 0.9399
+epoch 7    train_loss: 0.1334    lr: 0.002170
+epoch 7    train auc: 0.9913  f1: 0.9631    eval auc: 0.9798  f1: 0.9387    test auc: 0.9799  f1: 0.9387
+epoch 8    train_loss: 0.1319    lr: 0.002127
+epoch 8    train auc: 0.9914  f1: 0.9634    eval auc: 0.9793  f1: 0.9381    test auc: 0.9795  f1: 0.9384
+epoch 9    train_loss: 0.1310    lr: 0.002084
+epoch 9    train auc: 0.9916  f1: 0.9638    eval auc: 0.9794  f1: 0.9380    test auc: 0.9796  f1: 0.9383
+epoch 10    train_loss: 0.1301    lr: 0.002043
+epoch 10    train auc: 0.9915  f1: 0.9639    eval auc: 0.9794  f1: 0.9384    test auc: 0.9796  f1: 0.9387
+epoch 11    train_loss: 0.1294    lr: 0.002002
+epoch 11    train auc: 0.9918  f1: 0.9644    eval auc: 0.9791  f1: 0.9374    test auc: 0.9792  f1: 0.9376
+epoch 12    train_loss: 0.1287    lr: 0.001962
+epoch 12    train auc: 0.9919  f1: 0.9647    eval auc: 0.9792  f1: 0.9378    test auc: 0.9794  f1: 0.9379
+===== Tue 09/15/2026 13:54:52.29 resume --only 4 6 =====
+STAGE_START 4 ssl-ablation
+================================================================================
+ARM ssl_book_nocl
+SKIP already complete: ssl_book_nocl
+ARM_DONE ssl_book_nocl
+================================================================================
+ARM ssl_book_cl005
+SKIP already complete: ssl_book_cl005
+ARM_DONE ssl_book_cl005
+================================================================================
+ARM ssl_movie_nocl
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset movie --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 32 --n_iter 2 --batch_size 8192 --l2_weight 5e-6 --lr 0.0025 --layer_size [32] --adj_type plain --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 1 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion gate --use_cl 0 --use_simgcl 0 --lr_decay 0.98 --early_stop 8 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag ssl_ablate_3run_movie_nocl
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (155113, 155113) 0.7404470443725586
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2037    lr: 0.002500
+epoch 0    train auc: 0.9852  f1: 0.9509    eval auc: 0.9802  f1: 0.9414    test auc: 0.9804  f1: 0.9417
+epoch 1    train_loss: 0.1605    lr: 0.002450
+epoch 1    train auc: 0.9882  f1: 0.9566    eval auc: 0.9812  f1: 0.9427    test auc: 0.9813  f1: 0.9429
+epoch 2    train_loss: 0.1488    lr: 0.002401
+epoch 2    train auc: 0.9898  f1: 0.9596    eval auc: 0.9814  f1: 0.9422    test auc: 0.9815  f1: 0.9424
+epoch 3    train_loss: 0.1424    lr: 0.002353
+epoch 3    train auc: 0.9903  f1: 0.9611    eval auc: 0.9812  f1: 0.9414    test auc: 0.9813  f1: 0.9415
+epoch 4    train_loss: 0.1386    lr: 0.002306
+epoch 4    train auc: 0.9908  f1: 0.9619    eval auc: 0.9808  f1: 0.9409    test auc: 0.9810  f1: 0.9412
+epoch 5    train_loss: 0.1360    lr: 0.002260
+epoch 5    train auc: 0.9911  f1: 0.9626    eval auc: 0.9801  f1: 0.9398    test auc: 0.9803  f1: 0.9401
+epoch 6    train_loss: 0.1344    lr: 0.002215
+epoch 6    train auc: 0.9913  f1: 0.9631    eval auc: 0.9800  f1: 0.9402    test auc: 0.9802  f1: 0.9403
+epoch 7    train_loss: 0.1329    lr: 0.002170
+epoch 7    train auc: 0.9914  f1: 0.9634    eval auc: 0.9800  f1: 0.9399    test auc: 0.9802  f1: 0.9400
+epoch 8    train_loss: 0.1317    lr: 0.002127
+epoch 8    train auc: 0.9916  f1: 0.9638    eval auc: 0.9795  f1: 0.9385    test auc: 0.9797  f1: 0.9387
+epoch 9    train_loss: 0.1307    lr: 0.002084
+epoch 9    train auc: 0.9916  f1: 0.9638    eval auc: 0.9793  f1: 0.9381    test auc: 0.9795  f1: 0.9383
+epoch 10    train_loss: 0.1298    lr: 0.002043
+epoch 10    train auc: 0.9916  f1: 0.9642    eval auc: 0.9797  f1: 0.9393    test auc: 0.9798  f1: 0.9395
+epoch 11    train_loss: 0.1290    lr: 0.002002
+epoch 11    train auc: 0.9919  f1: 0.9647    eval auc: 0.9794  f1: 0.9383    test auc: 0.9796  f1: 0.9386
+epoch 12    train_loss: 0.1282    lr: 0.001962
+epoch 12    train auc: 0.9919  f1: 0.9647    eval auc: 0.9792  f1: 0.9377    test auc: 0.9794  f1: 0.9378
+epoch 13    train_loss: 0.1276    lr: 0.001923
+epoch 13    train auc: 0.9920  f1: 0.9648    eval auc: 0.9792  f1: 0.9375    test auc: 0.9794  f1: 0.9377
+epoch 14    train_loss: 0.1270    lr: 0.001884
+epoch 14    train auc: 0.9921  f1: 0.9653    eval auc: 0.9791  f1: 0.9385    test auc: 0.9793  f1: 0.9386
+Early stopping at epoch 14: no eval R@10 improvement for 8 epochs (best epoch 6, eval R@10 0.2269)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2037    lr: 0.002500
+epoch 0    train auc: 0.9855  f1: 0.9508    eval auc: 0.9804  f1: 0.9405    test auc: 0.9806  f1: 0.9408
+epoch 1    train_loss: 0.1608    lr: 0.002450
+epoch 1    train auc: 0.9882  f1: 0.9563    eval auc: 0.9809  f1: 0.9423    test auc: 0.9810  f1: 0.9426
+epoch 2    train_loss: 0.1494    lr: 0.002401
+epoch 2    train auc: 0.9894  f1: 0.9592    eval auc: 0.9804  f1: 0.9405    test auc: 0.9805  f1: 0.9407
+epoch 3    train_loss: 0.1431    lr: 0.002353
+epoch 3    train auc: 0.9902  f1: 0.9608    eval auc: 0.9805  f1: 0.9409    test auc: 0.9806  f1: 0.9410
+epoch 4    train_loss: 0.1391    lr: 0.002306
+epoch 4    train auc: 0.9906  f1: 0.9618    eval auc: 0.9800  f1: 0.9404    test auc: 0.9801  f1: 0.9405
+epoch 5    train_loss: 0.1367    lr: 0.002260
+epoch 5    train auc: 0.9909  f1: 0.9623    eval auc: 0.9799  f1: 0.9393    test auc: 0.9800  f1: 0.9395
+epoch 6    train_loss: 0.1347    lr: 0.002215
+epoch 6    train auc: 0.9911  f1: 0.9631    eval auc: 0.9797  f1: 0.9392    test auc: 0.9798  f1: 0.9394
+epoch 7    train_loss: 0.1332    lr: 0.002170
+epoch 7    train auc: 0.9913  f1: 0.9635    eval auc: 0.9790  f1: 0.9375    test auc: 0.9792  f1: 0.9377
+epoch 8    train_loss: 0.1317    lr: 0.002127
+epoch 8    train auc: 0.9915  f1: 0.9640    eval auc: 0.9791  f1: 0.9378    test auc: 0.9793  f1: 0.9382
+epoch 9    train_loss: 0.1308    lr: 0.002084
+epoch 9    train auc: 0.9916  f1: 0.9644    eval auc: 0.9789  f1: 0.9385    test auc: 0.9790  f1: 0.9387
+epoch 10    train_loss: 0.1298    lr: 0.002043
+epoch 10    train auc: 0.9917  f1: 0.9645    eval auc: 0.9792  f1: 0.9392    test auc: 0.9794  f1: 0.9394
+epoch 11    train_loss: 0.1289    lr: 0.002002
+epoch 11    train auc: 0.9919  f1: 0.9647    eval auc: 0.9786  f1: 0.9372    test auc: 0.9788  f1: 0.9375
+epoch 12    train_loss: 0.1281    lr: 0.001962
+epoch 12    train auc: 0.9920  f1: 0.9651    eval auc: 0.9781  f1: 0.9360    test auc: 0.9783  f1: 0.9363
+epoch 13    train_loss: 0.1273    lr: 0.001923
+epoch 13    train auc: 0.9919  f1: 0.9654    eval auc: 0.9787  f1: 0.9377    test auc: 0.9788  f1: 0.9378
+Early stopping at epoch 13: no eval R@10 improvement for 8 epochs (best epoch 5, eval R@10 0.2175)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2054    lr: 0.002500
+epoch 0    train auc: 0.9855  f1: 0.9510    eval auc: 0.9803  f1: 0.9410    test auc: 0.9805  f1: 0.9413
+epoch 1    train_loss: 0.1603    lr: 0.002450
+epoch 1    train auc: 0.9881  f1: 0.9564    eval auc: 0.9806  f1: 0.9413    test auc: 0.9808  f1: 0.9415
+epoch 2    train_loss: 0.1486    lr: 0.002401
+epoch 2    train auc: 0.9895  f1: 0.9591    eval auc: 0.9812  f1: 0.9413    test auc: 0.9814  f1: 0.9417
+epoch 3    train_loss: 0.1424    lr: 0.002353
+epoch 3    train auc: 0.9903  f1: 0.9609    eval auc: 0.9808  f1: 0.9420    test auc: 0.9809  f1: 0.9423
+epoch 4    train_loss: 0.1386    lr: 0.002306
+epoch 4    train auc: 0.9907  f1: 0.9619    eval auc: 0.9805  f1: 0.9400    test auc: 0.9807  f1: 0.9402
+epoch 5    train_loss: 0.1366    lr: 0.002260
+epoch 5    train auc: 0.9909  f1: 0.9622    eval auc: 0.9801  f1: 0.9387    test auc: 0.9802  f1: 0.9391
+epoch 6    train_loss: 0.1341    lr: 0.002215
+epoch 6    train auc: 0.9912  f1: 0.9633    eval auc: 0.9800  f1: 0.9399    test auc: 0.9801  f1: 0.9401
+epoch 7    train_loss: 0.1326    lr: 0.002170
+epoch 7    train auc: 0.9914  f1: 0.9636    eval auc: 0.9798  f1: 0.9395    test auc: 0.9800  f1: 0.9399
+epoch 8    train_loss: 0.1315    lr: 0.002127
+epoch 8    train auc: 0.9916  f1: 0.9639    eval auc: 0.9799  f1: 0.9401    test auc: 0.9801  f1: 0.9403
+epoch 9    train_loss: 0.1306    lr: 0.002084
+epoch 9    train auc: 0.9917  f1: 0.9641    eval auc: 0.9794  f1: 0.9382    test auc: 0.9795  f1: 0.9385
+epoch 10    train_loss: 0.1297    lr: 0.002043
+epoch 10    train auc: 0.9918  f1: 0.9644    eval auc: 0.9791  f1: 0.9378    test auc: 0.9793  f1: 0.9380
+epoch 11    train_loss: 0.1290    lr: 0.002002
+epoch 11    train auc: 0.9919  f1: 0.9647    eval auc: 0.9793  f1: 0.9391    test auc: 0.9795  f1: 0.9394
+epoch 12    train_loss: 0.1281    lr: 0.001962
+epoch 12    train auc: 0.9920  f1: 0.9650    eval auc: 0.9791  f1: 0.9381    test auc: 0.9793  f1: 0.9384
+epoch 13    train_loss: 0.1275    lr: 0.001923
+epoch 13    train auc: 0.9920  f1: 0.9651    eval auc: 0.9790  f1: 0.9375    test auc: 0.9793  f1: 0.9381
+epoch 14    train_loss: 0.1269    lr: 0.001884
+epoch 14    train auc: 0.9921  f1: 0.9651    eval auc: 0.9792  f1: 0.9386    test auc: 0.9794  f1: 0.9388
+epoch 15    train_loss: 0.1263    lr: 0.001846
+epoch 15    train auc: 0.9921  f1: 0.9652    eval auc: 0.9792  f1: 0.9398    test auc: 0.9794  f1: 0.9401
+epoch 16    train_loss: 0.1257    lr: 0.001809
+epoch 16    train auc: 0.9922  f1: 0.9656    eval auc: 0.9794  f1: 0.9389    test auc: 0.9795  f1: 0.9391
+epoch 17    train_loss: 0.1252    lr: 0.001773
+epoch 17    train auc: 0.9923  f1: 0.9657    eval auc: 0.9788  f1: 0.9382    test auc: 0.9790  f1: 0.9385
+epoch 18    train_loss: 0.1247    lr: 0.001738
+epoch 18    train auc: 0.9923  f1: 0.9660    eval auc: 0.9787  f1: 0.9375    test auc: 0.9789  f1: 0.9377
+epoch 19    train_loss: 0.1243    lr: 0.001703
+epoch 19    train auc: 0.9923  f1: 0.9660    eval auc: 0.9785  f1: 0.9371    test auc: 0.9787  f1: 0.9375
+epoch 20    train_loss: 0.1238    lr: 0.001669
+epoch 20    train auc: 0.9924  f1: 0.9661    eval auc: 0.9785  f1: 0.9370    test auc: 0.9787  f1: 0.9373
+Early stopping at epoch 20: no eval R@10 improvement for 8 epochs (best epoch 12, eval R@10 0.2193)
+[log_resources] valid runs: 3/3
+[0.98152854 0.98097463 0.98141567]
+[0.94239328 0.94263873 0.94169338]
+[[0.04446015 0.16502552 0.42763808 0.57762229]
+ [0.10740013 0.24004666 0.4694528  0.59307493]
+ [0.05330006 0.21746766 0.46898041 0.58532623]]
+[[0.165  0.118  0.0698 0.0516]
+ [0.21   0.143  0.0752 0.0521]
+ [0.175  0.142  0.075  0.0525]]
+average auc: 0.9813+\-0.0002
+average f1 : 0.9422+\-0.0004
+average recall   : 0.0684+\-0.0278 0.2075+\-0.0314 0.4554+\-0.0196 0.5853+\-0.0063 
+average precision: 0.1833+\-0.0193 0.1343+\-0.0116 0.0733+\-0.0025 0.0521+\-0.0004 
+average ndcg     : 0.1888+\-0.0224 0.2055+\-0.0281 0.2799+\-0.0249 0.3221+\-0.0239 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0684+-0.0278  precision: 0.1833+-0.0193  ndcg: 0.1888+-0.0224
+  R@10 recall: 0.2075+-0.0314  precision: 0.1343+-0.0116  ndcg: 0.2055+-0.0281
+  R@50 recall: 0.4554+-0.0196  precision: 0.0733+-0.0025  ndcg: 0.2799+-0.0249
+  R@100 recall: 0.5853+-0.0063  precision: 0.0521+-0.0004  ndcg: 0.3221+-0.0239
+average train_seconds: 1896.7+\-277.6
+average total_seconds: 2768.2+\-442.4
+average peak_vram_mb: 5457.7+\-26.0
+average train_Loss 0.13861385
+ARM_DONE ssl_movie_nocl
+================================================================================
+ARM ssl_movie_cl005
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset movie --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 32 --n_iter 2 --batch_size 8192 --l2_weight 5e-6 --lr 0.0025 --layer_size [32] --adj_type plain --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 1 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion gate --use_cl 1 --use_simgcl 0 --lr_decay 0.98 --early_stop 8 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --cl_lambda 0.005 --cl_tau 0.2 --exp_tag ssl_ablate_3run_movie_cl005
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (155113, 155113) 0.9201061725616455
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2051    cl_loss: 7.0009    lr: 0.002500
+epoch 0    train auc: 0.9855  f1: 0.9510    eval auc: 0.9802  f1: 0.9411    test auc: 0.9805  f1: 0.9414
+epoch 1    train_loss: 0.1611    cl_loss: 6.4203    lr: 0.002450
+epoch 1    train auc: 0.9880  f1: 0.9557    eval auc: 0.9808  f1: 0.9418    test auc: 0.9810  f1: 0.9419
+epoch 2    train_loss: 0.1498    cl_loss: 6.2567    lr: 0.002401
+epoch 2    train auc: 0.9894  f1: 0.9586    eval auc: 0.9808  f1: 0.9413    test auc: 0.9809  f1: 0.9415
+epoch 3    train_loss: 0.1437    cl_loss: 6.1665    lr: 0.002353
+epoch 3    train auc: 0.9901  f1: 0.9602    eval auc: 0.9804  f1: 0.9406    test auc: 0.9806  f1: 0.9410
+epoch 4    train_loss: 0.1400    cl_loss: 6.1093    lr: 0.002306
+epoch 4    train auc: 0.9905  f1: 0.9612    eval auc: 0.9801  f1: 0.9405    test auc: 0.9803  f1: 0.9405
+epoch 5    train_loss: 0.1372    cl_loss: 6.0563    lr: 0.002260
+epoch 5    train auc: 0.9907  f1: 0.9616    eval auc: 0.9796  f1: 0.9383    test auc: 0.9797  f1: 0.9383
+epoch 6    train_loss: 0.1353    cl_loss: 6.0070    lr: 0.002215
+epoch 6    train auc: 0.9910  f1: 0.9623    eval auc: 0.9795  f1: 0.9390    test auc: 0.9797  f1: 0.9392
+epoch 7    train_loss: 0.1339    cl_loss: 5.9685    lr: 0.002170
+epoch 7    train auc: 0.9912  f1: 0.9629    eval auc: 0.9793  f1: 0.9388    test auc: 0.9794  f1: 0.9389
+epoch 8    train_loss: 0.1325    cl_loss: 5.9105    lr: 0.002127
+epoch 8    train auc: 0.9913  f1: 0.9629    eval auc: 0.9790  f1: 0.9379    test auc: 0.9792  f1: 0.9380
+epoch 9    train_loss: 0.1315    cl_loss: 5.8670    lr: 0.002084
+epoch 9    train auc: 0.9915  f1: 0.9636    eval auc: 0.9789  f1: 0.9387    test auc: 0.9791  f1: 0.9388
+epoch 10    train_loss: 0.1306    cl_loss: 5.8271    lr: 0.002043
+epoch 10    train auc: 0.9916  f1: 0.9638    eval auc: 0.9788  f1: 0.9385    test auc: 0.9789  f1: 0.9386
+epoch 11    train_loss: 0.1297    cl_loss: 5.7651    lr: 0.002002
+epoch 11    train auc: 0.9917  f1: 0.9641    eval auc: 0.9787  f1: 0.9383    test auc: 0.9788  f1: 0.9384
+epoch 12    train_loss: 0.1288    cl_loss: 5.7196    lr: 0.001962
+epoch 12    train auc: 0.9917  f1: 0.9642    eval auc: 0.9785  f1: 0.9372    test auc: 0.9787  f1: 0.9373
+epoch 13    train_loss: 0.1281    cl_loss: 5.6567    lr: 0.001923
+epoch 13    train auc: 0.9918  f1: 0.9645    eval auc: 0.9784  f1: 0.9371    test auc: 0.9786  f1: 0.9371
+epoch 14    train_loss: 0.1275    cl_loss: 5.7251    lr: 0.001884
+epoch 14    train auc: 0.9920  f1: 0.9648    eval auc: 0.9782  f1: 0.9378    test auc: 0.9784  f1: 0.9379
+epoch 15    train_loss: 0.1267    cl_loss: 5.5136    lr: 0.001846
+epoch 15    train auc: 0.9920  f1: 0.9652    eval auc: 0.9780  f1: 0.9367    test auc: 0.9781  f1: 0.9369
+Early stopping at epoch 15: no eval R@10 improvement for 8 epochs (best epoch 7, eval R@10 0.2301)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2057    cl_loss: 6.9686    lr: 0.002500
+epoch 0    train auc: 0.9854  f1: 0.9508    eval auc: 0.9798  f1: 0.9403    test auc: 0.9799  f1: 0.9404
+epoch 1    train_loss: 0.1607    cl_loss: 6.3776    lr: 0.002450
+epoch 1    train auc: 0.9880  f1: 0.9560    eval auc: 0.9805  f1: 0.9415    test auc: 0.9807  f1: 0.9418
+epoch 2    train_loss: 0.1495    cl_loss: 6.2576    lr: 0.002401
+epoch 2    train auc: 0.9894  f1: 0.9586    eval auc: 0.9810  f1: 0.9430    test auc: 0.9811  f1: 0.9432
+epoch 3    train_loss: 0.1433    cl_loss: 6.1798    lr: 0.002353
+epoch 3    train auc: 0.9901  f1: 0.9603    eval auc: 0.9805  f1: 0.9408    test auc: 0.9806  f1: 0.9408
+epoch 4    train_loss: 0.1395    cl_loss: 6.1282    lr: 0.002306
+epoch 4    train auc: 0.9906  f1: 0.9613    eval auc: 0.9801  f1: 0.9407    test auc: 0.9803  f1: 0.9409
+epoch 5    train_loss: 0.1370    cl_loss: 6.0835    lr: 0.002260
+epoch 5    train auc: 0.9909  f1: 0.9620    eval auc: 0.9798  f1: 0.9400    test auc: 0.9799  f1: 0.9401
+epoch 6    train_loss: 0.1352    cl_loss: 6.0359    lr: 0.002215
+epoch 6    train auc: 0.9911  f1: 0.9625    eval auc: 0.9796  f1: 0.9403    test auc: 0.9797  f1: 0.9404
+epoch 7    train_loss: 0.1337    cl_loss: 5.9884    lr: 0.002170
+epoch 7    train auc: 0.9912  f1: 0.9629    eval auc: 0.9796  f1: 0.9395    test auc: 0.9797  f1: 0.9397
+epoch 8    train_loss: 0.1324    cl_loss: 5.9400    lr: 0.002127
+epoch 8    train auc: 0.9913  f1: 0.9631    eval auc: 0.9792  f1: 0.9384    test auc: 0.9794  f1: 0.9385
+epoch 9    train_loss: 0.1313    cl_loss: 5.8934    lr: 0.002084
+epoch 9    train auc: 0.9915  f1: 0.9636    eval auc: 0.9790  f1: 0.9388    test auc: 0.9792  f1: 0.9387
+epoch 10    train_loss: 0.1303    cl_loss: 5.8442    lr: 0.002043
+epoch 10    train auc: 0.9917  f1: 0.9639    eval auc: 0.9790  f1: 0.9388    test auc: 0.9792  f1: 0.9389
+epoch 11    train_loss: 0.1295    cl_loss: 5.7896    lr: 0.002002
+epoch 11    train auc: 0.9917  f1: 0.9639    eval auc: 0.9789  f1: 0.9389    test auc: 0.9790  f1: 0.9390
+epoch 12    train_loss: 0.1288    cl_loss: 5.7389    lr: 0.001962
+epoch 12    train auc: 0.9918  f1: 0.9643    eval auc: 0.9788  f1: 0.9384    test auc: 0.9789  f1: 0.9384
+epoch 13    train_loss: 0.1281    cl_loss: 5.6752    lr: 0.001923
+epoch 13    train auc: 0.9918  f1: 0.9641    eval auc: 0.9786  f1: 0.9367    test auc: 0.9788  f1: 0.9367
+Early stopping at epoch 13: no eval R@10 improvement for 8 epochs (best epoch 5, eval R@10 0.2149)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2043    cl_loss: 6.9792    lr: 0.002500
+epoch 0    train auc: 0.9853  f1: 0.9505    eval auc: 0.9801  f1: 0.9406    test auc: 0.9802  f1: 0.9406
+epoch 1    train_loss: 0.1604    cl_loss: 6.3869    lr: 0.002450
+epoch 1    train auc: 0.9881  f1: 0.9561    eval auc: 0.9811  f1: 0.9431    test auc: 0.9812  f1: 0.9433
+epoch 2    train_loss: 0.1490    cl_loss: 6.2493    lr: 0.002401
+epoch 2    train auc: 0.9894  f1: 0.9587    eval auc: 0.9808  f1: 0.9419    test auc: 0.9809  f1: 0.9423
+epoch 3    train_loss: 0.1429    cl_loss: 6.1839    lr: 0.002353
+epoch 3    train auc: 0.9902  f1: 0.9606    eval auc: 0.9805  f1: 0.9410    test auc: 0.9806  f1: 0.9413
+epoch 4    train_loss: 0.1391    cl_loss: 6.1439    lr: 0.002306
+epoch 4    train auc: 0.9906  f1: 0.9613    eval auc: 0.9803  f1: 0.9404    test auc: 0.9805  f1: 0.9406
+epoch 5    train_loss: 0.1364    cl_loss: 6.0899    lr: 0.002260
+epoch 5    train auc: 0.9908  f1: 0.9621    eval auc: 0.9800  f1: 0.9401    test auc: 0.9802  f1: 0.9404
+epoch 6    train_loss: 0.1345    cl_loss: 6.0528    lr: 0.002215
+epoch 6    train auc: 0.9911  f1: 0.9626    eval auc: 0.9796  f1: 0.9395    test auc: 0.9798  f1: 0.9398
+epoch 7    train_loss: 0.1331    cl_loss: 6.0206    lr: 0.002170
+epoch 7    train auc: 0.9913  f1: 0.9630    eval auc: 0.9795  f1: 0.9389    test auc: 0.9797  f1: 0.9392
+epoch 8    train_loss: 0.1319    cl_loss: 5.9670    lr: 0.002127
+epoch 8    train auc: 0.9913  f1: 0.9633    eval auc: 0.9795  f1: 0.9394    test auc: 0.9797  f1: 0.9399
+epoch 9    train_loss: 0.1309    cl_loss: 5.9205    lr: 0.002084
+epoch 9    train auc: 0.9915  f1: 0.9635    eval auc: 0.9793  f1: 0.9379    test auc: 0.9795  f1: 0.9383
+epoch 10    train_loss: 0.1300    cl_loss: 5.8737    lr: 0.002043
+epoch 10    train auc: 0.9917  f1: 0.9639    eval auc: 0.9793  f1: 0.9385    test auc: 0.9795  f1: 0.9386
+epoch 11    train_loss: 0.1292    cl_loss: 5.8240    lr: 0.002002
+epoch 11    train auc: 0.9917  f1: 0.9640    eval auc: 0.9790  f1: 0.9386    test auc: 0.9792  f1: 0.9388
+epoch 12    train_loss: 0.1284    cl_loss: 5.7730    lr: 0.001962
+epoch 12    train auc: 0.9918  f1: 0.9644    eval auc: 0.9789  f1: 0.9391    test auc: 0.9791  f1: 0.9393
+Early stopping at epoch 12: no eval R@10 improvement for 8 epochs (best epoch 4, eval R@10 0.2189)
+[log_resources] valid runs: 3/3
+[0.98094346 0.98110997 0.98124439]
+[0.94149003 0.94323034 0.94332534]
+[[0.05688527 0.18576169 0.47411504 0.59724894]
+ [0.11173966 0.24169654 0.48763482 0.61377553]
+ [0.05145835 0.17843389 0.48257727 0.60562677]]
+[[0.16   0.129  0.0724 0.0513]
+ [0.265  0.153  0.078  0.0534]
+ [0.165  0.129  0.075  0.0532]]
+average auc: 0.9811+\-0.0001
+average f1 : 0.9427+\-0.0008
+average recall   : 0.0734+\-0.0272 0.2020+\-0.0283 0.4814+\-0.0056 0.6056+\-0.0067 
+average precision: 0.1967+\-0.0484 0.1370+\-0.0113 0.0751+\-0.0023 0.0526+\-0.0009 
+average ndcg     : 0.2064+\-0.0527 0.2136+\-0.0358 0.2962+\-0.0308 0.3369+\-0.0322 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0734+-0.0272  precision: 0.1967+-0.0484  ndcg: 0.2064+-0.0527
+  R@10 recall: 0.2020+-0.0283  precision: 0.1370+-0.0113  ndcg: 0.2136+-0.0358
+  R@50 recall: 0.4814+-0.0056  precision: 0.0751+-0.0023  ndcg: 0.2962+-0.0308
+  R@100 recall: 0.6056+-0.0067  precision: 0.0526+-0.0009  ndcg: 0.3369+-0.0322
+average train_seconds: 2149.8+\-107.1
+average total_seconds: 2921.2+\-87.2
+average peak_vram_mb: 6253.0+\-517.0
+average train_Loss 0.14131616
+ARM_DONE ssl_movie_cl005
+================================================================================
+ARM ssl_restaurant_nocl
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 32768 --l2_weight 1e-7 --lr 0.02 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion gate --use_cl 0 --use_simgcl 0 --lr_decay 0.98 --early_stop 5 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag ssl_ablate_3run_restaurant_nocl
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (2300060, 2300060) 1.6513984203338623
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.4077    lr: 0.020000
+epoch 0    train auc: 0.9521  f1: 0.8852    eval auc: 0.8714  f1: 0.7798    test auc: 0.8713  f1: 0.7797
+epoch 1    train_loss: 0.3118    lr: 0.019600
+epoch 1    train auc: 0.9687  f1: 0.9098    eval auc: 0.8725  f1: 0.7844    test auc: 0.8725  f1: 0.7845
+epoch 2    train_loss: 0.2793    lr: 0.019208
+epoch 2    train auc: 0.9739  f1: 0.9187    eval auc: 0.8696  f1: 0.7800    test auc: 0.8696  f1: 0.7799
+epoch 3    train_loss: 0.2665    lr: 0.018824
+epoch 3    train auc: 0.9763  f1: 0.9226    eval auc: 0.8680  f1: 0.7776    test auc: 0.8679  f1: 0.7774
+epoch 4    train_loss: 0.2589    lr: 0.018447
+epoch 4    train auc: 0.9777  f1: 0.9250    eval auc: 0.8673  f1: 0.7800    test auc: 0.8672  f1: 0.7798
+epoch 5    train_loss: 0.2536    lr: 0.018078
+epoch 5    train auc: 0.9786  f1: 0.9265    eval auc: 0.8670  f1: 0.7786    test auc: 0.8670  f1: 0.7787
+Early stopping at epoch 5: no eval R@10 improvement for 5 epochs (best epoch 0, eval R@10 0.1639)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.4033    lr: 0.020000
+epoch 0    train auc: 0.9541  f1: 0.8877    eval auc: 0.8719  f1: 0.7837    test auc: 0.8719  f1: 0.7839
+epoch 1    train_loss: 0.3083    lr: 0.019600
+epoch 1    train auc: 0.9701  f1: 0.9117    eval auc: 0.8732  f1: 0.7852    test auc: 0.8733  f1: 0.7853
+epoch 2    train_loss: 0.2762    lr: 0.019208
+epoch 2    train auc: 0.9747  f1: 0.9197    eval auc: 0.8715  f1: 0.7849    test auc: 0.8715  f1: 0.7848
+epoch 3    train_loss: 0.2632    lr: 0.018824
+epoch 3    train auc: 0.9771  f1: 0.9241    eval auc: 0.8696  f1: 0.7819    test auc: 0.8695  f1: 0.7818
+epoch 4    train_loss: 0.2556    lr: 0.018447
+epoch 4    train auc: 0.9786  f1: 0.9265    eval auc: 0.8681  f1: 0.7802    test auc: 0.8680  f1: 0.7800
+epoch 5    train_loss: 0.2504    lr: 0.018078
+epoch 5    train auc: 0.9795  f1: 0.9282    eval auc: 0.8671  f1: 0.7813    test auc: 0.8671  f1: 0.7812
+epoch 6    train_loss: 0.2462    lr: 0.017717
+epoch 6    train auc: 0.9802  f1: 0.9293    eval auc: 0.8670  f1: 0.7808    test auc: 0.8669  f1: 0.7807
+epoch 7    train_loss: 0.2428    lr: 0.017363
+epoch 7    train auc: 0.9807  f1: 0.9298    eval auc: 0.8667  f1: 0.7796    test auc: 0.8666  f1: 0.7795
+epoch 8    train_loss: 0.2398    lr: 0.017015
+epoch 8    train auc: 0.9812  f1: 0.9308    eval auc: 0.8659  f1: 0.7806    test auc: 0.8657  f1: 0.7802
+Early stopping at epoch 8: no eval R@10 improvement for 5 epochs (best epoch 3, eval R@10 0.1651)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.4021    lr: 0.020000
+epoch 0    train auc: 0.9544  f1: 0.8882    eval auc: 0.8724  f1: 0.7822    test auc: 0.8724  f1: 0.7822
+epoch 1    train_loss: 0.3073    lr: 0.019600
+epoch 1    train auc: 0.9702  f1: 0.9123    eval auc: 0.8730  f1: 0.7847    test auc: 0.8730  f1: 0.7844
+epoch 2    train_loss: 0.2760    lr: 0.019208
+epoch 2    train auc: 0.9751  f1: 0.9203    eval auc: 0.8708  f1: 0.7837    test auc: 0.8708  f1: 0.7835
+epoch 3    train_loss: 0.2632    lr: 0.018824
+epoch 3    train auc: 0.9773  f1: 0.9244    eval auc: 0.8687  f1: 0.7796    test auc: 0.8687  f1: 0.7794
+epoch 4    train_loss: 0.2556    lr: 0.018447
+epoch 4    train auc: 0.9785  f1: 0.9261    eval auc: 0.8682  f1: 0.7816    test auc: 0.8681  f1: 0.7816
+epoch 5    train_loss: 0.2503    lr: 0.018078
+epoch 5    train auc: 0.9794  f1: 0.9275    eval auc: 0.8676  f1: 0.7803    test auc: 0.8676  f1: 0.7803
+Early stopping at epoch 5: no eval R@10 improvement for 5 epochs (best epoch 0, eval R@10 0.1285)
+[log_resources] valid runs: 3/3
+[0.87252147 0.87329622 0.87297709]
+[0.78446494 0.78532669 0.784445  ]
+[[0.04709957 0.1326039  0.31973593 0.52105411]
+ [0.0467751  0.13363844 0.40106158 0.58109252]
+ [0.03088889 0.10380891 0.34507753 0.48650092]]
+[[0.04   0.026  0.0148 0.0122]
+ [0.065  0.031  0.02   0.014 ]
+ [0.03   0.022  0.016  0.0117]]
+average auc: 0.8729+\-0.0003
+average f1 : 0.7847+\-0.0004
+average recall   : 0.0416+\-0.0076 0.1234+\-0.0138 0.3553+\-0.0340 0.5295+\-0.0391 
+average precision: 0.0450+\-0.0147 0.0263+\-0.0037 0.0169+\-0.0022 0.0126+\-0.0010 
+average ndcg     : 0.0530+\-0.0107 0.0764+\-0.0097 0.1385+\-0.0108 0.1732+\-0.0133 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0416+-0.0076  precision: 0.0450+-0.0147  ndcg: 0.0530+-0.0107
+  R@10 recall: 0.1234+-0.0138  precision: 0.0263+-0.0037  ndcg: 0.0764+-0.0097
+  R@50 recall: 0.3553+-0.0340  precision: 0.0169+-0.0022  ndcg: 0.1385+-0.0108
+  R@100 recall: 0.5295+-0.0391  precision: 0.0126+-0.0010  ndcg: 0.1732+-0.0133
+average train_seconds: 795.1+\-160.1
+average total_seconds: 1280.3+\-255.2
+average peak_vram_mb: 15369.0+\-80.1
+average train_Loss 0.2865735
+ARM_DONE ssl_restaurant_nocl
+================================================================================
+ARM ssl_restaurant_cl256
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 32768 --l2_weight 1e-7 --lr 0.02 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion gate --use_cl 1 --use_simgcl 0 --lr_decay 0.98 --early_stop 5 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --cl_lambda 0.02 --cl_tau 0.2 --cl_sample_size 256 --exp_tag ssl_ablate_3run_restaurant_cl256
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (2300060, 2300060) 1.3047287464141846
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.4463    cl_loss: 2.6629    lr: 0.020000
+epoch 0    train auc: 0.9537  f1: 0.8857    eval auc: 0.8618  f1: 0.7750    test auc: 0.8617  f1: 0.7751
+epoch 1    train_loss: 0.3156    cl_loss: 2.4976    lr: 0.019600
+epoch 1    train auc: 0.9700  f1: 0.9094    eval auc: 0.8651  f1: 0.7804    test auc: 0.8649  f1: 0.7802
+epoch 2    train_loss: 0.2813    cl_loss: 2.4685    lr: 0.019208
+epoch 2    train auc: 0.9749  f1: 0.9183    eval auc: 0.8630  f1: 0.7759    test auc: 0.8629  f1: 0.7758
+epoch 3    train_loss: 0.2674    cl_loss: 2.4638    lr: 0.018824
+epoch 3    train auc: 0.9771  f1: 0.9224    eval auc: 0.8622  f1: 0.7746    test auc: 0.8621  f1: 0.7746
+epoch 4    train_loss: 0.2591    cl_loss: 2.4627    lr: 0.018447
+epoch 4    train auc: 0.9783  f1: 0.9245    eval auc: 0.8628  f1: 0.7779    test auc: 0.8626  f1: 0.7776
+epoch 5    train_loss: 0.2535    cl_loss: 2.4656    lr: 0.018078
+epoch 5    train auc: 0.9793  f1: 0.9263    eval auc: 0.8628  f1: 0.7767    test auc: 0.8626  f1: 0.7766
+epoch 6    train_loss: 0.2492    cl_loss: 2.4677    lr: 0.017717
+epoch 6    train auc: 0.9800  f1: 0.9278    eval auc: 0.8624  f1: 0.7750    test auc: 0.8623  f1: 0.7751
+epoch 7    train_loss: 0.2457    cl_loss: 2.4724    lr: 0.017363
+epoch 7    train auc: 0.9805  f1: 0.9286    eval auc: 0.8623  f1: 0.7742    test auc: 0.8621  f1: 0.7740
+epoch 8    train_loss: 0.2430    cl_loss: 2.4739    lr: 0.017015
+epoch 8    train auc: 0.9809  f1: 0.9296    eval auc: 0.8623  f1: 0.7766    test auc: 0.8622  f1: 0.7768
+epoch 9    train_loss: 0.2404    cl_loss: 2.4754    lr: 0.016675
+epoch 9    train auc: 0.9813  f1: 0.9302    eval auc: 0.8622  f1: 0.7764    test auc: 0.8621  f1: 0.7764
+Early stopping at epoch 9: no eval R@10 improvement for 5 epochs (best epoch 4, eval R@10 0.1071)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.4472    cl_loss: 2.7071    lr: 0.020000
+epoch 0    train auc: 0.9523  f1: 0.8829    eval auc: 0.8567  f1: 0.7687    test auc: 0.8564  f1: 0.7683
+epoch 1    train_loss: 0.3204    cl_loss: 2.5055    lr: 0.019600
+epoch 1    train auc: 0.9688  f1: 0.9071    eval auc: 0.8626  f1: 0.7756    test auc: 0.8624  f1: 0.7751
+epoch 2    train_loss: 0.2857    cl_loss: 2.4763    lr: 0.019208
+epoch 2    train auc: 0.9740  f1: 0.9162    eval auc: 0.8620  f1: 0.7776    test auc: 0.8619  f1: 0.7772
+epoch 3    train_loss: 0.2715    cl_loss: 2.4625    lr: 0.018824
+epoch 3    train auc: 0.9764  f1: 0.9206    eval auc: 0.8616  f1: 0.7761    test auc: 0.8616  f1: 0.7759
+epoch 4    train_loss: 0.2630    cl_loss: 2.4615    lr: 0.018447
+epoch 4    train auc: 0.9776  f1: 0.9228    eval auc: 0.8627  f1: 0.7774    test auc: 0.8625  f1: 0.7771
+epoch 5    train_loss: 0.2571    cl_loss: 2.4599    lr: 0.018078
+epoch 5    train auc: 0.9787  f1: 0.9248    eval auc: 0.8618  f1: 0.7780    test auc: 0.8617  f1: 0.7780
+epoch 6    train_loss: 0.2528    cl_loss: 2.4608    lr: 0.017717
+epoch 6    train auc: 0.9794  f1: 0.9260    eval auc: 0.8621  f1: 0.7781    test auc: 0.8621  f1: 0.7782
+epoch 7    train_loss: 0.2494    cl_loss: 2.4657    lr: 0.017363
+epoch 7    train auc: 0.9799  f1: 0.9271    eval auc: 0.8621  f1: 0.7778    test auc: 0.8621  f1: 0.7778
+epoch 8    train_loss: 0.2466    cl_loss: 2.4702    lr: 0.017015
+epoch 8    train auc: 0.9803  f1: 0.9277    eval auc: 0.8625  f1: 0.7783    test auc: 0.8624  f1: 0.7783
+epoch 9    train_loss: 0.2440    cl_loss: 2.4743    lr: 0.016675
+epoch 9    train auc: 0.9807  f1: 0.9286    eval auc: 0.8620  f1: 0.7770    test auc: 0.8620  f1: 0.7768
+epoch 10    train_loss: 0.2416    cl_loss: 2.4788    lr: 0.016341
+epoch 10    train auc: 0.9811  f1: 0.9293    eval auc: 0.8618  f1: 0.7767    test auc: 0.8618  f1: 0.7766
+epoch 11    train_loss: 0.2395    cl_loss: 2.4822    lr: 0.016015
+epoch 11    train auc: 0.9814  f1: 0.9301    eval auc: 0.8614  f1: 0.7773    test auc: 0.8613  f1: 0.7772
+epoch 12    train_loss: 0.2375    cl_loss: 2.4876    lr: 0.015694
+epoch 12    train auc: 0.9816  f1: 0.9305    eval auc: 0.8619  f1: 0.7788    test auc: 0.8618  f1: 0.7787
+epoch 13    train_loss: 0.2354    cl_loss: 2.4922    lr: 0.015380
+epoch 13    train auc: 0.9819  f1: 0.9310    eval auc: 0.8612  f1: 0.7770    test auc: 0.8611  f1: 0.7769
+epoch 14    train_loss: 0.2338    cl_loss: 2.4959    lr: 0.015073
+epoch 14    train auc: 0.9821  f1: 0.9316    eval auc: 0.8609  f1: 0.7760    test auc: 0.8609  f1: 0.7757
+epoch 15    train_loss: 0.2319    cl_loss: 2.5003    lr: 0.014771
+epoch 15    train auc: 0.9824  f1: 0.9322    eval auc: 0.8606  f1: 0.7755    test auc: 0.8605  f1: 0.7754
+Early stopping at epoch 15: no eval R@10 improvement for 5 epochs (best epoch 10, eval R@10 0.1563)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.4462    cl_loss: 2.6600    lr: 0.020000
+epoch 0    train auc: 0.9531  f1: 0.8846    eval auc: 0.8599  f1: 0.7730    test auc: 0.8598  f1: 0.7728
+epoch 1    train_loss: 0.3185    cl_loss: 2.4970    lr: 0.019600
+epoch 1    train auc: 0.9691  f1: 0.9080    eval auc: 0.8636  f1: 0.7785    test auc: 0.8634  f1: 0.7783
+epoch 2    train_loss: 0.2849    cl_loss: 2.4579    lr: 0.019208
+epoch 2    train auc: 0.9743  f1: 0.9174    eval auc: 0.8616  f1: 0.7750    test auc: 0.8614  f1: 0.7750
+epoch 3    train_loss: 0.2709    cl_loss: 2.4486    lr: 0.018824
+epoch 3    train auc: 0.9764  f1: 0.9210    eval auc: 0.8625  f1: 0.7755    test auc: 0.8623  f1: 0.7755
+epoch 4    train_loss: 0.2624    cl_loss: 2.4495    lr: 0.018447
+epoch 4    train auc: 0.9777  f1: 0.9236    eval auc: 0.8626  f1: 0.7784    test auc: 0.8624  f1: 0.7783
+epoch 5    train_loss: 0.2568    cl_loss: 2.4534    lr: 0.018078
+epoch 5    train auc: 0.9786  f1: 0.9251    eval auc: 0.8623  f1: 0.7781    test auc: 0.8621  f1: 0.7780
+epoch 6    train_loss: 0.2527    cl_loss: 2.4562    lr: 0.017717
+epoch 6    train auc: 0.9793  f1: 0.9263    eval auc: 0.8617  f1: 0.7753    test auc: 0.8615  f1: 0.7751
+epoch 7    train_loss: 0.2493    cl_loss: 2.4593    lr: 0.017363
+epoch 7    train auc: 0.9797  f1: 0.9271    eval auc: 0.8625  f1: 0.7782    test auc: 0.8622  f1: 0.7781
+epoch 8    train_loss: 0.2466    cl_loss: 2.4633    lr: 0.017015
+epoch 8    train auc: 0.9802  f1: 0.9280    eval auc: 0.8618  f1: 0.7760    test auc: 0.8616  f1: 0.7760
+epoch 9    train_loss: 0.2440    cl_loss: 2.4668    lr: 0.016675
+epoch 9    train auc: 0.9806  f1: 0.9286    eval auc: 0.8620  f1: 0.7777    test auc: 0.8618  f1: 0.7776
+epoch 10    train_loss: 0.2418    cl_loss: 2.4734    lr: 0.016341
+epoch 10    train auc: 0.9808  f1: 0.9291    eval auc: 0.8626  f1: 0.7782    test auc: 0.8624  f1: 0.7783
+epoch 11    train_loss: 0.2398    cl_loss: 2.4764    lr: 0.016015
+epoch 11    train auc: 0.9813  f1: 0.9298    eval auc: 0.8610  f1: 0.7736    test auc: 0.8609  f1: 0.7735
+epoch 12    train_loss: 0.2378    cl_loss: 2.4809    lr: 0.015694
+epoch 12    train auc: 0.9816  f1: 0.9305    eval auc: 0.8611  f1: 0.7757    test auc: 0.8609  f1: 0.7755

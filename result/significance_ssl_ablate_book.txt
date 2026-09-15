@@ -1,0 +1,10 @@
+Paired significance test -- dataset: book
+proposed = KGCN_LightGCN (product_ssl_ablate_3run_book_cl005)   base = KGCN_LightGCN (product_ssl_ablate_3run_book_nocl)
+paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
+runs paired = 3
+
+metric      proposed            base                delta       t         p         sig   
+AUC         0.6077+-0.0529      0.7142+-0.0002      -0.1064     -2.849    0.1043    ns    
+F1          0.5965+-0.0326      0.6551+-0.0014      -0.0586     -2.549    0.1256    ns    
+Recall@10   0.0425+-0.0132      0.0669+-0.0161      -0.0244     -1.174    0.3613    ns    
+NDCG@10     0.0397+-0.0082      0.0546+-0.0161      -0.0149     -0.867    0.4772    ns    

@@ -1,0 +1,43 @@
+epoch: 0 train_loss:0.2051 cl_loss:7.0009
+epoch: 1 train_loss:0.1611 cl_loss:6.4203
+epoch: 2 train_loss:0.1498 cl_loss:6.2567
+epoch: 3 train_loss:0.1437 cl_loss:6.1665
+epoch: 4 train_loss:0.1400 cl_loss:6.1093
+epoch: 5 train_loss:0.1372 cl_loss:6.0563
+epoch: 6 train_loss:0.1353 cl_loss:6.0070
+epoch: 7 train_loss:0.1339 cl_loss:5.9685
+epoch: 8 train_loss:0.1325 cl_loss:5.9105
+epoch: 9 train_loss:0.1315 cl_loss:5.8670
+epoch:10 train_loss:0.1306 cl_loss:5.8271
+epoch:11 train_loss:0.1297 cl_loss:5.7651
+epoch:12 train_loss:0.1288 cl_loss:5.7196
+epoch:13 train_loss:0.1281 cl_loss:5.6567
+epoch:14 train_loss:0.1275 cl_loss:5.7251
+epoch:15 train_loss:0.1267 cl_loss:5.5136
+epoch:16 train_loss:0.2057 cl_loss:6.9686
+epoch:17 train_loss:0.1607 cl_loss:6.3776
+epoch:18 train_loss:0.1495 cl_loss:6.2576
+epoch:19 train_loss:0.1433 cl_loss:6.1798
+epoch:20 train_loss:0.1395 cl_loss:6.1282
+epoch:21 train_loss:0.1370 cl_loss:6.0835
+epoch:22 train_loss:0.1352 cl_loss:6.0359
+epoch:23 train_loss:0.1337 cl_loss:5.9884
+epoch:24 train_loss:0.1324 cl_loss:5.9400
+epoch:25 train_loss:0.1313 cl_loss:5.8934
+epoch:26 train_loss:0.1303 cl_loss:5.8442
+epoch:27 train_loss:0.1295 cl_loss:5.7896
+epoch:28 train_loss:0.1288 cl_loss:5.7389
+epoch:29 train_loss:0.1281 cl_loss:5.6752
+epoch:30 train_loss:0.2043 cl_loss:6.9792
+epoch:31 train_loss:0.1604 cl_loss:6.3869
+epoch:32 train_loss:0.1490 cl_loss:6.2493
+epoch:33 train_loss:0.1429 cl_loss:6.1839
+epoch:34 train_loss:0.1391 cl_loss:6.1439
+epoch:35 train_loss:0.1364 cl_loss:6.0899
+epoch:36 train_loss:0.1345 cl_loss:6.0528
+epoch:37 train_loss:0.1331 cl_loss:6.0206
+epoch:38 train_loss:0.1319 cl_loss:5.9670
+epoch:39 train_loss:0.1309 cl_loss:5.9205
+epoch:40 train_loss:0.1300 cl_loss:5.8737
+epoch:41 train_loss:0.1292 cl_loss:5.8240
+epoch:42 train_loss:0.1284 cl_loss:5.7730
