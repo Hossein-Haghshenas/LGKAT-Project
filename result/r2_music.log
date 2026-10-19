@@ -1,0 +1,59 @@
+================================================================================
+ARM r2_music_full_5run
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset music --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 32 --n_iter 1 --batch_size 128 --l2_weight 1e-4 --lr 0.005 --layer_size [32] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0.5 --smoothing_steps 8 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion gate --use_cl 1 --cl_lambda 0.02 --cl_tau 0.2 --use_simgcl 1 --simgcl_lambda 0.02 --simgcl_eps 0.05 --lr_decay 0.98 --early_stop 12 --fast_eval 1 --log_resources 1 --runs 5 --exp_tag r2_music_full_5run
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (5718, 5718) 0.01150965690612793
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+Attention: product
+2026-10-06 10:24:10.711919: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-06 10:24:14.170269: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-06 10:24:14.402378: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13622 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-06 10:24:15.827795: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+Initialized from scratch
+2026-10-06 10:24:16.862964: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-06 10:24:16.865490: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-06 10:24:16.866225: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13622 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-06 10:24:34.092439: I tensorflow/stream_executor/cuda/cuda_blas.cc:1786] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+epoch 0    train_loss: 0.6931    cl_loss: 1.0311    simgcl_loss: 0.8614    lr: 0.005000
+epoch 0    train auc: 0.7487  f1: 0.7116    eval auc: 0.4916  f1: 0.4812    test auc: 0.4972  f1: 0.4917
+epoch 1    train_loss: 0.6929    cl_loss: 0.8713    simgcl_loss: 0.8508    lr: 0.004900
+epoch 1    train auc: 0.7710  f1: 0.7249    eval auc: 0.4933  f1: 0.4914    test auc: 0.4876  f1: 0.4915
+epoch 2    train_loss: 0.6928    cl_loss: 0.8696    simgcl_loss: 0.8490    lr: 0.004802
+epoch 2    train auc: 0.7850  f1: 0.7402    eval auc: 0.4980  f1: 0.4926    test auc: 0.5079  f1: 0.5107
+epoch 3    train_loss: 0.6928    cl_loss: 0.8710    simgcl_loss: 0.8486    lr: 0.004706
+epoch 3    train auc: 0.7863  f1: 0.7422    eval auc: 0.5062  f1: 0.5018    test auc: 0.5139  f1: 0.5069
+epoch 4    train_loss: 0.6927    cl_loss: 0.8686    simgcl_loss: 0.8463    lr: 0.004612
+epoch 4    train auc: 0.7983  f1: 0.7524    eval auc: 0.4995  f1: 0.4944    test auc: 0.5038  f1: 0.5030
+epoch 5    train_loss: 0.6927    cl_loss: 0.8713    simgcl_loss: 0.8481    lr: 0.004520
+epoch 5    train auc: 0.8069  f1: 0.7578    eval auc: 0.4972  f1: 0.4956    test auc: 0.5118  f1: 0.5149
+epoch 6    train_loss: 0.6926    cl_loss: 0.8728    simgcl_loss: 0.8481    lr: 0.004429
+epoch 6    train auc: 0.8199  f1: 0.7744    eval auc: 0.5054  f1: 0.5041    test auc: 0.5094  f1: 0.5024
+epoch 7    train_loss: 0.6926    cl_loss: 0.8735    simgcl_loss: 0.8478    lr: 0.004341
+epoch 7    train auc: 0.8282  f1: 0.7759    eval auc: 0.5147  f1: 0.5078    test auc: 0.5062  f1: 0.5070
+epoch 8    train_loss: 0.6925    cl_loss: 0.8687    simgcl_loss: 0.8459    lr: 0.004254
+epoch 8    train auc: 0.8326  f1: 0.7810    eval auc: 0.5055  f1: 0.5064    test auc: 0.5053  f1: 0.4996
+epoch 9    train_loss: 0.6925    cl_loss: 0.8728    simgcl_loss: 0.8479    lr: 0.004169
+epoch 9    train auc: 0.8451  f1: 0.7920    eval auc: 0.5130  f1: 0.5134    test auc: 0.5110  f1: 0.5111
+epoch 10    train_loss: 0.6925    cl_loss: 0.8725    simgcl_loss: 0.8478    lr: 0.004085
+epoch 10    train auc: 0.8532  f1: 0.7954    eval auc: 0.5055  f1: 0.5037    test auc: 0.5054  f1: 0.5102
+epoch 11    train_loss: 0.6924    cl_loss: 0.8695    simgcl_loss: 0.8472    lr: 0.004004
+epoch 11    train auc: 0.8561  f1: 0.8022    eval auc: 0.5160  f1: 0.5079    test auc: 0.5114  f1: 0.5128
+epoch 12    train_loss: 0.6924    cl_loss: 0.8708    simgcl_loss: 0.8471    lr: 0.003924
+epoch 12    train auc: 0.8628  f1: 0.8069    eval auc: 0.5135  f1: 0.5136    test auc: 0.5108  f1: 0.5111

@@ -579,3 +579,771 @@ epoch 11    train_loss: 0.2398    cl_loss: 2.4764    lr: 0.016015
 epoch 11    train auc: 0.9813  f1: 0.9298    eval auc: 0.8610  f1: 0.7736    test auc: 0.8609  f1: 0.7735
 epoch 12    train_loss: 0.2378    cl_loss: 2.4809    lr: 0.015694
 epoch 12    train auc: 0.9816  f1: 0.9305    eval auc: 0.8611  f1: 0.7757    test auc: 0.8609  f1: 0.7755
+epoch 13    train_loss: 0.2361    cl_loss: 2.4830    lr: 0.015380
+epoch 13    train auc: 0.9818  f1: 0.9307    eval auc: 0.8614  f1: 0.7764    test auc: 0.8611  f1: 0.7762
+Early stopping at epoch 13: no eval R@10 improvement for 5 epochs (best epoch 8, eval R@10 0.1565)
+[log_resources] valid runs: 3/3
+[0.86492158 0.86254028 0.86336448]
+[0.78019556 0.77713038 0.77832267]
+[[0.03059524 0.08308009 0.33343074 0.52631602]
+ [0.05188131 0.11477336 0.32870047 0.49138689]
+ [0.00666667 0.08638492 0.30672497 0.43210134]]
+[[0.03   0.022  0.0148 0.0116]
+ [0.08   0.034  0.0178 0.013 ]
+ [0.01   0.019  0.0154 0.0108]]
+average auc: 0.8636+\-0.0010
+average f1 : 0.7785+\-0.0013
+average recall   : 0.0297+\-0.0185 0.0947+\-0.0142 0.3230+\-0.0116 0.4833+\-0.0389 
+average precision: 0.0400+\-0.0294 0.0250+\-0.0065 0.0160+\-0.0013 0.0118+\-0.0009 
+average ndcg     : 0.0457+\-0.0344 0.0639+\-0.0215 0.1247+\-0.0191 0.1567+\-0.0227 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0297+-0.0185  precision: 0.0400+-0.0294  ndcg: 0.0457+-0.0344
+  R@10 recall: 0.0947+-0.0142  precision: 0.0250+-0.0065  ndcg: 0.0639+-0.0215
+  R@50 recall: 0.3230+-0.0116  precision: 0.0160+-0.0013  ndcg: 0.1247+-0.0191
+  R@100 recall: 0.4833+-0.0389  precision: 0.0118+-0.0009  ndcg: 0.1567+-0.0227
+average train_seconds: 1523.2+\-302.5
+average total_seconds: 2332.0+\-490.3
+average peak_vram_mb: 15666.3+\-92.2
+average train_Loss 0.2711786
+ARM_DONE ssl_restaurant_cl256
+SIG C:\Users\asus\.conda\envs\lgkat\python.exe D:\projects\current-git-project\LGKAT-Project\scripts\significance_test.py --dataset book --proposed_model KGCN_LightGCN --base_model KGCN_LightGCN --proposed_att product --base_att product --proposed_tag ssl_ablate_3run_book_cl005 --base_tag ssl_ablate_3run_book_nocl --k 10
+Paired significance test -- dataset: book
+proposed = KGCN_LightGCN (product_ssl_ablate_3run_book_cl005)   base = KGCN_LightGCN (product_ssl_ablate_3run_book_nocl)
+paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
+runs paired = 3
+
+metric      proposed            base                delta       t         p         sig   
+AUC         0.6077+-0.0529      0.7142+-0.0002      -0.1064     -2.849    0.1043    ns    
+F1          0.5965+-0.0326      0.6551+-0.0014      -0.0586     -2.549    0.1256    ns    
+Recall@10   0.0425+-0.0132      0.0669+-0.0161      -0.0244     -1.174    0.3613    ns    
+NDCG@10     0.0397+-0.0082      0.0546+-0.0161      -0.0149     -0.867    0.4772    ns    
+
+written: result\significance_book.txt
+copied significance -> D:\projects\current-git-project\LGKAT-Project\result\significance_ssl_ablate_book.txt
+SIG C:\Users\asus\.conda\envs\lgkat\python.exe D:\projects\current-git-project\LGKAT-Project\scripts\significance_test.py --dataset movie --proposed_model KGCN_LightGCN --base_model KGCN_LightGCN --proposed_att product --base_att product --proposed_tag ssl_ablate_3run_movie_cl005 --base_tag ssl_ablate_3run_movie_nocl --k 10
+Paired significance test -- dataset: movie
+proposed = KGCN_LightGCN (product_ssl_ablate_3run_movie_cl005)   base = KGCN_LightGCN (product_ssl_ablate_3run_movie_nocl)
+paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
+runs paired = 3
+
+metric      proposed            base                delta       t         p         sig   
+AUC         0.9811+-0.0001      0.9813+-0.0002      -0.0002     -0.992    0.4258    ns    
+F1          0.9427+-0.0008      0.9422+-0.0004      +0.0004     0.598     0.6104    ns    
+Recall@10   0.2020+-0.0283      0.2075+-0.0314      -0.0055     -0.315    0.7827    ns    
+NDCG@10     0.2136+-0.0358      0.2055+-0.0281      +0.0081     0.658     0.5782    ns    
+
+written: result\significance_movie.txt
+copied significance -> D:\projects\current-git-project\LGKAT-Project\result\significance_ssl_ablate_movie.txt
+SIG C:\Users\asus\.conda\envs\lgkat\python.exe D:\projects\current-git-project\LGKAT-Project\scripts\significance_test.py --dataset restaurant --proposed_model KGCN_LightGCN --base_model KGCN_LightGCN --proposed_att product --base_att product --proposed_tag ssl_ablate_3run_restaurant_cl256 --base_tag ssl_ablate_3run_restaurant_nocl --k 10
+Paired significance test -- dataset: restaurant
+proposed = KGCN_LightGCN (product_ssl_ablate_3run_restaurant_cl256)   base = KGCN_LightGCN (product_ssl_ablate_3run_restaurant_nocl)
+paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
+runs paired = 3
+
+metric      proposed            base                delta       t         p         sig   
+AUC         0.8636+-0.0010      0.8729+-0.0003      -0.0093     -10.106   0.0097    **    
+F1          0.7785+-0.0013      0.7847+-0.0004      -0.0062     -5.463    0.0319    *     
+Recall@10   0.0947+-0.0142      0.1234+-0.0138      -0.0286     -2.733    0.1119    ns    
+NDCG@10     0.0639+-0.0215      0.0764+-0.0097      -0.0125     -1.077    0.3941    ns    
+
+written: result\significance_restaurant.txt
+copied significance -> D:\projects\current-git-project\LGKAT-Project\result\significance_ssl_ablate_restaurant.txt
+WROTE D:\projects\current-git-project\LGKAT-Project\docs\THESIS_NOTES\04_ssl_ablation.md
+[LGKAT-SSL-ARTICLE d3a1e80] feat: three-run SSL ablation on book movie restaurant
+ 38 files changed, 4101 insertions(+)
+ create mode 100644 docs/THESIS_NOTES/04_ssl_ablation.md
+ create mode 100644 result/KGCN_LightGCN_book_ctr_product_ssl_ablate_3run_book_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_book_ctr_product_ssl_ablate_3run_book_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_book_product_ssl_ablate_3run_book_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_book_product_ssl_ablate_3run_book_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_book_topk_product_ssl_ablate_3run_book_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_book_topk_product_ssl_ablate_3run_book_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_book_train_loss_product_ssl_ablate_3run_book_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_book_train_loss_product_ssl_ablate_3run_book_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_movie_ctr_product_ssl_ablate_3run_movie_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_movie_ctr_product_ssl_ablate_3run_movie_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_movie_product_ssl_ablate_3run_movie_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_movie_product_ssl_ablate_3run_movie_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_movie_topk_product_ssl_ablate_3run_movie_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_movie_topk_product_ssl_ablate_3run_movie_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_movie_train_loss_product_ssl_ablate_3run_movie_cl005.txt
+ create mode 100644 result/KGCN_LightGCN_movie_train_loss_product_ssl_ablate_3run_movie_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_ctr_product_ssl_ablate_3run_restaurant_cl256.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_ctr_product_ssl_ablate_3run_restaurant_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_product_ssl_ablate_3run_restaurant_cl256.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_product_ssl_ablate_3run_restaurant_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_topk_product_ssl_ablate_3run_restaurant_cl256.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_topk_product_ssl_ablate_3run_restaurant_nocl.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_train_loss_product_ssl_ablate_3run_restaurant_cl256.txt
+ create mode 100644 result/KGCN_LightGCN_restaurant_train_loss_product_ssl_ablate_3run_restaurant_nocl.txt
+ create mode 100644 result/closure_under10h.err
+ create mode 100644 result/closure_under10h.log
+ create mode 100644 result/runs_KGCN_LightGCN_book_product_ssl_ablate_3run_book_cl005.json
+ create mode 100644 result/runs_KGCN_LightGCN_book_product_ssl_ablate_3run_book_nocl.json
+ create mode 100644 result/runs_KGCN_LightGCN_movie_product_ssl_ablate_3run_movie_cl005.json
+ create mode 100644 result/runs_KGCN_LightGCN_movie_product_ssl_ablate_3run_movie_nocl.json
+ create mode 100644 result/runs_KGCN_LightGCN_restaurant_product_ssl_ablate_3run_restaurant_cl256.json
+ create mode 100644 result/runs_KGCN_LightGCN_restaurant_product_ssl_ablate_3run_restaurant_nocl.json
+ create mode 100644 result/significance_movie.txt
+ create mode 100644 result/significance_restaurant.txt
+ create mode 100644 result/significance_ssl_ablate_book.txt
+ create mode 100644 result/significance_ssl_ablate_movie.txt
+ create mode 100644 result/significance_ssl_ablate_restaurant.txt
+STAGE_DONE 4 ssl-ablation
+STAGE_START 6 paper-baseline
+================================================================================
+ARM paper_book
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset book --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 64 --n_iter 1 --batch_size 256 --l2_weight 2e-5 --lr 0.0002 --layer_size [64] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 3 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion fixed --use_cl 0 --use_simgcl 0 --lr_decay 1.0 --early_stop 0 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag thesis_paper_product_sanity
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (32827, 32827) 0.026233673095703125
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6922
+epoch 0    train auc: 0.8186  f1: 0.7551    eval auc: 0.6193  f1: 0.6125    test auc: 0.6128  f1: 0.6131
+epoch 1    train_loss: 0.6425
+epoch 1    train auc: 0.8683  f1: 0.7863    eval auc: 0.7137  f1: 0.6512    test auc: 0.7094  f1: 0.6508
+epoch 2    train_loss: 0.5337
+epoch 2    train auc: 0.8769  f1: 0.7925    eval auc: 0.7176  f1: 0.6552    test auc: 0.7137  f1: 0.6542
+epoch 3    train_loss: 0.4763
+epoch 3    train auc: 0.8845  f1: 0.7964    eval auc: 0.7151  f1: 0.6533    test auc: 0.7121  f1: 0.6542
+epoch 4    train_loss: 0.4502
+epoch 4    train auc: 0.8906  f1: 0.7993    eval auc: 0.7127  f1: 0.6530    test auc: 0.7098  f1: 0.6546
+epoch 5    train_loss: 0.4349
+epoch 5    train auc: 0.8953  f1: 0.8016    eval auc: 0.7101  f1: 0.6526    test auc: 0.7077  f1: 0.6547
+epoch 6    train_loss: 0.4248
+epoch 6    train auc: 0.8987  f1: 0.8032    eval auc: 0.7081  f1: 0.6525    test auc: 0.7058  f1: 0.6543
+epoch 7    train_loss: 0.4169
+epoch 7    train auc: 0.9015  f1: 0.8042    eval auc: 0.7062  f1: 0.6520    test auc: 0.7042  f1: 0.6538
+epoch 8    train_loss: 0.4108
+epoch 8    train auc: 0.9039  f1: 0.8050    eval auc: 0.7043  f1: 0.6523    test auc: 0.7023  f1: 0.6528
+epoch 9    train_loss: 0.4063
+epoch 9    train auc: 0.9058  f1: 0.8060    eval auc: 0.7025  f1: 0.6519    test auc: 0.7006  f1: 0.6528
+epoch 10    train_loss: 0.4023
+epoch 10    train auc: 0.9072  f1: 0.8065    eval auc: 0.7010  f1: 0.6515    test auc: 0.6990  f1: 0.6520
+epoch 11    train_loss: 0.3991
+epoch 11    train auc: 0.9084  f1: 0.8066    eval auc: 0.6998  f1: 0.6516    test auc: 0.6978  f1: 0.6524
+epoch 12    train_loss: 0.3961
+epoch 12    train auc: 0.9096  f1: 0.8073    eval auc: 0.6988  f1: 0.6523    test auc: 0.6969  f1: 0.6523
+epoch 13    train_loss: 0.3937
+epoch 13    train auc: 0.9103  f1: 0.8074    eval auc: 0.6975  f1: 0.6509    test auc: 0.6959  f1: 0.6519
+epoch 14    train_loss: 0.3917
+epoch 14    train auc: 0.9112  f1: 0.8078    eval auc: 0.6966  f1: 0.6507    test auc: 0.6949  f1: 0.6520
+epoch 15    train_loss: 0.3899
+epoch 15    train auc: 0.9117  f1: 0.8088    eval auc: 0.6957  f1: 0.6508    test auc: 0.6942  f1: 0.6520
+epoch 16    train_loss: 0.3883
+epoch 16    train auc: 0.9126  f1: 0.8093    eval auc: 0.6949  f1: 0.6507    test auc: 0.6935  f1: 0.6517
+epoch 17    train_loss: 0.3867
+epoch 17    train auc: 0.9133  f1: 0.8096    eval auc: 0.6943  f1: 0.6500    test auc: 0.6928  f1: 0.6509
+epoch 18    train_loss: 0.3855
+epoch 18    train auc: 0.9139  f1: 0.8103    eval auc: 0.6937  f1: 0.6502    test auc: 0.6921  f1: 0.6511
+epoch 19    train_loss: 0.3840
+epoch 19    train auc: 0.9149  f1: 0.8110    eval auc: 0.6931  f1: 0.6498    test auc: 0.6917  f1: 0.6518
+epoch 20    train_loss: 0.3826
+epoch 20    train auc: 0.9155  f1: 0.8118    eval auc: 0.6927  f1: 0.6494    test auc: 0.6910  f1: 0.6508
+epoch 21    train_loss: 0.3811
+epoch 21    train auc: 0.9163  f1: 0.8133    eval auc: 0.6921  f1: 0.6495    test auc: 0.6907  f1: 0.6503
+epoch 22    train_loss: 0.3795
+epoch 22    train auc: 0.9173  f1: 0.8142    eval auc: 0.6917  f1: 0.6495    test auc: 0.6902  f1: 0.6496
+epoch 23    train_loss: 0.3779
+epoch 23    train auc: 0.9181  f1: 0.8147    eval auc: 0.6913  f1: 0.6488    test auc: 0.6898  f1: 0.6495
+epoch 24    train_loss: 0.3759
+epoch 24    train auc: 0.9193  f1: 0.8162    eval auc: 0.6909  f1: 0.6483    test auc: 0.6893  f1: 0.6483
+epoch 25    train_loss: 0.3740
+epoch 25    train auc: 0.9204  f1: 0.8182    eval auc: 0.6905  f1: 0.6481    test auc: 0.6887  f1: 0.6472
+epoch 26    train_loss: 0.3717
+epoch 26    train auc: 0.9219  f1: 0.8196    eval auc: 0.6899  f1: 0.6471    test auc: 0.6882  f1: 0.6467
+epoch 27    train_loss: 0.3697
+epoch 27    train auc: 0.9230  f1: 0.8219    eval auc: 0.6896  f1: 0.6463    test auc: 0.6876  f1: 0.6449
+epoch 28    train_loss: 0.3674
+epoch 28    train auc: 0.9245  f1: 0.8236    eval auc: 0.6891  f1: 0.6451    test auc: 0.6871  f1: 0.6442
+epoch 29    train_loss: 0.3654
+epoch 29    train auc: 0.9259  f1: 0.8263    eval auc: 0.6888  f1: 0.6452    test auc: 0.6863  f1: 0.6437
+epoch 30    train_loss: 0.3629
+epoch 30    train auc: 0.9272  f1: 0.8289    eval auc: 0.6881  f1: 0.6438    test auc: 0.6856  f1: 0.6417
+epoch 31    train_loss: 0.3606
+epoch 31    train auc: 0.9285  f1: 0.8312    eval auc: 0.6876  f1: 0.6425    test auc: 0.6851  f1: 0.6417
+epoch 32    train_loss: 0.3583
+epoch 32    train auc: 0.9302  f1: 0.8338    eval auc: 0.6871  f1: 0.6415    test auc: 0.6845  f1: 0.6415
+epoch 33    train_loss: 0.3564
+epoch 33    train auc: 0.9311  f1: 0.8361    eval auc: 0.6866  f1: 0.6408    test auc: 0.6839  f1: 0.6413
+epoch 34    train_loss: 0.3538
+epoch 34    train auc: 0.9325  f1: 0.8383    eval auc: 0.6860  f1: 0.6398    test auc: 0.6835  f1: 0.6409
+epoch 35    train_loss: 0.3516
+epoch 35    train auc: 0.9336  f1: 0.8403    eval auc: 0.6855  f1: 0.6395    test auc: 0.6829  f1: 0.6404
+epoch 36    train_loss: 0.3494
+epoch 36    train auc: 0.9349  f1: 0.8423    eval auc: 0.6849  f1: 0.6384    test auc: 0.6823  f1: 0.6400
+epoch 37    train_loss: 0.3475
+epoch 37    train auc: 0.9358  f1: 0.8442    eval auc: 0.6843  f1: 0.6377    test auc: 0.6816  f1: 0.6394
+epoch 38    train_loss: 0.3451
+epoch 38    train auc: 0.9370  f1: 0.8463    eval auc: 0.6837  f1: 0.6363    test auc: 0.6809  f1: 0.6383
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6920
+epoch 0    train auc: 0.8280  f1: 0.7659    eval auc: 0.6354  f1: 0.6192    test auc: 0.6306  f1: 0.6185
+epoch 1    train_loss: 0.6394
+epoch 1    train auc: 0.8688  f1: 0.7869    eval auc: 0.7145  f1: 0.6533    test auc: 0.7098  f1: 0.6522
+epoch 2    train_loss: 0.5319
+epoch 2    train auc: 0.8769  f1: 0.7918    eval auc: 0.7178  f1: 0.6553    test auc: 0.7144  f1: 0.6563
+epoch 3    train_loss: 0.4755
+epoch 3    train auc: 0.8848  f1: 0.7961    eval auc: 0.7156  f1: 0.6559    test auc: 0.7126  f1: 0.6561
+epoch 4    train_loss: 0.4500
+epoch 4    train auc: 0.8908  f1: 0.7993    eval auc: 0.7129  f1: 0.6547    test auc: 0.7102  f1: 0.6556
+epoch 5    train_loss: 0.4348
+epoch 5    train auc: 0.8954  f1: 0.8013    eval auc: 0.7102  f1: 0.6538    test auc: 0.7082  f1: 0.6550
+epoch 6    train_loss: 0.4246
+epoch 6    train auc: 0.8989  f1: 0.8031    eval auc: 0.7081  f1: 0.6531    test auc: 0.7061  f1: 0.6544
+epoch 7    train_loss: 0.4170
+epoch 7    train auc: 0.9017  f1: 0.8044    eval auc: 0.7061  f1: 0.6536    test auc: 0.7040  f1: 0.6538
+epoch 8    train_loss: 0.4107
+epoch 8    train auc: 0.9043  f1: 0.8059    eval auc: 0.7042  f1: 0.6534    test auc: 0.7023  f1: 0.6529
+epoch 9    train_loss: 0.4061
+epoch 9    train auc: 0.9058  f1: 0.8066    eval auc: 0.7023  f1: 0.6527    test auc: 0.7008  f1: 0.6526
+epoch 10    train_loss: 0.4022
+epoch 10    train auc: 0.9072  f1: 0.8068    eval auc: 0.7008  f1: 0.6524    test auc: 0.6994  f1: 0.6530
+epoch 11    train_loss: 0.3990
+epoch 11    train auc: 0.9086  f1: 0.8070    eval auc: 0.6994  f1: 0.6523    test auc: 0.6983  f1: 0.6531
+epoch 12    train_loss: 0.3963
+epoch 12    train auc: 0.9096  f1: 0.8074    eval auc: 0.6980  f1: 0.6515    test auc: 0.6969  f1: 0.6527
+epoch 13    train_loss: 0.3939
+epoch 13    train auc: 0.9103  f1: 0.8074    eval auc: 0.6968  f1: 0.6506    test auc: 0.6958  f1: 0.6517
+epoch 14    train_loss: 0.3918
+epoch 14    train auc: 0.9113  f1: 0.8078    eval auc: 0.6959  f1: 0.6500    test auc: 0.6950  f1: 0.6520
+epoch 15    train_loss: 0.3900
+epoch 15    train auc: 0.9118  f1: 0.8084    eval auc: 0.6953  f1: 0.6511    test auc: 0.6942  f1: 0.6517
+ARM_FAILED paper_book rc=1073807364
+===== Wed 09/16/2026  0:27:45.06 python exit 1073807364 =====
+===== Mon 09/21/2026  7:11:17.75 resume --only 6 =====
+STAGE_START 6 paper-baseline
+================================================================================
+ARM paper_book
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset book --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 64 --n_iter 1 --batch_size 256 --l2_weight 2e-5 --lr 0.0002 --layer_size [64] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 3 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion fixed --use_cl 0 --use_simgcl 0 --lr_decay 1.0 --early_stop 5 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag thesis_paper_product_sanity_es5
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (32827, 32827) 0.019513368606567383
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6922
+ARM_FAILED paper_book rc=3221225477
+===== Mon 09/21/2026  7:13:44.75 python exit -1 =====
+===== Mon 09/21/2026  7:51:49.21 resume --only 6 =====
+STAGE_START 6 paper-baseline
+================================================================================
+ARM paper_book
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset book --aggregator concat --n_epochs 39 --neighbor_sample_size 8 --dim 64 --n_iter 1 --batch_size 256 --l2_weight 2e-5 --lr 0.0002 --layer_size [64] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 3 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion fixed --use_cl 0 --use_simgcl 0 --lr_decay 1.0 --early_stop 5 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag thesis_paper_product_sanity_es5
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (32827, 32827) 0.017462968826293945
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6923
+epoch 0    train auc: 0.8191  f1: 0.7574    eval auc: 0.6181  f1: 0.6114    test auc: 0.6123  f1: 0.6121
+epoch 1    train_loss: 0.6433
+epoch 1    train auc: 0.8681  f1: 0.7854    eval auc: 0.7144  f1: 0.6515    test auc: 0.7101  f1: 0.6504
+epoch 2    train_loss: 0.5343
+epoch 2    train auc: 0.8768  f1: 0.7915    eval auc: 0.7183  f1: 0.6549    test auc: 0.7143  f1: 0.6529
+epoch 3    train_loss: 0.4766
+epoch 3    train auc: 0.8845  f1: 0.7961    eval auc: 0.7158  f1: 0.6536    test auc: 0.7126  f1: 0.6535
+epoch 4    train_loss: 0.4502
+epoch 4    train auc: 0.8905  f1: 0.7989    eval auc: 0.7133  f1: 0.6530    test auc: 0.7101  f1: 0.6534
+epoch 5    train_loss: 0.4350
+epoch 5    train auc: 0.8952  f1: 0.8007    eval auc: 0.7107  f1: 0.6526    test auc: 0.7081  f1: 0.6535
+epoch 6    train_loss: 0.4247
+epoch 6    train auc: 0.8987  f1: 0.8027    eval auc: 0.7086  f1: 0.6529    test auc: 0.7060  f1: 0.6532
+epoch 7    train_loss: 0.4169
+epoch 7    train auc: 0.9015  f1: 0.8037    eval auc: 0.7065  f1: 0.6519    test auc: 0.7042  f1: 0.6528
+Early stopping at epoch 7: no eval R@10 improvement for 5 epochs (best epoch 2, eval R@10 0.0775)
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6924
+epoch 0    train auc: 0.8197  f1: 0.7584    eval auc: 0.6161  f1: 0.6145    test auc: 0.6109  f1: 0.6161
+epoch 1    train_loss: 0.6466
+epoch 1    train auc: 0.8681  f1: 0.7859    eval auc: 0.7125  f1: 0.6496    test auc: 0.7085  f1: 0.6529
+epoch 2    train_loss: 0.5368
+epoch 2    train auc: 0.8765  f1: 0.7900    eval auc: 0.7179  f1: 0.6533    test auc: 0.7144  f1: 0.6555
+epoch 3    train_loss: 0.4776
+epoch 3    train auc: 0.8842  f1: 0.7945    eval auc: 0.7156  f1: 0.6533    test auc: 0.7129  f1: 0.6569
+epoch 4    train_loss: 0.4508
+epoch 4    train auc: 0.8903  f1: 0.7984    eval auc: 0.7135  f1: 0.6537    test auc: 0.7108  f1: 0.6559
+epoch 5    train_loss: 0.4356
+epoch 5    train auc: 0.8950  f1: 0.8003    eval auc: 0.7110  f1: 0.6536    test auc: 0.7086  f1: 0.6562
+epoch 6    train_loss: 0.4252
+epoch 6    train auc: 0.8985  f1: 0.8024    eval auc: 0.7087  f1: 0.6535    test auc: 0.7068  f1: 0.6561
+epoch 7    train_loss: 0.4175
+epoch 7    train auc: 0.9015  f1: 0.8037    eval auc: 0.7066  f1: 0.6523    test auc: 0.7046  f1: 0.6545
+Early stopping at epoch 7: no eval R@10 improvement for 5 epochs (best epoch 2, eval R@10 0.0567)
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.6923
+epoch 0    train auc: 0.8208  f1: 0.7596    eval auc: 0.6218  f1: 0.6144    test auc: 0.6172  f1: 0.6162
+epoch 1    train_loss: 0.6433
+epoch 1    train auc: 0.8683  f1: 0.7845    eval auc: 0.7150  f1: 0.6540    test auc: 0.7095  f1: 0.6508
+epoch 2    train_loss: 0.5337
+epoch 2    train auc: 0.8767  f1: 0.7907    eval auc: 0.7184  f1: 0.6563    test auc: 0.7145  f1: 0.6551
+epoch 3    train_loss: 0.4761
+epoch 3    train auc: 0.8846  f1: 0.7953    eval auc: 0.7161  f1: 0.6561    test auc: 0.7126  f1: 0.6553
+epoch 4    train_loss: 0.4503
+epoch 4    train auc: 0.8906  f1: 0.7984    eval auc: 0.7131  f1: 0.6546    test auc: 0.7103  f1: 0.6548
+epoch 5    train_loss: 0.4353
+epoch 5    train auc: 0.8951  f1: 0.8012    eval auc: 0.7105  f1: 0.6541    test auc: 0.7080  f1: 0.6541
+epoch 6    train_loss: 0.4247
+epoch 6    train auc: 0.8987  f1: 0.8029    eval auc: 0.7081  f1: 0.6535    test auc: 0.7062  f1: 0.6544
+epoch 7    train_loss: 0.4168
+epoch 7    train auc: 0.9016  f1: 0.8035    eval auc: 0.7059  f1: 0.6525    test auc: 0.7043  f1: 0.6532
+epoch 8    train_loss: 0.4110
+epoch 8    train auc: 0.9040  f1: 0.8042    eval auc: 0.7041  f1: 0.6511    test auc: 0.7028  f1: 0.6528
+epoch 9    train_loss: 0.4062
+epoch 9    train auc: 0.9057  f1: 0.8051    eval auc: 0.7026  f1: 0.6523    test auc: 0.7013  f1: 0.6534
+epoch 10    train_loss: 0.4022
+epoch 10    train auc: 0.9072  f1: 0.8058    eval auc: 0.7011  f1: 0.6526    test auc: 0.6997  f1: 0.6531
+Early stopping at epoch 10: no eval R@10 improvement for 5 epochs (best epoch 5, eval R@10 0.1083)
+[log_resources] valid runs: 3/3
+[0.71428375 0.71444259 0.71445836]
+[0.6529304  0.65547129 0.65511307]
+[[0.0425     0.07429701 0.11153846 0.1473547 ]
+ [0.0561036  0.08179904 0.12933887 0.15397763]
+ [0.017      0.04449206 0.09508532 0.14858965]]
+[[0.035  0.017  0.0058 0.0042]
+ [0.04   0.017  0.0066 0.0047]
+ [0.015  0.01   0.0046 0.0034]]
+average auc: 0.7144+\-0.0001
+average f1 : 0.6545+\-0.0011
+average recall   : 0.0385+\-0.0162 0.0669+\-0.0161 0.1120+\-0.0140 0.1500+\-0.0029 
+average precision: 0.0300+\-0.0108 0.0147+\-0.0033 0.0057+\-0.0008 0.0041+\-0.0005 
+average ndcg     : 0.0457+\-0.0199 0.0554+\-0.0169 0.0672+\-0.0160 0.0749+\-0.0141 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0385+-0.0162  precision: 0.0300+-0.0108  ndcg: 0.0457+-0.0199
+  R@10 recall: 0.0669+-0.0161  precision: 0.0147+-0.0033  ndcg: 0.0554+-0.0169
+  R@50 recall: 0.1120+-0.0140  precision: 0.0057+-0.0008  ndcg: 0.0672+-0.0160
+  R@100 recall: 0.1500+-0.0029  precision: 0.0041+-0.0005  ndcg: 0.0749+-0.0141
+average train_seconds: 921.2+\-407.5
+average total_seconds: 1407.1+\-542.7
+average peak_vram_mb: 6447.3+\-6.3
+average train_Loss 0.49805894
+ARM_DONE paper_book
+================================================================================
+ARM paper_movie
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset movie --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 32 --n_iter 2 --batch_size 8192 --l2_weight 5e-6 --lr 0.0025 --layer_size [32] --adj_type plain --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --alpha 0 --smoothing_steps 1 --pretrain 0 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion fixed --use_cl 0 --use_simgcl 0 --lr_decay 1.0 --early_stop 0 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag thesis_paper_product_sanity
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (155113, 155113) 0.6382999420166016
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2208
+epoch 0    train auc: 0.9826  f1: 0.9452    eval auc: 0.9782  f1: 0.9372    test auc: 0.9783  f1: 0.9374
+epoch 1    train_loss: 0.1736
+epoch 1    train auc: 0.9859  f1: 0.9514    eval auc: 0.9799  f1: 0.9408    test auc: 0.9801  f1: 0.9410
+epoch 2    train_loss: 0.1605
+epoch 2    train auc: 0.9877  f1: 0.9548    eval auc: 0.9803  f1: 0.9404    test auc: 0.9804  f1: 0.9406
+epoch 3    train_loss: 0.1522
+epoch 3    train auc: 0.9889  f1: 0.9575    eval auc: 0.9803  f1: 0.9405    test auc: 0.9804  f1: 0.9407
+epoch 4    train_loss: 0.1465
+epoch 4    train auc: 0.9897  f1: 0.9590    eval auc: 0.9799  f1: 0.9399    test auc: 0.9800  f1: 0.9401
+epoch 5    train_loss: 0.1424
+epoch 5    train auc: 0.9902  f1: 0.9601    eval auc: 0.9795  f1: 0.9389    test auc: 0.9796  f1: 0.9392
+epoch 6    train_loss: 0.1395
+epoch 6    train auc: 0.9905  f1: 0.9609    eval auc: 0.9796  f1: 0.9385    test auc: 0.9796  f1: 0.9385
+epoch 7    train_loss: 0.1375
+epoch 7    train auc: 0.9908  f1: 0.9614    eval auc: 0.9792  f1: 0.9376    test auc: 0.9793  f1: 0.9375
+epoch 8    train_loss: 0.1359
+epoch 8    train auc: 0.9910  f1: 0.9623    eval auc: 0.9791  f1: 0.9383    test auc: 0.9792  f1: 0.9386
+epoch 9    train_loss: 0.1347
+epoch 9    train auc: 0.9912  f1: 0.9627    eval auc: 0.9790  f1: 0.9374    test auc: 0.9791  f1: 0.9377
+epoch 10    train_loss: 0.1339
+epoch 10    train auc: 0.9911  f1: 0.9624    eval auc: 0.9786  f1: 0.9356    test auc: 0.9787  f1: 0.9359
+epoch 11    train_loss: 0.1329
+epoch 11    train auc: 0.9914  f1: 0.9635    eval auc: 0.9786  f1: 0.9373    test auc: 0.9787  f1: 0.9374
+epoch 12    train_loss: 0.1323
+epoch 12    train auc: 0.9914  f1: 0.9633    eval auc: 0.9784  f1: 0.9360    test auc: 0.9785  f1: 0.9361
+epoch 13    train_loss: 0.1319
+epoch 13    train auc: 0.9914  f1: 0.9633    eval auc: 0.9783  f1: 0.9358    test auc: 0.9784  f1: 0.9358
+epoch 14    train_loss: 0.1314
+epoch 14    train auc: 0.9915  f1: 0.9638    eval auc: 0.9778  f1: 0.9349    test auc: 0.9780  f1: 0.9352
+epoch 15    train_loss: 0.1310
+epoch 15    train auc: 0.9916  f1: 0.9642    eval auc: 0.9778  f1: 0.9374    test auc: 0.9778  f1: 0.9375
+epoch 16    train_loss: 0.1307
+epoch 16    train auc: 0.9917  f1: 0.9646    eval auc: 0.9776  f1: 0.9361    test auc: 0.9777  f1: 0.9363
+epoch 17    train_loss: 0.1302
+epoch 17    train auc: 0.9917  f1: 0.9644    eval auc: 0.9778  f1: 0.9364    test auc: 0.9780  f1: 0.9367
+epoch 18    train_loss: 0.1300
+epoch 18    train auc: 0.9917  f1: 0.9646    eval auc: 0.9780  f1: 0.9374    test auc: 0.9781  f1: 0.9377
+epoch 19    train_loss: 0.1299
+epoch 19    train auc: 0.9918  f1: 0.9647    eval auc: 0.9780  f1: 0.9368    test auc: 0.9781  f1: 0.9370
+epoch 20    train_loss: 0.1297
+epoch 20    train auc: 0.9918  f1: 0.9648    eval auc: 0.9780  f1: 0.9372    test auc: 0.9781  f1: 0.9376
+epoch 21    train_loss: 0.1295
+epoch 21    train auc: 0.9916  f1: 0.9641    eval auc: 0.9779  f1: 0.9350    test auc: 0.9780  f1: 0.9352
+epoch 22    train_loss: 0.1292
+epoch 22    train auc: 0.9918  f1: 0.9648    eval auc: 0.9777  f1: 0.9354    test auc: 0.9778  f1: 0.9357
+epoch 23    train_loss: 0.1292
+epoch 23    train auc: 0.9919  f1: 0.9650    eval auc: 0.9778  f1: 0.9375    test auc: 0.9778  f1: 0.9378
+epoch 24    train_loss: 0.1289
+epoch 24    train auc: 0.9919  f1: 0.9651    eval auc: 0.9774  f1: 0.9373    test auc: 0.9776  f1: 0.9376
+epoch 25    train_loss: 0.1289
+epoch 25    train auc: 0.9919  f1: 0.9651    eval auc: 0.9778  f1: 0.9368    test auc: 0.9779  f1: 0.9370
+epoch 26    train_loss: 0.1287
+epoch 26    train auc: 0.9919  f1: 0.9650    eval auc: 0.9772  f1: 0.9344    test auc: 0.9774  f1: 0.9347
+epoch 27    train_loss: 0.1286
+epoch 27    train auc: 0.9920  f1: 0.9654    eval auc: 0.9774  f1: 0.9365    test auc: 0.9776  f1: 0.9368
+epoch 28    train_loss: 0.1285
+epoch 28    train auc: 0.9919  f1: 0.9654    eval auc: 0.9774  f1: 0.9373    test auc: 0.9776  f1: 0.9373
+epoch 29    train_loss: 0.1282
+epoch 29    train auc: 0.9919  f1: 0.9654    eval auc: 0.9777  f1: 0.9368    test auc: 0.9778  f1: 0.9370
+epoch 30    train_loss: 0.1282
+epoch 30    train auc: 0.9920  f1: 0.9655    eval auc: 0.9773  f1: 0.9360    test auc: 0.9774  f1: 0.9361
+epoch 31    train_loss: 0.1281
+epoch 31    train auc: 0.9920  f1: 0.9657    eval auc: 0.9773  f1: 0.9365    test auc: 0.9775  f1: 0.9367
+epoch 32    train_loss: 0.1281
+epoch 32    train auc: 0.9920  f1: 0.9655    eval auc: 0.9775  f1: 0.9355    test auc: 0.9776  f1: 0.9357
+epoch 33    train_loss: 0.1279
+epoch 33    train auc: 0.9920  f1: 0.9653    eval auc: 0.9770  f1: 0.9335    test auc: 0.9772  f1: 0.9336
+epoch 34    train_loss: 0.1279
+epoch 34    train auc: 0.9920  f1: 0.9656    eval auc: 0.9772  f1: 0.9352    test auc: 0.9774  f1: 0.9354
+epoch 35    train_loss: 0.1278
+epoch 35    train auc: 0.9921  f1: 0.9657    eval auc: 0.9769  f1: 0.9344    test auc: 0.9771  f1: 0.9347
+epoch 36    train_loss: 0.1277
+epoch 36    train auc: 0.9921  f1: 0.9659    eval auc: 0.9772  f1: 0.9361    test auc: 0.9773  f1: 0.9361
+epoch 37    train_loss: 0.1278
+epoch 37    train auc: 0.9921  f1: 0.9659    eval auc: 0.9771  f1: 0.9363    test auc: 0.9773  f1: 0.9364
+epoch 38    train_loss: 0.1275
+epoch 38    train auc: 0.9921  f1: 0.9658    eval auc: 0.9771  f1: 0.9357    test auc: 0.9772  f1: 0.9357
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2210
+epoch 0    train auc: 0.9828  f1: 0.9453    eval auc: 0.9785  f1: 0.9378    test auc: 0.9787  f1: 0.9381
+epoch 1    train_loss: 0.1727
+epoch 1    train auc: 0.9862  f1: 0.9517    eval auc: 0.9801  f1: 0.9403    test auc: 0.9803  f1: 0.9406
+epoch 2    train_loss: 0.1595
+epoch 2    train auc: 0.9876  f1: 0.9544    eval auc: 0.9804  f1: 0.9397    test auc: 0.9806  f1: 0.9400
+epoch 3    train_loss: 0.1513
+epoch 3    train auc: 0.9890  f1: 0.9577    eval auc: 0.9804  f1: 0.9416    test auc: 0.9805  f1: 0.9418
+epoch 4    train_loss: 0.1456
+epoch 4    train auc: 0.9899  f1: 0.9594    eval auc: 0.9802  f1: 0.9400    test auc: 0.9803  f1: 0.9402
+epoch 5    train_loss: 0.1415
+epoch 5    train auc: 0.9902  f1: 0.9608    eval auc: 0.9801  f1: 0.9407    test auc: 0.9802  f1: 0.9407
+epoch 6    train_loss: 0.1384
+epoch 6    train auc: 0.9907  f1: 0.9617    eval auc: 0.9798  f1: 0.9395    test auc: 0.9800  f1: 0.9397
+epoch 7    train_loss: 0.1360
+epoch 7    train auc: 0.9910  f1: 0.9624    eval auc: 0.9798  f1: 0.9398    test auc: 0.9800  f1: 0.9400
+epoch 8    train_loss: 0.1340
+epoch 8    train auc: 0.9912  f1: 0.9632    eval auc: 0.9792  f1: 0.9384    test auc: 0.9793  f1: 0.9385
+epoch 9    train_loss: 0.1325
+epoch 9    train auc: 0.9916  f1: 0.9638    eval auc: 0.9789  f1: 0.9378    test auc: 0.9791  f1: 0.9379
+epoch 10    train_loss: 0.1313
+epoch 10    train auc: 0.9915  f1: 0.9634    eval auc: 0.9790  f1: 0.9361    test auc: 0.9792  f1: 0.9364
+epoch 11    train_loss: 0.1302
+epoch 11    train auc: 0.9917  f1: 0.9643    eval auc: 0.9789  f1: 0.9396    test auc: 0.9791  f1: 0.9400
+epoch 12    train_loss: 0.1293
+epoch 12    train auc: 0.9918  f1: 0.9649    eval auc: 0.9787  f1: 0.9382    test auc: 0.9788  f1: 0.9384
+epoch 13    train_loss: 0.1285
+epoch 13    train auc: 0.9919  f1: 0.9652    eval auc: 0.9789  f1: 0.9387    test auc: 0.9790  f1: 0.9388
+epoch 14    train_loss: 0.1278
+epoch 14    train auc: 0.9921  f1: 0.9655    eval auc: 0.9788  f1: 0.9382    test auc: 0.9789  f1: 0.9384
+epoch 15    train_loss: 0.1270
+epoch 15    train auc: 0.9921  f1: 0.9659    eval auc: 0.9787  f1: 0.9378    test auc: 0.9789  f1: 0.9380
+epoch 16    train_loss: 0.1266
+epoch 16    train auc: 0.9922  f1: 0.9660    eval auc: 0.9783  f1: 0.9370    test auc: 0.9785  f1: 0.9372
+epoch 17    train_loss: 0.1259
+epoch 17    train auc: 0.9924  f1: 0.9662    eval auc: 0.9784  f1: 0.9373    test auc: 0.9786  f1: 0.9374
+epoch 18    train_loss: 0.1254
+epoch 18    train auc: 0.9924  f1: 0.9662    eval auc: 0.9784  f1: 0.9369    test auc: 0.9786  f1: 0.9373
+epoch 19    train_loss: 0.1250
+epoch 19    train auc: 0.9924  f1: 0.9664    eval auc: 0.9786  f1: 0.9379    test auc: 0.9787  f1: 0.9381
+epoch 20    train_loss: 0.1245
+epoch 20    train auc: 0.9925  f1: 0.9666    eval auc: 0.9782  f1: 0.9364    test auc: 0.9784  f1: 0.9368
+epoch 21    train_loss: 0.1240
+epoch 21    train auc: 0.9926  f1: 0.9665    eval auc: 0.9782  f1: 0.9354    test auc: 0.9784  f1: 0.9357
+epoch 22    train_loss: 0.1237
+epoch 22    train auc: 0.9927  f1: 0.9670    eval auc: 0.9782  f1: 0.9377    test auc: 0.9783  f1: 0.9379
+epoch 23    train_loss: 0.1232
+epoch 23    train auc: 0.9927  f1: 0.9671    eval auc: 0.9780  f1: 0.9375    test auc: 0.9782  f1: 0.9378
+epoch 24    train_loss: 0.1229
+epoch 24    train auc: 0.9927  f1: 0.9671    eval auc: 0.9783  f1: 0.9368    test auc: 0.9785  f1: 0.9372
+epoch 25    train_loss: 0.1225
+epoch 25    train auc: 0.9928  f1: 0.9672    eval auc: 0.9783  f1: 0.9377    test auc: 0.9784  f1: 0.9380
+epoch 26    train_loss: 0.1222
+epoch 26    train auc: 0.9928  f1: 0.9673    eval auc: 0.9782  f1: 0.9360    test auc: 0.9783  f1: 0.9363
+epoch 27    train_loss: 0.1219
+epoch 27    train auc: 0.9928  f1: 0.9673    eval auc: 0.9782  f1: 0.9365    test auc: 0.9783  f1: 0.9367
+epoch 28    train_loss: 0.1216
+epoch 28    train auc: 0.9928  f1: 0.9673    eval auc: 0.9782  f1: 0.9364    test auc: 0.9783  f1: 0.9365
+epoch 29    train_loss: 0.1212
+epoch 29    train auc: 0.9929  f1: 0.9674    eval auc: 0.9781  f1: 0.9354    test auc: 0.9782  f1: 0.9354
+epoch 30    train_loss: 0.1212
+epoch 30    train auc: 0.9929  f1: 0.9676    eval auc: 0.9782  f1: 0.9374    test auc: 0.9784  f1: 0.9377
+epoch 31    train_loss: 0.1209
+epoch 31    train auc: 0.9930  f1: 0.9677    eval auc: 0.9781  f1: 0.9365    test auc: 0.9782  f1: 0.9369
+epoch 32    train_loss: 0.1206
+epoch 32    train auc: 0.9930  f1: 0.9676    eval auc: 0.9779  f1: 0.9354    test auc: 0.9780  f1: 0.9355
+epoch 33    train_loss: 0.1204
+epoch 33    train auc: 0.9930  f1: 0.9678    eval auc: 0.9781  f1: 0.9365    test auc: 0.9783  f1: 0.9367
+epoch 34    train_loss: 0.1201
+epoch 34    train auc: 0.9930  f1: 0.9676    eval auc: 0.9779  f1: 0.9345    test auc: 0.9781  f1: 0.9348
+epoch 35    train_loss: 0.1200
+epoch 35    train auc: 0.9931  f1: 0.9680    eval auc: 0.9780  f1: 0.9357    test auc: 0.9781  f1: 0.9360
+epoch 36    train_loss: 0.1199
+epoch 36    train auc: 0.9931  f1: 0.9680    eval auc: 0.9778  f1: 0.9363    test auc: 0.9780  f1: 0.9364
+epoch 37    train_loss: 0.1196
+epoch 37    train auc: 0.9931  f1: 0.9681    eval auc: 0.9780  f1: 0.9373    test auc: 0.9781  f1: 0.9375
+epoch 38    train_loss: 0.1193
+epoch 38    train auc: 0.9930  f1: 0.9681    eval auc: 0.9778  f1: 0.9378    test auc: 0.9779  f1: 0.9381
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+epoch 0    train_loss: 0.2217
+epoch 0    train auc: 0.9828  f1: 0.9451    eval auc: 0.9783  f1: 0.9375    test auc: 0.9785  f1: 0.9376
+epoch 1    train_loss: 0.1734
+epoch 1    train auc: 0.9858  f1: 0.9514    eval auc: 0.9801  f1: 0.9415    test auc: 0.9803  f1: 0.9418
+epoch 2    train_loss: 0.1609
+epoch 2    train auc: 0.9877  f1: 0.9549    eval auc: 0.9804  f1: 0.9415    test auc: 0.9806  f1: 0.9418
+epoch 3    train_loss: 0.1525
+epoch 3    train auc: 0.9889  f1: 0.9570    eval auc: 0.9803  f1: 0.9401    test auc: 0.9805  f1: 0.9404
+epoch 4    train_loss: 0.1463
+epoch 4    train auc: 0.9898  f1: 0.9594    eval auc: 0.9800  f1: 0.9405    test auc: 0.9801  f1: 0.9407
+epoch 5    train_loss: 0.1421
+epoch 5    train auc: 0.9903  f1: 0.9606    eval auc: 0.9801  f1: 0.9410    test auc: 0.9803  f1: 0.9413
+epoch 6    train_loss: 0.1388
+epoch 6    train auc: 0.9908  f1: 0.9618    eval auc: 0.9795  f1: 0.9391    test auc: 0.9797  f1: 0.9394
+epoch 7    train_loss: 0.1365
+epoch 7    train auc: 0.9911  f1: 0.9625    eval auc: 0.9790  f1: 0.9388    test auc: 0.9792  f1: 0.9391
+epoch 8    train_loss: 0.1345
+epoch 8    train auc: 0.9914  f1: 0.9631    eval auc: 0.9791  f1: 0.9388    test auc: 0.9793  f1: 0.9392
+epoch 9    train_loss: 0.1328
+epoch 9    train auc: 0.9916  f1: 0.9635    eval auc: 0.9791  f1: 0.9380    test auc: 0.9792  f1: 0.9382
+epoch 10    train_loss: 0.1316
+epoch 10    train auc: 0.9917  f1: 0.9639    eval auc: 0.9789  f1: 0.9389    test auc: 0.9791  f1: 0.9392
+epoch 11    train_loss: 0.1306
+epoch 11    train auc: 0.9918  f1: 0.9636    eval auc: 0.9785  f1: 0.9352    test auc: 0.9787  f1: 0.9356
+epoch 12    train_loss: 0.1298
+epoch 12    train auc: 0.9921  f1: 0.9645    eval auc: 0.9783  f1: 0.9366    test auc: 0.9785  f1: 0.9368
+epoch 13    train_loss: 0.1289
+epoch 13    train auc: 0.9921  f1: 0.9648    eval auc: 0.9784  f1: 0.9373    test auc: 0.9786  f1: 0.9373
+epoch 14    train_loss: 0.1282
+epoch 14    train auc: 0.9921  f1: 0.9646    eval auc: 0.9780  f1: 0.9344    test auc: 0.9782  f1: 0.9345
+epoch 15    train_loss: 0.1278
+epoch 15    train auc: 0.9924  f1: 0.9654    eval auc: 0.9781  f1: 0.9376    test auc: 0.9783  f1: 0.9377
+epoch 16    train_loss: 0.1270
+epoch 16    train auc: 0.9925  f1: 0.9657    eval auc: 0.9776  f1: 0.9356    test auc: 0.9778  f1: 0.9359
+epoch 17    train_loss: 0.1267
+epoch 17    train auc: 0.9924  f1: 0.9656    eval auc: 0.9779  f1: 0.9362    test auc: 0.9781  f1: 0.9365
+epoch 18    train_loss: 0.1262
+epoch 18    train auc: 0.9926  f1: 0.9658    eval auc: 0.9775  f1: 0.9365    test auc: 0.9777  f1: 0.9365
+epoch 19    train_loss: 0.1259
+epoch 19    train auc: 0.9927  f1: 0.9659    eval auc: 0.9776  f1: 0.9363    test auc: 0.9778  f1: 0.9365
+epoch 20    train_loss: 0.1257
+epoch 20    train auc: 0.9927  f1: 0.9662    eval auc: 0.9775  f1: 0.9356    test auc: 0.9776  f1: 0.9357
+epoch 21    train_loss: 0.1253
+epoch 21    train auc: 0.9927  f1: 0.9661    eval auc: 0.9775  f1: 0.9348    test auc: 0.9777  f1: 0.9351
+epoch 22    train_loss: 0.1249
+epoch 22    train auc: 0.9927  f1: 0.9665    eval auc: 0.9778  f1: 0.9369    test auc: 0.9779  f1: 0.9372
+epoch 23    train_loss: 0.1246
+epoch 23    train auc: 0.9928  f1: 0.9664    eval auc: 0.9775  f1: 0.9366    test auc: 0.9777  f1: 0.9367
+epoch 24    train_loss: 0.1243
+epoch 24    train auc: 0.9928  f1: 0.9664    eval auc: 0.9776  f1: 0.9362    test auc: 0.9777  f1: 0.9364
+epoch 25    train_loss: 0.1241
+epoch 25    train auc: 0.9929  f1: 0.9668    eval auc: 0.9776  f1: 0.9370    test auc: 0.9778  f1: 0.9373
+epoch 26    train_loss: 0.1239
+epoch 26    train auc: 0.9929  f1: 0.9667    eval auc: 0.9772  f1: 0.9359    test auc: 0.9774  f1: 0.9361
+epoch 27    train_loss: 0.1235
+epoch 27    train auc: 0.9929  f1: 0.9668    eval auc: 0.9775  f1: 0.9359    test auc: 0.9776  f1: 0.9361
+epoch 28    train_loss: 0.1235
+epoch 28    train auc: 0.9930  f1: 0.9670    eval auc: 0.9773  f1: 0.9365    test auc: 0.9774  f1: 0.9367
+epoch 29    train_loss: 0.1231
+epoch 29    train auc: 0.9929  f1: 0.9669    eval auc: 0.9773  f1: 0.9372    test auc: 0.9774  f1: 0.9374
+epoch 30    train_loss: 0.1230
+epoch 30    train auc: 0.9930  f1: 0.9669    eval auc: 0.9771  f1: 0.9356    test auc: 0.9772  f1: 0.9356
+epoch 31    train_loss: 0.1231
+epoch 31    train auc: 0.9930  f1: 0.9670    eval auc: 0.9772  f1: 0.9350    test auc: 0.9773  f1: 0.9353
+epoch 32    train_loss: 0.1228
+epoch 32    train auc: 0.9930  f1: 0.9671    eval auc: 0.9772  f1: 0.9364    test auc: 0.9773  f1: 0.9367
+epoch 33    train_loss: 0.1226
+epoch 33    train auc: 0.9931  f1: 0.9672    eval auc: 0.9771  f1: 0.9359    test auc: 0.9773  f1: 0.9360
+epoch 34    train_loss: 0.1226
+epoch 34    train auc: 0.9930  f1: 0.9671    eval auc: 0.9770  f1: 0.9353    test auc: 0.9772  f1: 0.9354
+epoch 35    train_loss: 0.1223
+epoch 35    train auc: 0.9931  f1: 0.9673    eval auc: 0.9770  f1: 0.9346    test auc: 0.9771  f1: 0.9348
+epoch 36    train_loss: 0.1223
+epoch 36    train auc: 0.9931  f1: 0.9672    eval auc: 0.9773  f1: 0.9363    test auc: 0.9775  f1: 0.9364
+epoch 37    train_loss: 0.1222
+epoch 37    train auc: 0.9931  f1: 0.9674    eval auc: 0.9772  f1: 0.9359    test auc: 0.9773  f1: 0.9360
+epoch 38    train_loss: 0.1222
+epoch 38    train auc: 0.9931  f1: 0.9675    eval auc: 0.9771  f1: 0.9354    test auc: 0.9772  f1: 0.9356
+[log_resources] valid runs: 3/3
+[0.98036008 0.98053545 0.98056639]
+[0.94070682 0.94180072 0.94177417]
+[[0.06333797 0.16971184 0.44995465 0.56654466]
+ [0.11794972 0.24795601 0.47513073 0.6015642 ]
+ [0.05921474 0.18334772 0.44964127 0.57381593]]
+[[0.19   0.123  0.0746 0.0513]
+ [0.255  0.154  0.0778 0.0531]
+ [0.175  0.13   0.0742 0.0509]]
+average auc: 0.9805+\-0.0001
+average f1 : 0.9414+\-0.0005
+average recall   : 0.0802+\-0.0268 0.2003+\-0.0341 0.4582+\-0.0119 0.5806+\-0.0151 
+average precision: 0.2067+\-0.0347 0.1357+\-0.0133 0.0755+\-0.0016 0.0518+\-0.0010 
+average ndcg     : 0.2129+\-0.0423 0.2136+\-0.0338 0.2923+\-0.0289 0.3311+\-0.0313 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0802+-0.0268  precision: 0.2067+-0.0347  ndcg: 0.2129+-0.0423
+  R@10 recall: 0.2003+-0.0341  precision: 0.1357+-0.0133  ndcg: 0.2136+-0.0338
+  R@50 recall: 0.4582+-0.0119  precision: 0.0755+-0.0016  ndcg: 0.2923+-0.0289
+  R@100 recall: 0.5806+-0.0151  precision: 0.0518+-0.0010  ndcg: 0.3311+-0.0313
+average train_seconds: 5772.4+\-96.7
+average total_seconds: 7645.7+\-60.7
+average peak_vram_mb: 6432.7+\-104.4
+average train_Loss 0.13320346
+ARM_DONE paper_movie
+================================================================================
+ARM paper_restaurant
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 32768 --l2_weight 1e-7 --lr 0.02 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion fixed --use_cl 0 --use_simgcl 0 --lr_decay 1.0 --early_stop 0 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag thesis_paper_product_sanity
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (2300060, 2300060) 1.2559258937835693
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+[log_resources] run 0 crashed: ResourceExhaustedError: Graph execution error:
+
+Detected at node 'gradients/SparseTensorDenseMatMul/SparseTensorDenseMatMul_grad/SparseTensorDenseMatMul' defined at (most recent call last):
+    File "D:\projects\current-git-project\LGKAT-Project\src\main.py", line 264, in <module>
+      train_n_runs(args, data, show_loss, show_topk, show_ctr)
+    File "D:\projects\current-git-project\LGKAT-Project\src\train_n_runs.py", line 201, in train_n_runs
+      model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entity, 
+[log_resources] excluding run 0 from mean (crashed)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+[log_resources] run 1 crashed: ResourceExhaustedError: Graph execution error:
+
+Detected at node 'gradients/SparseTensorDenseMatMul_77/SparseTensorDenseMatMul_grad/SparseTensorDenseMatMul' defined at (most recent call last):
+    File "D:\projects\current-git-project\LGKAT-Project\src\main.py", line 264, in <module>
+      train_n_runs(args, data, show_loss, show_topk, show_ctr)
+    File "D:\projects\current-git-project\LGKAT-Project\src\train_n_runs.py", line 201, in train_n_runs
+      model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entit
+[log_resources] excluding run 1 from mean (crashed)
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+[log_resources] run 2 crashed: ResourceExhaustedError: Graph execution error:
+
+Detected at node 'gradients/SparseTensorDenseMatMul_77/SparseTensorDenseMatMul_grad/SparseTensorDenseMatMul' defined at (most recent call last):
+    File "D:\projects\current-git-project\LGKAT-Project\src\main.py", line 264, in <module>
+      train_n_runs(args, data, show_loss, show_topk, show_ctr)
+    File "D:\projects\current-git-project\LGKAT-Project\src\train_n_runs.py", line 201, in train_n_runs
+      model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entit
+[log_resources] excluding run 2 from mean (crashed)
+[log_resources] valid runs: 0/3
+[log_resources] no valid runs to aggregate; skipping mean±std
+average train_Loss nan
+ARM_DONE paper_restaurant
+WROTE D:\projects\current-git-project\LGKAT-Project\docs\THESIS_NOTES\06_paper_baseline.md
+STAGE_DONE 6 paper-baseline
+ALL_SHORT_TASKS_DONE
+===== Mon 09/21/2026 15:45:46.00 python exit 0 =====
+===== Mon 09/21/2026 16:23:24.88 resume --only 6 =====
+STAGE_START 6 paper-baseline
+================================================================================
+ARM paper_book
+SKIP already complete: paper_book
+ARM_DONE paper_book
+================================================================================
+ARM paper_movie
+SKIP already complete: paper_movie
+ARM_DONE paper_movie
+================================================================================
+ARM paper_restaurant
+C:\Users\asus\.conda\envs\lgkat\python.exe main.py --dataset restaurant --aggregator concat --n_epochs 39 --neighbor_sample_size 4 --dim 8 --n_iter 2 --batch_size 32768 --l2_weight 1e-7 --lr 0.02 --layer_size [8] --adj_type norm --alg_type lightgcn --model_type KGCN_LightGCN --node_dropout [0.1] --mess_dropout [0.1] --node_dropout_flag 1 --agg_type weighted_avg --smoothing_steps 1 --pretrain 0 --alpha 0.5 --att product --gpu_id 0 --topk_k_list [2,10,50,100] --topk_user_num 100 --fusion fixed --use_cl 0 --use_simgcl 0 --lr_decay 1.0 --early_stop 0 --early_stop_min_epoch 0 --fast_eval 1 --log_resources 1 --runs 3 --exp_tag thesis_paper_product_sanity
+================================================================================
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (2300060, 2300060) 2.5066239833831787
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+Attention: product
+Attention: product
+Attention: product
+Initialized from scratch
+ARM_FAILED paper_restaurant rc=3221226505
+===== Mon 09/21/2026 16:26:14.17 python exit -1 =====

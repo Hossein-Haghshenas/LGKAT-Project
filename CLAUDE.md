@@ -5,7 +5,8 @@ using light graph convolutional network and personalized knowledge-aware attenti
 sub-network" (built on the COAT/KGCN codebase). Current goal: architectural improvements
 (attention, contrastive learning, fusion…) that measurably beat the paper's Table 2/3
 numbers — feeding Hossein's MSc thesis (see the Thesis Project folder's CLAUDE.md) and
-a follow-up paper. Pristine upstream copy: D:\projects\LGKAT-main — never modify it;
+a follow-up paper (Persian article drafts + submission forms: the OneDrive "LGKAT Article"
+folder, which has its own CLAUDE.md). Pristine upstream copy: D:\projects\LGKAT-main — never modify it;
 diff against it to see what we changed.
 
 ## Stack & environment
@@ -32,6 +33,9 @@ diff against it to see what we changed.
 - `output/`, `Pretrain/` — generated embeddings & checkpoints.
 - `configs/`, `notebooks/`, `logs/`, `embeddings/` — empty or written by other branches'
   code; ignore on this branch.
+- `docs/KNOWLEDGE_BASE.md` — full repo analysis (2026-07): architecture, branch atlas,
+  known protocol caveats, bottlenecks, optimization roadmap. Read it before proposing
+  architectural changes; this file stays the authority on rules.
 
 ## Running
 - NEVER launch training yourself — Hossein runs all training on his GPU (hours-long).
@@ -46,9 +50,14 @@ diff against it to see what we changed.
 - Always pass the full flag set from cmd.sh — main.py's argparse defaults are NOT the
   paper settings (a per-dataset block is merely commented in/out; leave those comment
   blocks alone).
+- `--att product` is the variant reported in the paper/article tables; `h_ur_t` is the
+  older variant.
+- Per-dataset flags differ on purpose (e.g. `alpha` 0 on movie/book vs 0.5 on
+  music/restaurant) — never "normalize" them across datasets.
 
 ## Git
-- Full freedom: commit (feat:/fix: prefix, imperative), push, switch branches.
+- Full freedom in this repo — deliberate override of the global ask-first git rule:
+  commit (feat:/fix: prefix, imperative), push, switch branches.
 - Experiments live on dedicated branches (`with-<idea>`, `graph-…`); `major-version-1`
   is the current mainline.
 - Commit or stash dirty `result/*.txt` before any checkout — losing run logs means

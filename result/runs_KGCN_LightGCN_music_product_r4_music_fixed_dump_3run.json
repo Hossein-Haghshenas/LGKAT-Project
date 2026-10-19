@@ -1,0 +1,258 @@
+{
+  "model_type": "KGCN_LightGCN",
+  "dataset": "music",
+  "att": "product",
+  "exp_tag": "r4_music_fixed_dump_3run",
+  "k_list": [
+    2,
+    10,
+    50,
+    100
+  ],
+  "runs": 3,
+  "auc": [
+    0.8190140844673489,
+    0.8193391009397211,
+    0.8192056982900594
+  ],
+  "f1": [
+    0.7434995714197304,
+    0.7447885910429471,
+    0.7445278397175549
+  ],
+  "recall": [
+    [
+      0.035833333333333335,
+      0.11383333333333333,
+      0.326,
+      0.43449999999999994
+    ],
+    [
+      0.032,
+      0.10566666666666666,
+      0.248,
+      0.33277777777777773
+    ],
+    [
+      0.02583333333333333,
+      0.1355952380952381,
+      0.3282857142857143,
+      0.470047619047619
+    ]
+  ],
+  "precision": [
+    [
+      0.03,
+      0.026000000000000006,
+      0.014600000000000002,
+      0.01
+    ],
+    [
+      0.045,
+      0.026000000000000002,
+      0.0124,
+      0.008400000000000001
+    ],
+    [
+      0.04,
+      0.032,
+      0.0152,
+      0.0105
+    ]
+  ],
+  "ndcg": [
+    [
+      0.03404635368040541,
+      0.0718687648936616,
+      0.13075102196061916,
+      0.15355915277665372
+    ],
+    [
+      0.046131471927654585,
+      0.06698419900528363,
+      0.10844559175822045,
+      0.12678187418500045
+    ],
+    [
+      0.037737056144690834,
+      0.07750077097648644,
+      0.12940587607284504,
+      0.15704800482948708
+    ]
+  ],
+  "n_attempted": 3,
+  "n_valid": 3,
+  "run_records": [
+    {
+      "run_index": 0,
+      "status": "ok",
+      "seed_eval": 556,
+      "seed_test": 557,
+      "error": null,
+      "train_seconds": 512.6642547000004,
+      "total_seconds": 813.1677366,
+      "eval_seconds": 300.50348189999966,
+      "peak_vram_bytes": 3975151616,
+      "peak_vram_mb": 3791.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 20,
+      "best_recall_epoch": 23,
+      "rank_ckpt": "r10",
+      "auc": 0.8190140844673489,
+      "f1": 0.7434995714197304,
+      "recall": [
+        0.035833333333333335,
+        0.11383333333333333,
+        0.326,
+        0.43449999999999994
+      ],
+      "precision": [
+        0.03,
+        0.026000000000000006,
+        0.014600000000000002,
+        0.01
+      ],
+      "ndcg": [
+        0.03404635368040541,
+        0.0718687648936616,
+        0.13075102196061916,
+        0.15355915277665372
+      ]
+    },
+    {
+      "run_index": 1,
+      "status": "ok",
+      "seed_eval": 558,
+      "seed_test": 559,
+      "error": null,
+      "train_seconds": 508.3478430999995,
+      "total_seconds": 797.6182747,
+      "eval_seconds": 289.2704316000005,
+      "peak_vram_bytes": 3882876928,
+      "peak_vram_mb": 3703.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 19,
+      "best_recall_epoch": 27,
+      "rank_ckpt": "r10",
+      "auc": 0.8193391009397211,
+      "f1": 0.7447885910429471,
+      "recall": [
+        0.032,
+        0.10566666666666666,
+        0.248,
+        0.33277777777777773
+      ],
+      "precision": [
+        0.045,
+        0.026000000000000002,
+        0.0124,
+        0.008400000000000001
+      ],
+      "ndcg": [
+        0.046131471927654585,
+        0.06698419900528363,
+        0.10844559175822045,
+        0.12678187418500045
+      ]
+    },
+    {
+      "run_index": 2,
+      "status": "ok",
+      "seed_eval": 560,
+      "seed_test": 561,
+      "error": null,
+      "train_seconds": 507.8591673999997,
+      "total_seconds": 801.4299839,
+      "eval_seconds": 293.5708165000003,
+      "peak_vram_bytes": 3908042752,
+      "peak_vram_mb": 3727.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 21,
+      "best_recall_epoch": 36,
+      "rank_ckpt": "r10",
+      "auc": 0.8192056982900594,
+      "f1": 0.7445278397175549,
+      "recall": [
+        0.02583333333333333,
+        0.1355952380952381,
+        0.3282857142857143,
+        0.470047619047619
+      ],
+      "precision": [
+        0.04,
+        0.032,
+        0.0152,
+        0.0105
+      ],
+      "ndcg": [
+        0.037737056144690834,
+        0.07750077097648644,
+        0.12940587607284504,
+        0.15704800482948708
+      ]
+    }
+  ],
+  "config": {
+    "adj_type": "norm",
+    "agg_type": "weighted_avg",
+    "aggregator": "concat",
+    "alg_type": "lightgcn",
+    "alpha": 0.5,
+    "att": "product",
+    "batch_size": 128,
+    "cl_detach": "none",
+    "cl_lambda": 0.02,
+    "cl_sample_size": 0,
+    "cl_tau": 0.2,
+    "dataset": "music",
+    "dim": 32,
+    "early_stop": 0,
+    "early_stop_min_epoch": 0,
+    "exp_tag": "r4_music_fixed_dump_3run",
+    "fast_eval": 1,
+    "fusion": "fixed",
+    "gpu_id": 0,
+    "interpret": 0,
+    "interpret_topk": 5,
+    "interpret_user": -1,
+    "kgtr_center": 0,
+    "kgtr_dot": 0,
+    "kgtr_ffn": 0,
+    "kgtr_pool": "transformed",
+    "kgtr_rel_bias": 0,
+    "kgtr_temp": 1.0,
+    "kgtr_token": "rel_ej",
+    "l2_weight": 0.0001,
+    "layer_size": "[32]",
+    "log_resources": 1,
+    "logging": "save",
+    "lr": 0.005,
+    "lr_decay": 0.98,
+    "ls_weight": 0,
+    "mess_dropout": "[0.1]",
+    "model_type": "KGCN_LightGCN",
+    "n_epochs": 39,
+    "n_heads": 4,
+    "n_iter": 1,
+    "neighbor_sample_size": 8,
+    "node_dropout": "[0.1]",
+    "node_dropout_flag": 1,
+    "pair_dump": 1,
+    "params": "['dataset','aggregator','n_epochs','neighbor_sample_size','dim','n_iter','batch_size','l2_weight','ls_weight','lr','ratio','layer_size','adj_type','alg_type','node_dropout_flag','node_dropout','mess_dropout','model_type','att','agg_type','alpha','smoothing_steps','runs','logging','pretrain','topk_user_num','topk_k_list','report_ndcg','use_cl','cl_lambda','cl_tau','cl_sample_size','cl_detach','use_simgcl','simgcl_lambda','simgcl_eps','lr_decay','early_stop','early_stop_min_epoch','fusion','exp_tag','n_heads','kgtr_token','kgtr_pool','kgtr_center','kgtr_ffn','kgtr_temp','kgtr_rel_bias','kgtr_dot','fast_eval','sparsity_eval','sparsity_buckets','interpret','interpret_user','interpret_topk']",
+    "pretrain": 0,
+    "rank_ckpt": "r10",
+    "ratio": 1,
+    "report_ndcg": 1,
+    "runs": 3,
+    "seed": 562,
+    "simgcl_eps": 0.05,
+    "simgcl_lambda": 0.02,
+    "smoothing_steps": 8,
+    "sparsity_buckets": "[5,10,20]",
+    "sparsity_eval": 0,
+    "topk_k_list": "[2,10,50,100]",
+    "topk_user_num": 100,
+    "use_cl": 0,
+    "use_simgcl": 0
+  }
+}

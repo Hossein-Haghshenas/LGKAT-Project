@@ -1,0 +1,69 @@
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 cl_sample_size:0 cl_detach:none use_simgcl:1 simgcl_lambda:0.02 simgcl_eps:0.05 lr_decay:0.98 early_stop:5 early_stop_min_epoch:10 fusion:gate exp_tag:r4_book_gate_noise_3run n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.8128 train_f1:0.7349 eval_auc:0.4935 eval_f1:0.5025 test_auc:0.4927 test_f1:0.5063
+epoch: 1 train_auc:0.8756 train_f1:0.7868 eval_auc:0.4825 eval_f1:0.4899 test_auc:0.4807 test_f1:0.4995
+epoch: 2 train_auc:0.8932 train_f1:0.8058 eval_auc:0.4497 eval_f1:0.4681 test_auc:0.4478 test_f1:0.4749
+epoch: 3 train_auc:0.8897 train_f1:0.8048 eval_auc:0.4058 eval_f1:0.4425 test_auc:0.4032 test_f1:0.4472
+epoch: 4 train_auc:0.8694 train_f1:0.7886 eval_auc:0.3687 eval_f1:0.4130 test_auc:0.3669 test_f1:0.4196
+epoch: 5 train_auc:0.8425 train_f1:0.7639 eval_auc:0.3476 eval_f1:0.4041 test_auc:0.3443 test_f1:0.4008
+epoch: 6 train_auc:0.8337 train_f1:0.7627 eval_auc:0.3384 eval_f1:0.4138 test_auc:0.3309 test_f1:0.4051
+epoch: 7 train_auc:0.8132 train_f1:0.7463 eval_auc:0.3338 eval_f1:0.4057 test_auc:0.3314 test_f1:0.4054
+epoch: 8 train_auc:0.8007 train_f1:0.7319 eval_auc:0.3330 eval_f1:0.4137 test_auc:0.3335 test_f1:0.4195
+epoch: 9 train_auc:0.8135 train_f1:0.7355 eval_auc:0.3473 eval_f1:0.4189 test_auc:0.3462 test_f1:0.4207
+epoch:10 train_auc:0.8293 train_f1:0.7467 eval_auc:0.4023 eval_f1:0.4348 test_auc:0.3986 test_f1:0.4294
+epoch:11 train_auc:0.8427 train_f1:0.7507 eval_auc:0.4790 eval_f1:0.4559 test_auc:0.4800 test_f1:0.4541
+epoch:12 train_auc:0.8583 train_f1:0.7639 eval_auc:0.5700 eval_f1:0.5031 test_auc:0.5702 test_f1:0.4990
+epoch:13 train_auc:0.8698 train_f1:0.7797 eval_auc:0.6383 eval_f1:0.5544 test_auc:0.6361 test_f1:0.5464
+epoch:14 train_auc:0.8769 train_f1:0.7898 eval_auc:0.6667 eval_f1:0.5814 test_auc:0.6656 test_f1:0.5814
+epoch:15 train_auc:0.8837 train_f1:0.7983 eval_auc:0.6781 eval_f1:0.5983 test_auc:0.6775 test_f1:0.6000
+epoch:16 train_auc:0.8897 train_f1:0.8043 eval_auc:0.6825 eval_f1:0.6077 test_auc:0.6823 test_f1:0.6101
+epoch:17 train_auc:0.8954 train_f1:0.8099 eval_auc:0.6844 eval_f1:0.6138 test_auc:0.6845 test_f1:0.6151
+epoch:18 train_auc:0.9007 train_f1:0.8146 eval_auc:0.6850 eval_f1:0.6167 test_auc:0.6854 test_f1:0.6188
+epoch:19 train_auc:0.9056 train_f1:0.8186 eval_auc:0.6847 eval_f1:0.6184 test_auc:0.6856 test_f1:0.6209
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 cl_sample_size:0 cl_detach:none use_simgcl:1 simgcl_lambda:0.02 simgcl_eps:0.05 lr_decay:0.98 early_stop:5 early_stop_min_epoch:10 fusion:gate exp_tag:r4_book_gate_noise_3run n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.8076 train_f1:0.7320 eval_auc:0.4928 eval_f1:0.5047 test_auc:0.4994 test_f1:0.5074
+epoch: 1 train_auc:0.8757 train_f1:0.7887 eval_auc:0.4815 eval_f1:0.4909 test_auc:0.4899 test_f1:0.4984
+epoch: 2 train_auc:0.9013 train_f1:0.8160 eval_auc:0.4568 eval_f1:0.4705 test_auc:0.4609 test_f1:0.4722
+epoch: 3 train_auc:0.8961 train_f1:0.8126 eval_auc:0.4187 eval_f1:0.4386 test_auc:0.4203 test_f1:0.4421
+epoch: 4 train_auc:0.8811 train_f1:0.7983 eval_auc:0.3750 eval_f1:0.4113 test_auc:0.3756 test_f1:0.4166
+epoch: 5 train_auc:0.8594 train_f1:0.7785 eval_auc:0.3481 eval_f1:0.3986 test_auc:0.3509 test_f1:0.4016
+epoch: 6 train_auc:0.8378 train_f1:0.7575 eval_auc:0.3378 eval_f1:0.3954 test_auc:0.3366 test_f1:0.4000
+epoch: 7 train_auc:0.8207 train_f1:0.7480 eval_auc:0.3318 eval_f1:0.3899 test_auc:0.3320 test_f1:0.3942
+epoch: 8 train_auc:0.8068 train_f1:0.7394 eval_auc:0.3317 eval_f1:0.4047 test_auc:0.3326 test_f1:0.4076
+epoch: 9 train_auc:0.8127 train_f1:0.7389 eval_auc:0.3371 eval_f1:0.4011 test_auc:0.3393 test_f1:0.4074
+epoch:10 train_auc:0.8272 train_f1:0.7454 eval_auc:0.3575 eval_f1:0.4059 test_auc:0.3603 test_f1:0.4081
+epoch:11 train_auc:0.8381 train_f1:0.7487 eval_auc:0.3969 eval_f1:0.4166 test_auc:0.3995 test_f1:0.4194
+epoch:12 train_auc:0.8555 train_f1:0.7599 eval_auc:0.4512 eval_f1:0.4382 test_auc:0.4526 test_f1:0.4379
+epoch:13 train_auc:0.8770 train_f1:0.7825 eval_auc:0.5235 eval_f1:0.4797 test_auc:0.5223 test_f1:0.4769
+epoch:14 train_auc:0.8927 train_f1:0.8033 eval_auc:0.5955 eval_f1:0.5263 test_auc:0.5912 test_f1:0.5218
+epoch:15 train_auc:0.8997 train_f1:0.8136 eval_auc:0.6400 eval_f1:0.5625 test_auc:0.6365 test_f1:0.5599
+epoch:16 train_auc:0.9048 train_f1:0.8242 eval_auc:0.6627 eval_f1:0.5885 test_auc:0.6587 test_f1:0.5838
+epoch:17 train_auc:0.9107 train_f1:0.8312 eval_auc:0.6726 eval_f1:0.5994 test_auc:0.6695 test_f1:0.5976
+
+******************************************************************************
+dataset:book aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:64 n_iter:1 batch_size:256 l2_weight:2e-05 ls_weight:0 lr:0.0002 ratio:1 layer_size:[64] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.0 smoothing_steps:3 runs:3 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:0 cl_lambda:0.1 cl_tau:0.2 cl_sample_size:0 cl_detach:none use_simgcl:1 simgcl_lambda:0.02 simgcl_eps:0.05 lr_decay:0.98 early_stop:5 early_stop_min_epoch:10 fusion:gate exp_tag:r4_book_gate_noise_3run n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.8031 train_f1:0.7300 eval_auc:0.4924 eval_f1:0.4927 test_auc:0.4904 test_f1:0.4953
+epoch: 1 train_auc:0.8650 train_f1:0.7792 eval_auc:0.4735 eval_f1:0.4819 test_auc:0.4740 test_f1:0.4886
+epoch: 2 train_auc:0.8772 train_f1:0.7930 eval_auc:0.4388 eval_f1:0.4512 test_auc:0.4344 test_f1:0.4516
+epoch: 3 train_auc:0.8676 train_f1:0.7826 eval_auc:0.3943 eval_f1:0.4260 test_auc:0.3905 test_f1:0.4211
+epoch: 4 train_auc:0.8506 train_f1:0.7698 eval_auc:0.3613 eval_f1:0.4037 test_auc:0.3583 test_f1:0.4050
+epoch: 5 train_auc:0.8336 train_f1:0.7548 eval_auc:0.3408 eval_f1:0.3944 test_auc:0.3380 test_f1:0.3935
+epoch: 6 train_auc:0.8137 train_f1:0.7419 eval_auc:0.3343 eval_f1:0.3891 test_auc:0.3295 test_f1:0.3843
+epoch: 7 train_auc:0.7966 train_f1:0.7196 eval_auc:0.3286 eval_f1:0.3895 test_auc:0.3270 test_f1:0.3895
+epoch: 8 train_auc:0.7907 train_f1:0.7203 eval_auc:0.3307 eval_f1:0.3954 test_auc:0.3281 test_f1:0.3957
+epoch: 9 train_auc:0.8088 train_f1:0.7378 eval_auc:0.3408 eval_f1:0.4040 test_auc:0.3386 test_f1:0.4059
+epoch:10 train_auc:0.8180 train_f1:0.7336 eval_auc:0.3856 eval_f1:0.4068 test_auc:0.3825 test_f1:0.4034
+epoch:11 train_auc:0.8336 train_f1:0.7370 eval_auc:0.4476 eval_f1:0.4258 test_auc:0.4457 test_f1:0.4223
+epoch:12 train_auc:0.8576 train_f1:0.7586 eval_auc:0.5340 eval_f1:0.4758 test_auc:0.5323 test_f1:0.4698
+epoch:13 train_auc:0.8740 train_f1:0.7800 eval_auc:0.6143 eval_f1:0.5324 test_auc:0.6101 test_f1:0.5269
+epoch:14 train_auc:0.8815 train_f1:0.7911 eval_auc:0.6546 eval_f1:0.5705 test_auc:0.6520 test_f1:0.5664
+epoch:15 train_auc:0.8890 train_f1:0.8030 eval_auc:0.6721 eval_f1:0.5928 test_auc:0.6704 test_f1:0.5907
+epoch:16 train_auc:0.8962 train_f1:0.8121 eval_auc:0.6807 eval_f1:0.6066 test_auc:0.6790 test_f1:0.6048
+epoch:17 train_auc:0.9031 train_f1:0.8194 eval_auc:0.6842 eval_f1:0.6137 test_auc:0.6832 test_f1:0.6141
+epoch:18 train_auc:0.9095 train_f1:0.8260 eval_auc:0.6857 eval_f1:0.6181 test_auc:0.6849 test_f1:0.6187

@@ -1,0 +1,273 @@
+import argparse
+import numpy as np
+from time import time
+from data_loader import load_data
+from train_n_runs import train_n_runs
+
+np.random.seed(555)
+
+
+parser = argparse.ArgumentParser()
+
+'''
+# movie
+parser.add_argument('--dataset', type=str, default='movie', help='which dataset to use')
+parser.add_argument('--aggregator', type=str, default='sum', help='which aggregator to use')
+parser.add_argument('--n_epochs', type=int, default=15, help='the number of epochs')
+parser.add_argument('--neighbor_sample_size', type=int, default=4, help='the number of neighbors to be sampled')
+parser.add_argument('--dim', type=int, default=32, help='dimension of user and entity embeddings')
+parser.add_argument('--n_iter', type=int, default=2, help='number of iterations when computing entity representation')
+parser.add_argument('--batch_size', type=int, default=65536, help='batch size')
+parser.add_argument('--l2_weight', type=float, default=1e-7, help='weight of l2 regularization')
+parser.add_argument('--ls_weight', type=float, default=0, help='weight of LS regularization')
+parser.add_argument('--lr', type=float, default=2e-2, help='learning rate')
+parser.add_argument('--ratio', type=float, default=1, help='size of training dataset')
+
+# NGCF
+parser.add_argument('--layer_size', nargs='?', default='[32, 32]', help='Output sizes of every layer')
+parser.add_argument('--adj_type', nargs='?', default='norm', help='Type of the adjacency (laplacian) matrix from {plain, norm, mean}.')
+parser.add_argument('--alg_type', nargs='?', default='gcmc', help='Type of the graph convolutional layer from {ngcf, gcn, gcmc}.')
+parser.add_argument('--node_dropout_flag', type=int, default=0, help='0: Disable node dropout, 1: Activate node dropout')
+parser.add_argument('--node_dropout', nargs='?', default='[0.1, 0.1]',
+                    help='Keep probability w.r.t. node dropout (i.e., 1-dropout_ratio) for each deep layer. 1: no dropout.')
+parser.add_argument('--mess_dropout', nargs='?', default='[0.1, 0.1]',
+                    help='Keep probability w.r.t. message dropout (i.e., 1-dropout_ratio) for each deep layer. 1: no dropout.')
+
+parser.add_argument('--model_type', nargs='?', default='KGCN+NGCF', help='{KGCN, KGCN+NGCF}.')
+'''
+
+
+# book
+parser.add_argument('--dataset', type=str, default='book', help='which dataset to use')
+parser.add_argument('--aggregator', type=str, default='sum', help='which aggregator to use')
+parser.add_argument('--n_epochs', type=int, default=15, help='the number of epochs')
+parser.add_argument('--neighbor_sample_size', type=int, default=8, help='the number of neighbors to be sampled')
+parser.add_argument('--dim', type=int, default=64, help='dimension of user and entity embeddings')
+parser.add_argument('--n_iter', type=int, default=3, help='number of iterations when computing entity representation')
+parser.add_argument('--batch_size', type=int, default=256, help='batch size')
+parser.add_argument('--l2_weight', type=float, default=2e-5, help='weight of l2 regularization')
+parser.add_argument('--ls_weight', type=float, default=0, help='weight of LS regularization')
+parser.add_argument('--lr', type=float, default=2e-4, help='learning rate')
+parser.add_argument('--ratio', type=float, default=1, help='size of training dataset')
+
+# NGCF
+parser.add_argument('--layer_size', nargs='?', default='[64,64]', help='Output sizes of every layer')
+parser.add_argument('--adj_type', nargs='?', default='norm', help='Type of the adjacency (laplacian) matrix from {plain, norm, mean}.')
+parser.add_argument('--alg_type', nargs='?', default='ngcf', help='Type of the graph convolutional layer from {ngcf, gcn, gcmc}.')
+parser.add_argument('--node_dropout_flag', type=int, default=0, help='0: Disable node dropout, 1: Activate node dropout')
+parser.add_argument('--node_dropout', nargs='?', default='[0.1, 0.1]',
+                    help='Keep probability w.r.t. node dropout (i.e., 1-dropout_ratio) for each deep layer. 1: no dropout.')
+parser.add_argument('--mess_dropout', nargs='?', default='[0.1, 0.1]',
+                    help='Keep probability w.r.t. message dropout (i.e., 1-dropout_ratio) for each deep layer. 1: no dropout.')
+
+parser.add_argument('--model_type', nargs='?', default='KGCN', help='{KGCN, KGCN+NGCF}.')
+
+
+
+'''
+# music
+parser.add_argument('--dataset', type=str, default='music', help='which dataset to use')
+parser.add_argument('--aggregator', type=str, default='sum', help='which aggregator to use')
+parser.add_argument('--n_epochs', type=int, default=2, help='the number of epochs')
+parser.add_argument('--neighbor_sample_size', type=int, default=8, help='the number of neighbors to be sampled')
+parser.add_argument('--dim', type=int, default=16, help='dimension of user and entity embeddings')
+parser.add_argument('--n_iter', type=int, default=1, help='number of iterations when computing entity representation')
+parser.add_argument('--batch_size', type=int, default=128, help='batch size')
+parser.add_argument('--l2_weight', type=float, default=1e-4, help='weight of l2 regularization')
+parser.add_argument('--ls_weight', type=float, default=0, help='weight of LS regularization')
+parser.add_argument('--lr', type=float, default=5e-4, help='learning rate')
+parser.add_argument('--ratio', type=float, default=1, help='size of training dataset')
+
+# NGCF
+parser.add_argument('--layer_size', nargs='?', default='[16, 16]', help='Output sizes of every layer')
+parser.add_argument('--adj_type', nargs='?', default='norm', help='Type of the adjacency (laplacian) matrix from {plain, norm, mean}.')
+parser.add_argument('--alg_type', nargs='?', default='ngcf', help='Type of the graph convolutional layer from {ngcf, gcn, gcmc}.')
+parser.add_argument('--node_dropout_flag', type=int, default=0, help='0: Disable node dropout, 1: Activate node dropout')
+parser.add_argument('--node_dropout', nargs='?', default='[0.1, 0.1]',
+                    help='Keep probability w.r.t. node dropout (i.e., 1-dropout_ratio) for each deep layer. 1: no dropout.')
+parser.add_argument('--mess_dropout', nargs='?', default='[0.1, 0.1]',
+                    help='Keep probability w.r.t. message dropout (i.e., 1-dropout_ratio) for each deep layer. 1: no dropout.')
+
+parser.add_argument('--model_type', nargs='?', default='KGCN', help='{KGCN, KGCN+NGCF, KGCN+GCMC, KGCN+GCN}.')
+parser.add_argument('--att', nargs='?', default='u_r',
+                    help='{avg, u_r, product, product_mh, kg_transformer, ...} KG attention')  # attention types
+parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in gcn layer.')
+# '''
+parser.add_argument('--smoothing_steps', type=int, default=1, help='k of A^k in gcn layer.')
+parser.add_argument('--runs', type=int, default=3, help='the number of epochs')
+parser.add_argument('--gpu_id', type=int, default=0, help='gpu id')
+parser.add_argument('--att', nargs='?', default='u_r',
+                    help='{avg, u_r, product, product_mh, kg_transformer, ...} KG attention')  # attention types
+'''
+******************************************************************************
+Methods for combining items embeddings from KGCN and CF (GCMC, NGCF or GCN)
+'''
+# gcn, graphsage and bi are three aggregation methods from KGAT
+parser.add_argument('--agg_type', nargs='?', default='weighted_avg', help='{weighted_avg, gcn, graphsage, bi}.')  # attention types
+
+# hyperparameter for weighted average
+# alpha = 0: user embedding from CF, item embedding from KGCN
+# alpha = 1: both user embedding and item embedding from CF
+# alpha = 0.5, average of item embeddings from CF and KGCN
+parser.add_argument('--alpha', type=float, default=0, \
+                    help='hyperparameter for balancing item embeddings from KGCN and CF (GCMC, NGCF or GCN)')
+'''
+******************************************************************************
+'''
+parser.add_argument('--pretrain', type=int, default=0, help='0: no pretrain, 1: pretraining from kgcn.')
+parser.add_argument('--logging', nargs='?', default='save', help='{save, ctr, topk}.')
+parser.add_argument('--seed', type=int, default=555, help='random seed')
+
+parser.add_argument('--topk_user_num', type=int, default=100,
+                    help='Users for top-K eval; 0 = all users in train∩test (slow on large datasets)')
+parser.add_argument('--topk_k_list', nargs='?', default='[1,2,5,10,20,50,100]',
+                    help='K values for Recall@K, e.g. [2,10,50,100] to match paper tables')
+
+# Task 1: NDCG@K. 1 = compute & log NDCG@K alongside Precision@K/Recall@K in the
+# *_topk_*.txt files (paper Section 3-4, binary relevance). 0 = legacy output
+# (byte-for-byte identical to pre-NDCG logs).
+parser.add_argument('--report_ndcg', type=int, default=1,
+                    help='1: log NDCG@K alongside Precision/Recall in topk files; 0: legacy output')
+
+# Task 8: cross-view self-supervised contrastive (InfoNCE), paper Section 3-3-6.
+# Off by default so all existing commands reproduce their current results exactly.
+parser.add_argument('--use_cl', type=int, default=0,
+                    help='1: add cross-view InfoNCE (CF<->KG item views) to the loss; 0: off')
+parser.add_argument('--cl_lambda', type=float, default=0.1,
+                    help='weight of the contrastive loss in the multi-task objective')
+parser.add_argument('--cl_tau', type=float, default=0.2,
+                    help='temperature tau for the InfoNCE cosine similarity')
+parser.add_argument('--cl_sample_size', type=int, default=0,
+                    help='InfoNCE in-batch negatives: 0 = full batch (default); >0 = random subset (large-batch GPU)')
+parser.add_argument('--cl_detach', nargs='?', default='none',
+                    help="{none, kg, cf} stop-grad one CL view; kg = only CF matches frozen KG")
+
+# SimGCL-style noise contrastive on CF embeddings (Yu et al.). Off by default.
+parser.add_argument('--use_simgcl', type=int, default=0,
+                    help='1: add SimGCL noise InfoNCE on CF user/item embeddings; 0: off')
+parser.add_argument('--simgcl_lambda', type=float, default=0.1,
+                    help='weight of the SimGCL loss in the multi-task objective')
+parser.add_argument('--simgcl_eps', type=float, default=0.1,
+                    help='noise magnitude eps for SimGCL embedding perturbation')
+
+# training schedule helpers (off by default — fixed 39 epochs + constant lr = paper path)
+parser.add_argument('--lr_decay', type=float, default=1.0,
+                    help='per-epoch exponential LR decay factor; 1.0 = no decay (e.g. 0.95)')
+parser.add_argument('--early_stop', type=int, default=0,
+                    help='patience in epochs on eval R@10 (or eval AUC if top-K off); 0 = disabled')
+parser.add_argument('--early_stop_min_epoch', type=int, default=0,
+                    help='do not early-stop before this epoch (warmup for slow-start datasets like book)')
+# ranking snapshot / early-stop metric. default r10 keeps proposed_* and
+# paper_ssl_final_5run byte-stable. auc = report Recall@K from the same
+# epoch as F1 (eval AUC), and early-stop on eval AUC instead of noisy R@10.
+parser.add_argument('--rank_ckpt', nargs='?', default='r10',
+                    help="{r10, auc} which eval metric snapshots test Recall@K; r10 = legacy")
+
+# Task 2: ablation switches.
+#   --fusion: item-embedding fusion for weighted_avg. 'fixed' = alpha-blend (paper
+#     default, base reproduction). 'gate' = adaptive gate (ablation 2c), identity-
+#     initialized so it starts exactly at the fixed-alpha weighted average.
+#   --exp_tag: optional suffix appended to all result filenames so ablation variants
+#     that share a model_type (e.g. fixed vs gate, w/o-cl vs with-cl) write to
+#     separate files. Empty (default) keeps the legacy filenames byte-for-byte.
+parser.add_argument('--fusion', nargs='?', default='fixed', help='{fixed, gate, residual} item-embedding fusion')
+parser.add_argument('--exp_tag', nargs='?', default='', help='optional suffix for result filenames (ablation variants)')
+
+# final-paper resource logging. off by default: default-flag result text/json stay unchanged.
+parser.add_argument('--log_resources', type=int, default=0,
+                    help='1: per-run wall-clock + peak GPU VRAM, isolate crashed runs, extra json fields; 0: off')
+
+# thesis: multi-head product (--att product_mh) or KG Transformer (--att kg_transformer).
+# unused unless that att is selected; default --att path does not create these weights.
+parser.add_argument('--n_heads', type=int, default=4,
+                    help='heads for product_mh / kg_transformer (require dim %% n_heads == 0)')
+# Phase-4 P1: kg_transformer neighbor token. default rel_ej = v1 (byte-stable for old tags);
+# product = concat(u, r⊙ei, ej) like paper Product features.
+parser.add_argument('--kgtr_token', nargs='?', default='rel_ej',
+                    help="{rel_ej, product} token for --att kg_transformer; ignored otherwise")
+# Phase-4 P2: how to form neighbors_agg. transformed = mean(LN(X+AttnV)) v1;
+# raw = QKV scores only, mix raw neighbor_vectors (Product/GAT-style).
+parser.add_argument('--kgtr_pool', nargs='?', default='transformed',
+                    help="{transformed, raw} pool for --att kg_transformer; ignored otherwise")
+# Phase-5 v3: center-query attention, post-pool FFN, attention temperature (all off/neutral by default)
+parser.add_argument('--kgtr_center', type=int, default=0,
+                    help='1: Q from center e_i+user only (kg_transformer); 0: legacy mean-over-queries')
+parser.add_argument('--kgtr_ffn', type=int, default=0,
+                    help='1: residual FFN+LN after neighbor pool (kg_transformer); 0: off')
+parser.add_argument('--kgtr_temp', type=float, default=1.0,
+                    help='attention temperature for kg_transformer logits (must be > 0)')
+parser.add_argument('--kgtr_rel_bias', type=int, default=0,
+                    help='1: add relation-embedding bias to kg_transformer logits; 0: off')
+parser.add_argument('--kgtr_dot', type=int, default=0,
+                    help='1: add scaled e_i·e_j to kg_transformer logits; 0: off')
+
+# Eval-only speedup: materialize LightGCN user/item tables once per epoch (dropout off)
+# and reuse them for CTR/top-K scoring so full-graph sparse propagation is not repeated
+# on every scoring batch. Off by default — training graph and default-flag results unchanged.
+parser.add_argument('--fast_eval', type=int, default=0,
+                    help='1: cache LightGCN embeddings once per epoch for CTR/top-K; 0: legacy eval')
+
+# Task 3: cold-start / data-sparsity evaluation. When on, after training each run the
+# top-K test users are grouped by their number of positive training interactions and
+# per-bucket Precision/Recall/NDCG are logged (use --topk_user_num 0 for all users so
+# every bucket is well populated). Off by default.
+parser.add_argument('--sparsity_eval', type=int, default=0,
+                    help='1: also log per-bucket (cold-start) top-K metrics by user interaction count')
+parser.add_argument('--sparsity_buckets', nargs='?', default='[5,10,20]',
+                    help='bucket edges on positive train interactions; [5,10,20] -> <5, 5-10, 10-20, 20+')
+
+# Task 6: interpretability case study. When on, after training a user's top-K recommended
+# items and the knowledge-aware attention weights over their KG neighbors are exported to
+# result/{model_type}_{dataset}_attention_{att}.{json,txt}. Off by default.
+parser.add_argument('--interpret', type=int, default=0,
+                    help='1: after training, export KG attention weights for a user top-K recs')
+parser.add_argument('--interpret_user', type=int, default=-1,
+                    help='user id for the attention case study; -1 = auto-pick an active user')
+parser.add_argument('--interpret_topk', type=int, default=5,
+                    help='number of top recommended items to explain')
+
+parser.add_argument(
+    '--params', 
+    nargs='?', 
+    default='[\'dataset\',\'aggregator\',\'n_epochs\',\'neighbor_sample_size\','
+            '\'dim\',\'n_iter\',\'batch_size\',\'l2_weight\',\'ls_weight\',\'lr\','
+            '\'ratio\',\'layer_size\',\'adj_type\',\'alg_type\',\'node_dropout_flag\','
+            '\'node_dropout\',\'mess_dropout\',\'model_type\',\'att\',\'agg_type\','
+            '\'alpha\',\'smoothing_steps\',\'runs\',\'logging\',\'pretrain\','
+            '\'topk_user_num\',\'topk_k_list\',\'report_ndcg\','
+            '\'use_cl\',\'cl_lambda\',\'cl_tau\',\'cl_sample_size\',\'cl_detach\',\'use_simgcl\',\'simgcl_lambda\',\'simgcl_eps\','
+            '\'lr_decay\',\'early_stop\',\'early_stop_min_epoch\',\'fusion\',\'exp_tag\',\'n_heads\',\'kgtr_token\',\'kgtr_pool\',\'kgtr_center\',\'kgtr_ffn\',\'kgtr_temp\',\'kgtr_rel_bias\',\'kgtr_dot\',\'fast_eval\','
+            '\'sparsity_eval\',\'sparsity_buckets\','
+            '\'interpret\',\'interpret_user\',\'interpret_topk\']',
+    help='paramerts')
+
+show_loss = False
+show_time = False
+show_topk = True
+show_ctr = True
+
+t = time()
+
+'''
+************************************************
+fixed parameters
+'''
+args = parser.parse_args()
+data = load_data(args)
+
+# train(args, data, show_loss, show_topk)
+def train_case_study(args, data, show_loss, show_topk, show_ctr):
+    pass
+
+
+if args.logging == 'save':
+    train_n_runs(args, data, show_loss, show_topk, show_ctr)
+else:
+    train_case_study(args, data, show_loss, show_topk, show_ctr)
+
+if show_time:
+    print('time used: %d s' % (time() - t))
+
+'''
+************************************************
+'''

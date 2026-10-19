@@ -774,7 +774,12 @@ class KGCN(object):
         # SimGCL: e' = e + eps * ||e||_2 * (noise / ||noise||_2)
         noise = tf.random.uniform(shape=tf.shape(input=emb), minval=0.0, maxval=1.0, dtype=emb.dtype)
         noise = tf.nn.l2_normalize(noise, axis=1)
-        emb_norm = tf.norm(tensor=emb, axis=1, keepdims=True) + 1e-12
+        # ||e|| with a zero-safe gradient. tf.norm's gradient is NaN at an all-zero row (inf when the
+        # squares underflow), and the rows of nodes that get only the L2 gradient between batches decay
+        # to exactly zero under Adam (MovieLens, Dianping). Same value and gradient for every other row.
+        sq = tf.reduce_sum(input_tensor=emb * emb, axis=1, keepdims=True)
+        nz = sq > 0.
+        emb_norm = tf.where(nz, tf.sqrt(tf.where(nz, sq, tf.ones_like(sq))), tf.zeros_like(sq)) + 1e-12
         return emb + self.simgcl_eps * emb_norm * noise
 
     def _infonce_pair(self, z1, z2, tau):

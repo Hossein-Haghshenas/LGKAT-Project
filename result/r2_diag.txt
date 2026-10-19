@@ -1,0 +1,39 @@
+=== date
+Tue 10/06/2026 
+01:10 PM
+=== active power scheme 
+Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)=== gpu state 
+name, pstate, clocks.current.sm [MHz], clocks.max.sm [MHz], utilization.gpu [%], temperature.gpu, power.draw [W], power.limit [W], clocks_event_reasons.active
+NVIDIA GeForce RTX 5060 Ti, P3, 652 MHz, 3090 MHz, 1 %, 49, 20.41 W, 180.00 W, 0x0000000000000000
+=== processes on the gpu 
+pid, used_gpu_memory [MiB], process_name
+2012, [N/A], [Insufficient Permissions]
+8276, [N/A], C:\Windows\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\CrossDeviceResume.exe
+11900, [N/A], C:\Windows\explorer.exe
+12756, [N/A], C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe
+13136, [N/A], C:\Windows\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe
+12136, [N/A], C:\Program Files\NVIDIA Corporation\NVIDIA App\CEF\NVIDIA Overlay.exe
+13112, [N/A], C:\Windows\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\SearchHost.exe
+15652, [N/A], C:\Program Files (x86)\Microsoft\EdgeWebView\Application\154.0.4258.53\msedgewebview2.exe
+17848, [N/A], C:\Windows\SystemApps\ShellExperienceHost_cw5n1h2txyewy\ShellExperienceHost.exe
+16704, [N/A], C:\Windows\SystemApps\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\TextInputHost.exe
+18956, [N/A], C:\Program Files\Razer\RazerAppEngine\app-4.0.823\RazerAppEngine.exe
+19716, [N/A], C:\Program Files (x86)\Razer\Razer Services\Razer Central\Razer Central.exe
+20964, [N/A], [Insufficient Permissions]
+22736, [N/A], C:\Users\asus\AppData\Local\Programs\Microsoft VS Code\Code.exe
+9060, [N/A], D:\software\telegram\Telegram Desktop\Telegram.exe
+36824, [N/A], C:\Program Files\KMPlayer 64X\KMPlayer64.exe
+30404, [N/A], C:\Program Files\WindowsApps\Claude_2.19675.1.0_x64__pzs8sxrjxfjjc\app\claude.exe
+29800, [N/A], C:\Program Files\WindowsApps\Claude_2.19675.1.0_x64__pzs8sxrjxfjjc\app\claude.exe
+38096, [N/A], D:\software\Happ\Happ.exe
+24928, [N/A], C:\Users\asus\AppData\Local\Programs\Antigravity IDE\Antigravity IDE.exe
+28516, [N/A], C:\Users\asus\AppData\Local\Programs\Antigravity IDE\Antigravity IDE.exe
+25380, [N/A], C:\Program Files\WindowsApps\Microsoft.WindowsTerminal_1.24.12741.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe
+38824, [N/A], C:\Program Files\Google\Chrome\Application\chrome.exe
+15472, [N/A], [Insufficient Permissions]
+5704, [N/A], C:\Program Files\Google\Chrome\Application\chrome.exe
+4, [N/A], [Insufficient Permissions]
+10372, [N/A], C:\Users\asus\AppData\Local\Google\Gemini\app-1.13.1\Gemini.exe
+23756, [N/A], C:\Windows\System32\ShellHost.exe
+=== python processes 
+

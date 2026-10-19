@@ -1,0 +1,17 @@
+
+******************************************************************************
+dataset:music aggregator:concat n_epochs:39 neighbor_sample_size:8 dim:32 n_iter:1 batch_size:128 l2_weight:0.0001 ls_weight:0 lr:0.005 ratio:1 layer_size:[32] adj_type:norm alg_type:lightgcn node_dropout_flag:1 node_dropout:[0.1] mess_dropout:[0.1] model_type:KGCN_LightGCN att:product agg_type:weighted_avg alpha:0.5 smoothing_steps:8 runs:5 logging:save pretrain:0 topk_user_num:100 topk_k_list:[2,10,50,100] report_ndcg:1 use_cl:1 cl_lambda:0.02 cl_tau:0.2 cl_sample_size:0 cl_detach:none use_simgcl:1 simgcl_lambda:0.02 simgcl_eps:0.05 lr_decay:0.98 early_stop:12 early_stop_min_epoch:0 fusion:gate exp_tag:r2_music_full_5run n_heads:4 kgtr_token:rel_ej kgtr_pool:transformed kgtr_center:0 kgtr_ffn:0 kgtr_temp:1.0 kgtr_rel_bias:0 kgtr_dot:0 fast_eval:1 sparsity_eval:0 sparsity_buckets:[5,10,20] interpret:0 interpret_user:-1 interpret_topk:5 
+******************************************************************************
+epoch: 0 train_auc:0.7487 train_f1:0.7116 eval_auc:0.4916 eval_f1:0.4812 test_auc:0.4972 test_f1:0.4917
+epoch: 1 train_auc:0.7710 train_f1:0.7249 eval_auc:0.4933 eval_f1:0.4914 test_auc:0.4876 test_f1:0.4915
+epoch: 2 train_auc:0.7850 train_f1:0.7402 eval_auc:0.4980 eval_f1:0.4926 test_auc:0.5079 test_f1:0.5107
+epoch: 3 train_auc:0.7863 train_f1:0.7422 eval_auc:0.5062 eval_f1:0.5018 test_auc:0.5139 test_f1:0.5069
+epoch: 4 train_auc:0.7983 train_f1:0.7524 eval_auc:0.4995 eval_f1:0.4944 test_auc:0.5038 test_f1:0.5030
+epoch: 5 train_auc:0.8069 train_f1:0.7578 eval_auc:0.4972 eval_f1:0.4956 test_auc:0.5118 test_f1:0.5149
+epoch: 6 train_auc:0.8199 train_f1:0.7744 eval_auc:0.5054 eval_f1:0.5041 test_auc:0.5094 test_f1:0.5024
+epoch: 7 train_auc:0.8282 train_f1:0.7759 eval_auc:0.5147 eval_f1:0.5078 test_auc:0.5062 test_f1:0.5070
+epoch: 8 train_auc:0.8326 train_f1:0.7810 eval_auc:0.5055 eval_f1:0.5064 test_auc:0.5053 test_f1:0.4996
+epoch: 9 train_auc:0.8451 train_f1:0.7920 eval_auc:0.5130 eval_f1:0.5134 test_auc:0.5110 test_f1:0.5111
+epoch:10 train_auc:0.8532 train_f1:0.7954 eval_auc:0.5055 eval_f1:0.5037 test_auc:0.5054 test_f1:0.5102
+epoch:11 train_auc:0.8561 train_f1:0.8022 eval_auc:0.5160 eval_f1:0.5079 test_auc:0.5114 test_f1:0.5128
+epoch:12 train_auc:0.8628 train_f1:0.8069 eval_auc:0.5135 eval_f1:0.5136 test_auc:0.5108 test_f1:0.5111

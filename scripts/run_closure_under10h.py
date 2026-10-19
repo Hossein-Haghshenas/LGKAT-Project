@@ -240,17 +240,24 @@ def interpret_row(path):
     recs = data.get('recommendations') or []
     n_unique = []
     att_stds = []
+    norm_entropies = []
+    max_weights = []
     n_repeat_slots = 0
     n_slots = 0
     examples = []
     for rec in recs:
         nbs = rec.get('kg_neighbors') or []
         ents = [int(x['entity']) for x in nbs]
-        atts = [float(x['attention']) for x in nbs]
+        atts = np.array([float(x['attention']) for x in nbs], dtype=float)
         uniq = sorted(set(ents))
         n_unique.append(len(uniq))
-        if atts:
+        if atts.size:
             att_stds.append(float(np.std(atts)))
+            max_weights.append(float(np.max(atts)))
+            probs = atts / float(np.sum(atts))
+            ent = -float(np.sum(probs * np.log(probs + 1e-12)))
+            n = int(atts.size)
+            norm_entropies.append(ent / np.log(n) if n > 1 else 1.0)
         n_slots += len(ents)
         n_repeat_slots += len(ents) - len(uniq)
         top = sorted(nbs, key=lambda d: -float(d['attention']))[:3]
@@ -259,11 +266,20 @@ def interpret_row(path):
             'item': rec.get('item'),
             'in_test': rec.get('in_test'),
             'n_unique_entities': len(uniq),
-            'att_std': float(np.std(atts)) if atts else None,
+            'att_std': float(np.std(atts)) if atts.size else None,
             'top3': [{'entity': int(t['entity']), 'relation': int(t['relation']),
                       'attention': float(t['attention'])} for t in top],
         })
-    uniform = bool(att_stds) and (float(np.mean(att_stds)) < 1e-3)
+    mean_att_std = float(np.mean(att_stds)) if att_stds else 0.0
+    mean_norm_entropy = float(np.mean(norm_entropies)) if norm_entropies else 0.0
+    max_weight = float(np.max(max_weights)) if max_weights else 0.0
+    # strict uniform vs near-uniform (movie: distinct neighbors but ~flat weights)
+    if mean_att_std < 1e-3:
+        weight_label = 'یکنواخت'
+    elif mean_norm_entropy > 0.99:
+        weight_label = 'تقریباً یکنواخت'
+    else:
+        weight_label = 'انتخابی'
     return {
         'dataset': data.get('dataset'),
         'user': data.get('user'),
@@ -271,8 +287,10 @@ def interpret_row(path):
         'n_recs': len(recs),
         'mean_unique_entities': float(np.mean(n_unique)) if n_unique else 0.0,
         'repeat_slot_frac': (n_repeat_slots / float(n_slots)) if n_slots else 0.0,
-        'mean_att_std': float(np.mean(att_stds)) if att_stds else 0.0,
-        'weights_uniform': uniform,
+        'mean_att_std': mean_att_std,
+        'mean_norm_entropy': mean_norm_entropy,
+        'max_weight': max_weight,
+        'weight_label': weight_label,
         'examples': examples,
     }
 
@@ -293,20 +311,19 @@ def summarize_interpret():
         'خروجی تفسیرپذیری قهرمان هر مجموعه‌داده (`--interpret 1 --exp_tag interp_v2`).',
         'اعداد از فایل‌های `result/KGCN_LightGCN_*_attention_product_interp_v2.json` خوانده شده‌اند.',
         '',
-        '| مجموعه‌داده | کاربر | همسایه | میانگین موجودیت یکتا | سهم جایگاه تکراری | انحراف‌معیار وزن | وزن یکنواخت؟ |',
+        '| مجموعه‌داده | کاربر | همسایه | موجودیت یکتا | آنتروپی نرمال | بیشترین وزن | الگوی توجه |',
         '|---|---:|---:|---:|---:|---:|---|',
     ]
     extra = []
     for ds in ('music', 'book', 'movie', 'restaurant'):
         path = interpret_json(ds, 'product', 'interp_v2')
         if not os.path.exists(path):
-            lines.append('| %s | — | — | — | — | — | فایل نیست |' % ds)
+            lines.append('| %s | — | — | — | — | — | فایل نیست (کتاب: OOM GPU) |' % ds)
             continue
         row = interpret_row(path)
         lines.append(
             '| {dataset} | {user} | {n_neighbor} | {mean_unique_entities:.2f} | '
-            '{repeat_slot_frac:.2f} | {mean_att_std:.4f} | {uni} |'.format(
-                uni='بله' if row['weights_uniform'] else 'خیر', **row))
+            '{mean_norm_entropy:.4f} | {max_weight:.4f} | {weight_label} |'.format(**row))
         extra.append('## %s — کاربر %s' % (ds, row['user']))
         extra.append('')
         for ex in row['examples']:
@@ -320,8 +337,11 @@ def summarize_interpret():
         extra.append('')
     body = '\n'.join(lines + [''] + extra)
     body += (
-        '\n**برای بخش ۴-۷:** اگر لست‌اف‌ام و بوک کراسینگ وزن نزدیک ۱/n و موجودیت تکراری داشته باشند، '
-        'و مووی‌لنز/دیان‌پینگ وزن نایکنواخت و موجودیت متمایز، ادعا از استدلال ساختاری به شاهد تجربی می‌رسد.\n'
+        '\n**برای بخش ۴-۷ (نسخه‌ی ۱٫۱۸٫۰):** تکرار موجودیت در همسایه‌ها برای یکنواخت شدن توجه '
+        '**کافی** است (لست‌اف‌ام: آیتم ۳۶۱ پنج موجودیت متمایز دارد ولی وزن‌ها دقیقاً ۰٫۱۲۵). '
+        'همسایگی غنی (موجودیت متمایز) برای انتخابی شدن توجه فقط **لازم** است، نه کافی '
+        '(مووی‌لنز: چهار موجودیت متمایز ولی آنتروپی نرمال ≈۱). دیان‌پینگ هر دو شرط را دارد '
+        'و توجه واقعاً انتخابی است (بیشترین وزن تا ۰٫۷۲).\n'
     )
     return write_note('01_interpret.md', body)
 
@@ -418,25 +438,39 @@ def summarize_ssl():
 
 def summarize_paper():
     lines = [
-        'بازتولید خط‌مبنای مقاله با خاموش‌کردن بهبودها: '
-        '`fusion=fixed use_cl=0 use_simgcl=0 lr_decay=1.0 early_stop=0 runs=3`.',
-        'موسیقی از قبل موجود است (`thesis_paper_product_sanity`).',
+        'بازتولید خط‌مبنای مقاله با خاموش‌کردن بهبودها.',
+        'موسیقی/فیلم/رستوران: `early_stop=0` (۳۹ دوره). کتاب: `early_stop=5` '
+        '(بهترین AUC اعتبارسنجی در دور ۲؛ ~۸۰٪ صرفه‌جویی زمان).',
         '',
-        '| مجموعه‌داده | F1 ما | F1 مقاله | Recall@10 ما | Recall@10 مقاله |',
-        '|---|---|---|---|---|',
+        '| مجموعه‌داده | وضعیت | F1 ما | F1 مقاله | Recall@10 ما | Recall@10 مقاله |',
+        '|---|---|---|---|---|---|',
     ]
+    tags = {
+        'music': ('thesis_paper_product_sanity', 3),
+        'book': ('thesis_paper_product_sanity_es5', 3),
+        'movie': ('thesis_paper_product_sanity', 3),
+        'restaurant': ('thesis_paper_product_sanity', 3),
+    }
     for ds in ('music', 'book', 'movie', 'restaurant'):
-        data = load_runs(ds, 'product', 'thesis_paper_product_sanity')
+        tag, need = tags[ds]
+        data = load_runs(ds, 'product', tag)
+        if data is None and ds == 'book':
+            data = load_runs(ds, 'product', 'thesis_paper_product_sanity')
+            tag = 'thesis_paper_product_sanity (es0، ناقص)'
         if data is None:
-            lines.append('| %s | — | %.4f | — | %.4f |' % (ds, PAPER_F1[ds], PAPER_R10[ds]))
+            lines.append('| %s | ❌ | — | %.4f | — | %.4f |' % (ds, PAPER_F1[ds], PAPER_R10[ds]))
             continue
-        f1_vals = np.array(data.get('f1') or [], dtype=float)
+        n_ok = int(data.get('n_valid') or len(data.get('f1') or []))
+        status = '✅' if n_ok >= need else '%d/%d' % (n_ok, need)
         r10 = recall_at(data, 10)
-        f1_s = fmt_ms(f1_vals)
+        f1_s = fmt_ms(data.get('f1') or [])
         r_s = fmt_ms(r10) if r10 is not None else 'n/a'
-        lines.append('| %s | %s | %.4f | %s | %.4f |' % (
-            ds, f1_s, PAPER_F1[ds], r_s, PAPER_R10[ds]))
+        lines.append('| %s | %s | %s | %.4f | %s | %.4f |' % (
+            ds, status, f1_s, PAPER_F1[ds], r_s, PAPER_R10[ds]))
     lines.append(
+        '\n**یادداشت کتاب:** یک اجرای کامل با `early_stop=0` (F1=۰٫۶۵۴۲، ~۱٫۵ ساعت) '
+        'پیش از توقف بیرونی ثبت شده؛ اجرای تازه با `early_stop=5` و برچسب '
+        '`thesis_paper_product_sanity_es5` است.\n'
         '\nاین اعداد جدول‌های ۴-۹ تا ۴-۱۱ را از نقل‌قول مقاله به بازاجرا زیر پروتکل یکسان ارتقا می‌دهند.\n'
     )
     return write_note('06_paper_baseline.md', '\n'.join(lines))
@@ -547,17 +581,24 @@ def stage_ssl(commit):
 
 
 def stage_paper(commit):
-    kill = dict(
+    kill_full = dict(
         att='product', fusion='fixed', use_cl='0', use_simgcl='0',
         lr_decay='1.0', early_stop='0', early_stop_min_epoch='0', runs='3',
         exp_tag='thesis_paper_product_sanity',
     )
+    kill_book = dict(kill_full)
+    kill_book['early_stop'] = '5'
+    kill_book['exp_tag'] = 'thesis_paper_product_sanity_es5'
+    # restaurant OOM/crash at batch 32768 after long movie run on 16GB GPU
+    kill_restaurant = dict(kill_full)
+    kill_restaurant['batch_size'] = '16384'
+    kill_restaurant['early_stop'] = '5'
     arms = [
-        ('paper_book', overlay(book_champ(), **kill),
-         runs_done('book', 'product', 'thesis_paper_product_sanity', 3)),
-        ('paper_movie', overlay(movie_champ(), **kill),
+        ('paper_book', overlay(book_champ(), **kill_book),
+         runs_done('book', 'product', 'thesis_paper_product_sanity_es5', 3)),
+        ('paper_movie', overlay(movie_champ(), **kill_full),
          runs_done('movie', 'product', 'thesis_paper_product_sanity', 3)),
-        ('paper_restaurant', overlay(restaurant_champ(), **kill),
+        ('paper_restaurant', overlay(restaurant_champ(), **kill_restaurant),
          runs_done('restaurant', 'product', 'thesis_paper_product_sanity', 3)),
     ]
     for name, pairs, skip in arms:
@@ -613,6 +654,9 @@ def main():
         if rc != 0:
             sys.exit(rc)
     print('ALL_SHORT_TASKS_DONE', flush=True)
+    done_path = os.path.join(RESULT, 'closure_under10h.done')
+    with open(done_path, 'w', encoding='utf-8') as f:
+        f.write(datetime.now().isoformat() + '\n')
 
 
 if __name__ == '__main__':

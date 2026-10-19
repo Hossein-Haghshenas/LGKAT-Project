@@ -226,6 +226,12 @@ parser.add_argument('--interpret_user', type=int, default=-1,
 parser.add_argument('--interpret_topk', type=int, default=5,
                     help='number of top recommended items to explain')
 
+# Reviewer 4 analysis: at every new best eval-AUC epoch, save each test pair's user, item,
+# label, predicted score and fusion weight g (alpha for fixed fusion) to
+# result/pairs_{dataset}_{exp_tag}_run{r}.npz. Needs --fast_eval 1. Off by default.
+parser.add_argument('--pair_dump', type=int, default=0,
+                    help='1: dump per-pair test scores and gate values at the best eval-AUC epoch')
+
 parser.add_argument(
     '--params', 
     nargs='?', 
