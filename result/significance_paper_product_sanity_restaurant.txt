@@ -1,0 +1,11 @@
+Paired significance test -- dataset: restaurant
+proposed = KGCN_LightGCN (product_paper_ssl_final_5run)   base = KGCN_LightGCN (product_thesis_paper_product_sanity)
+paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
+WARNING: run counts differ (5 vs 3); pairing first 3 runs
+runs paired = 3
+
+metric      proposed            base                delta       t         p         sig   
+AUC         0.8719+-0.0001      0.8726+-0.0013      -0.0006     -0.697    0.5580    ns    
+F1          0.7856+-0.0013      0.7858+-0.0001      -0.0002     -0.199    0.8604    ns    
+Recall@10   0.1429+-0.0487      0.1198+-0.0043      +0.0231     0.633     0.5915    ns    
+NDCG@10     0.0873+-0.0318      0.0723+-0.0127      +0.0150     0.767     0.5234    ns    

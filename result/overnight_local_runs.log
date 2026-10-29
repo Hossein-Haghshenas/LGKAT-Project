@@ -1,0 +1,434 @@
+[2026-10-26 02:05:55] Starting Overnight Local Runner with 3 tasks...
+[2026-10-26 02:05:55] === Starting Task 1/3: 1/3: Book Interpretation (interp_v3) ===
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (32827, 32827) 0.020157337188720703
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+Attention: product
+2026-10-26 02:06:19.442202: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-26 02:06:22.739893: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:06:28.467707: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-26 02:06:29.511603: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+Initialized from scratch
+2026-10-26 02:06:30.351028: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:06:30.354871: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:06:30.355317: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-26 02:06:59.269893: I tensorflow/stream_executor/cuda/cuda_blas.cc:1786] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+epoch 0    train_loss: 0.6923    lr: 0.000200
+epoch 0    train auc: 0.8176  f1: 0.7562    eval auc: 0.6151  f1: 0.6125    test auc: 0.6086  f1: 0.6130
+epoch 1    train_loss: 0.6456    lr: 0.000196
+epoch 1    train auc: 0.8683  f1: 0.7866    eval auc: 0.7127  f1: 0.6513    test auc: 0.7082  f1: 0.6503
+epoch 2    train_loss: 0.5383    lr: 0.000192
+epoch 2    train auc: 0.8762  f1: 0.7917    eval auc: 0.7176  f1: 0.6538    test auc: 0.7134  f1: 0.6536
+epoch 3    train_loss: 0.4792    lr: 0.000188
+epoch 3    train auc: 0.8835  f1: 0.7957    eval auc: 0.7153  f1: 0.6531    test auc: 0.7121  f1: 0.6547
+epoch 4    train_loss: 0.4521    lr: 0.000184
+epoch 4    train auc: 0.8894  f1: 0.7989    eval auc: 0.7129  f1: 0.6523    test auc: 0.7100  f1: 0.6545
+epoch 5    train_loss: 0.4367    lr: 0.000181
+epoch 5    train auc: 0.8939  f1: 0.8008    eval auc: 0.7107  f1: 0.6526    test auc: 0.7080  f1: 0.6542
+epoch 6    train_loss: 0.4265    lr: 0.000177
+epoch 6    train auc: 0.8971  f1: 0.8026    eval auc: 0.7085  f1: 0.6529    test auc: 0.7063  f1: 0.6537
+epoch 7    train_loss: 0.4187    lr: 0.000174
+epoch 7    train auc: 0.9000  f1: 0.8037    eval auc: 0.7068  f1: 0.6520    test auc: 0.7045  f1: 0.6529
+Early stopping at epoch 7: no eval R@10 improvement for 5 epochs (best epoch 2, eval R@10 0.0775)
+attention case study (user 6486) written to ../result/KGCN_LightGCN_book_attention_product_interp_v3.json / .txt
+[log_resources] valid runs: 1/1
+[0.71344683]
+[0.65357653]
+[[0.04361111 0.07429701 0.11353846 0.15068803]]
+[[0.04   0.017  0.006  0.0043]]
+average auc: 0.7134+\-0.0000
+average f1 : 0.6536+\-0.0000
+average recall   : 0.0436+\-0.0000 0.0743+\-0.0000 0.1135+\-0.0000 0.1507+\-0.0000 
+average precision: 0.0400+\-0.0000 0.0170+\-0.0000 0.0060+\-0.0000 0.0043+\-0.0000 
+average ndcg     : 0.0524+\-0.0000 0.0584+\-0.0000 0.0706+\-0.0000 0.0788+\-0.0000 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0436+-0.0000  precision: 0.0400+-0.0000  ndcg: 0.0524+-0.0000
+  R@10 recall: 0.0743+-0.0000  precision: 0.0170+-0.0000  ndcg: 0.0584+-0.0000
+  R@50 recall: 0.1135+-0.0000  precision: 0.0060+-0.0000  ndcg: 0.0706+-0.0000
+  R@100 recall: 0.1507+-0.0000  precision: 0.0043+-0.0000  ndcg: 0.0788+-0.0000
+average train_seconds: 529.4+\-0.0
+average total_seconds: 776.0+\-0.0
+average peak_vram_mb: 6509.0+\-0.0
+average train_Loss 0.51116765
+[2026-10-26 02:19:17] === Task 1 SUCCESS in 13m 21s ===
+[2026-10-26 02:19:17] === Starting Task 2/3: 2/3: Last.fm No-KG Baseline Sparsity (base_sparsity, 3 runs) ===
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (5718, 5718) 0.010598897933959961
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+2026-10-26 02:19:42.052526: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-26 02:19:42.456394: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:19:45.695353: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-26 02:19:45.996244: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+Initialized from scratch
+2026-10-26 02:19:46.461528: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:19:46.461985: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:19:46.462319: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+epoch 0    train_loss: 0.6671    lr: 0.005000
+epoch 0    train auc: 0.8276  f1: 0.7425    eval auc: 0.7416  f1: 0.6820    test auc: 0.7399  f1: 0.6797
+epoch 1    train_loss: 0.6153    lr: 0.004900
+epoch 1    train auc: 0.8381  f1: 0.7474    eval auc: 0.7472  f1: 0.6803    test auc: 0.7454  f1: 0.6796
+epoch 2    train_loss: 0.6083    lr: 0.004802
+epoch 2    train auc: 0.8426  f1: 0.7471    eval auc: 0.7517  f1: 0.6807    test auc: 0.7478  f1: 0.6792
+epoch 3    train_loss: 0.6073    lr: 0.004706
+epoch 3    train auc: 0.8429  f1: 0.7469    eval auc: 0.7509  f1: 0.6815    test auc: 0.7522  f1: 0.6823
+epoch 4    train_loss: 0.6073    lr: 0.004612
+epoch 4    train auc: 0.8423  f1: 0.7475    eval auc: 0.7500  f1: 0.6801    test auc: 0.7490  f1: 0.6809
+epoch 5    train_loss: 0.6061    lr: 0.004520
+epoch 5    train auc: 0.8420  f1: 0.7489    eval auc: 0.7511  f1: 0.6816    test auc: 0.7513  f1: 0.6824
+epoch 6    train_loss: 0.6064    lr: 0.004429
+epoch 6    train auc: 0.8441  f1: 0.7473    eval auc: 0.7512  f1: 0.6814    test auc: 0.7520  f1: 0.6816
+epoch 7    train_loss: 0.6060    lr: 0.004341
+epoch 7    train auc: 0.8425  f1: 0.7475    eval auc: 0.7507  f1: 0.6815    test auc: 0.7499  f1: 0.6814
+epoch 8    train_loss: 0.6062    lr: 0.004254
+epoch 8    train auc: 0.8425  f1: 0.7477    eval auc: 0.7491  f1: 0.6800    test auc: 0.7492  f1: 0.6802
+epoch 9    train_loss: 0.6052    lr: 0.004169
+epoch 9    train auc: 0.8440  f1: 0.7477    eval auc: 0.7510  f1: 0.6806    test auc: 0.7515  f1: 0.6804
+epoch 10    train_loss: 0.6051    lr: 0.004085
+epoch 10    train auc: 0.8454  f1: 0.7469    eval auc: 0.7518  f1: 0.6817    test auc: 0.7498  f1: 0.6791
+epoch 11    train_loss: 0.6056    lr: 0.004004
+epoch 11    train auc: 0.8445  f1: 0.7491    eval auc: 0.7516  f1: 0.6817    test auc: 0.7510  f1: 0.6806
+epoch 12    train_loss: 0.6052    lr: 0.003924
+epoch 12    train auc: 0.8440  f1: 0.7477    eval auc: 0.7525  f1: 0.6811    test auc: 0.7510  f1: 0.6805
+epoch 13    train_loss: 0.6048    lr: 0.003845
+epoch 13    train auc: 0.8439  f1: 0.7469    eval auc: 0.7512  f1: 0.6794    test auc: 0.7510  f1: 0.6800
+epoch 14    train_loss: 0.6050    lr: 0.003768
+epoch 14    train auc: 0.8446  f1: 0.7469    eval auc: 0.7514  f1: 0.6794    test auc: 0.7510  f1: 0.6790
+epoch 15    train_loss: 0.6045    lr: 0.003693
+epoch 15    train auc: 0.8449  f1: 0.7478    eval auc: 0.7525  f1: 0.6824    test auc: 0.7518  f1: 0.6807
+epoch 16    train_loss: 0.6051    lr: 0.003619
+epoch 16    train auc: 0.8447  f1: 0.7475    eval auc: 0.7524  f1: 0.6799    test auc: 0.7512  f1: 0.6794
+epoch 17    train_loss: 0.6044    lr: 0.003547
+epoch 17    train auc: 0.8437  f1: 0.7467    eval auc: 0.7529  f1: 0.6793    test auc: 0.7512  f1: 0.6801
+epoch 18    train_loss: 0.6043    lr: 0.003476
+epoch 18    train auc: 0.8432  f1: 0.7474    eval auc: 0.7523  f1: 0.6826    test auc: 0.7522  f1: 0.6795
+epoch 19    train_loss: 0.6039    lr: 0.003406
+epoch 19    train auc: 0.8441  f1: 0.7475    eval auc: 0.7521  f1: 0.6806    test auc: 0.7511  f1: 0.6791
+epoch 20    train_loss: 0.6037    lr: 0.003338
+epoch 20    train auc: 0.8450  f1: 0.7474    eval auc: 0.7521  f1: 0.6817    test auc: 0.7520  f1: 0.6804
+epoch 21    train_loss: 0.6039    lr: 0.003271
+epoch 21    train auc: 0.8452  f1: 0.7476    eval auc: 0.7515  f1: 0.6807    test auc: 0.7503  f1: 0.6802
+epoch 22    train_loss: 0.6041    lr: 0.003206
+epoch 22    train auc: 0.8447  f1: 0.7467    eval auc: 0.7517  f1: 0.6801    test auc: 0.7506  f1: 0.6784
+epoch 23    train_loss: 0.6032    lr: 0.003142
+epoch 23    train auc: 0.8442  f1: 0.7473    eval auc: 0.7530  f1: 0.6810    test auc: 0.7514  f1: 0.6800
+epoch 24    train_loss: 0.6033    lr: 0.003079
+epoch 24    train auc: 0.8456  f1: 0.7472    eval auc: 0.7528  f1: 0.6801    test auc: 0.7519  f1: 0.6785
+epoch 25    train_loss: 0.6034    lr: 0.003017
+epoch 25    train auc: 0.8460  f1: 0.7472    eval auc: 0.7525  f1: 0.6808    test auc: 0.7520  f1: 0.6794
+Early stopping at epoch 25: no eval R@10 improvement for 12 epochs (best epoch 5, eval R@10 0.1197)
+2026-10-26 02:33:12.774100: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:33:12.774480: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+Initialized from scratch
+epoch 0    train_loss: 0.6655    lr: 0.005000
+epoch 0    train auc: 0.8265  f1: 0.7400    eval auc: 0.7392  f1: 0.6769    test auc: 0.7422  f1: 0.6785
+epoch 1    train_loss: 0.6142    lr: 0.004900
+epoch 1    train auc: 0.8389  f1: 0.7470    eval auc: 0.7489  f1: 0.6807    test auc: 0.7478  f1: 0.6813
+epoch 2    train_loss: 0.6090    lr: 0.004802
+epoch 2    train auc: 0.8392  f1: 0.7468    eval auc: 0.7496  f1: 0.6812    test auc: 0.7496  f1: 0.6801
+epoch 3    train_loss: 0.6074    lr: 0.004706
+epoch 3    train auc: 0.8414  f1: 0.7481    eval auc: 0.7512  f1: 0.6814    test auc: 0.7510  f1: 0.6812
+epoch 4    train_loss: 0.6067    lr: 0.004612
+epoch 4    train auc: 0.8421  f1: 0.7463    eval auc: 0.7496  f1: 0.6813    test auc: 0.7481  f1: 0.6786
+epoch 5    train_loss: 0.6064    lr: 0.004520
+epoch 5    train auc: 0.8430  f1: 0.7479    eval auc: 0.7521  f1: 0.6801    test auc: 0.7484  f1: 0.6807
+epoch 6    train_loss: 0.6064    lr: 0.004429
+epoch 6    train auc: 0.8438  f1: 0.7475    eval auc: 0.7531  f1: 0.6817    test auc: 0.7485  f1: 0.6799
+epoch 7    train_loss: 0.6067    lr: 0.004341
+epoch 7    train auc: 0.8424  f1: 0.7473    eval auc: 0.7510  f1: 0.6807    test auc: 0.7497  f1: 0.6796
+epoch 8    train_loss: 0.6060    lr: 0.004254
+epoch 8    train auc: 0.8427  f1: 0.7464    eval auc: 0.7505  f1: 0.6824    test auc: 0.7508  f1: 0.6801
+epoch 9    train_loss: 0.6058    lr: 0.004169
+epoch 9    train auc: 0.8435  f1: 0.7477    eval auc: 0.7517  f1: 0.6811    test auc: 0.7529  f1: 0.6799
+epoch 10    train_loss: 0.6050    lr: 0.004085
+epoch 10    train auc: 0.8437  f1: 0.7479    eval auc: 0.7524  f1: 0.6828    test auc: 0.7515  f1: 0.6797
+epoch 11    train_loss: 0.6051    lr: 0.004004
+epoch 11    train auc: 0.8433  f1: 0.7471    eval auc: 0.7509  f1: 0.6799    test auc: 0.7504  f1: 0.6794
+epoch 12    train_loss: 0.6052    lr: 0.003924
+epoch 12    train auc: 0.8434  f1: 0.7481    eval auc: 0.7513  f1: 0.6816    test auc: 0.7503  f1: 0.6805
+epoch 13    train_loss: 0.6052    lr: 0.003845
+epoch 13    train auc: 0.8434  f1: 0.7472    eval auc: 0.7521  f1: 0.6795    test auc: 0.7506  f1: 0.6816
+epoch 14    train_loss: 0.6042    lr: 0.003768
+epoch 14    train auc: 0.8448  f1: 0.7485    eval auc: 0.7522  f1: 0.6798    test auc: 0.7516  f1: 0.6799
+epoch 15    train_loss: 0.6046    lr: 0.003693
+epoch 15    train auc: 0.8443  f1: 0.7471    eval auc: 0.7518  f1: 0.6804    test auc: 0.7518  f1: 0.6797
+epoch 16    train_loss: 0.6053    lr: 0.003619
+epoch 16    train auc: 0.8442  f1: 0.7466    eval auc: 0.7515  f1: 0.6813    test auc: 0.7509  f1: 0.6797
+epoch 17    train_loss: 0.6042    lr: 0.003547
+epoch 17    train auc: 0.8446  f1: 0.7473    eval auc: 0.7523  f1: 0.6825    test auc: 0.7513  f1: 0.6794
+epoch 18    train_loss: 0.6044    lr: 0.003476
+epoch 18    train auc: 0.8452  f1: 0.7479    eval auc: 0.7521  f1: 0.6815    test auc: 0.7524  f1: 0.6795
+epoch 19    train_loss: 0.6039    lr: 0.003406
+epoch 19    train auc: 0.8457  f1: 0.7469    eval auc: 0.7514  f1: 0.6800    test auc: 0.7510  f1: 0.6790
+epoch 20    train_loss: 0.6037    lr: 0.003338
+epoch 20    train auc: 0.8455  f1: 0.7477    eval auc: 0.7534  f1: 0.6809    test auc: 0.7517  f1: 0.6779
+epoch 21    train_loss: 0.6037    lr: 0.003271
+epoch 21    train auc: 0.8451  f1: 0.7480    eval auc: 0.7519  f1: 0.6800    test auc: 0.7505  f1: 0.6801
+epoch 22    train_loss: 0.6040    lr: 0.003206
+epoch 22    train auc: 0.8448  f1: 0.7473    eval auc: 0.7514  f1: 0.6817    test auc: 0.7524  f1: 0.6808
+epoch 23    train_loss: 0.6037    lr: 0.003142
+epoch 23    train auc: 0.8451  f1: 0.7482    eval auc: 0.7521  f1: 0.6824    test auc: 0.7512  f1: 0.6804
+epoch 24    train_loss: 0.6033    lr: 0.003079
+epoch 24    train auc: 0.8454  f1: 0.7480    eval auc: 0.7527  f1: 0.6800    test auc: 0.7520  f1: 0.6805
+epoch 25    train_loss: 0.6036    lr: 0.003017
+epoch 25    train auc: 0.8443  f1: 0.7471    eval auc: 0.7515  f1: 0.6803    test auc: 0.7509  f1: 0.6805
+epoch 26    train_loss: 0.6028    lr: 0.002957
+epoch 26    train auc: 0.8454  f1: 0.7473    eval auc: 0.7523  f1: 0.6803    test auc: 0.7517  f1: 0.6795
+epoch 27    train_loss: 0.6035    lr: 0.002898
+epoch 27    train auc: 0.8449  f1: 0.7468    eval auc: 0.7519  f1: 0.6791    test auc: 0.7514  f1: 0.6784
+epoch 28    train_loss: 0.6026    lr: 0.002840
+epoch 28    train auc: 0.8458  f1: 0.7476    eval auc: 0.7530  f1: 0.6793    test auc: 0.7522  f1: 0.6790
+epoch 29    train_loss: 0.6030    lr: 0.002783
+epoch 29    train auc: 0.8457  f1: 0.7471    eval auc: 0.7519  f1: 0.6799    test auc: 0.7522  f1: 0.6797
+epoch 30    train_loss: 0.6028    lr: 0.002727
+epoch 30    train auc: 0.8445  f1: 0.7467    eval auc: 0.7515  f1: 0.6789    test auc: 0.7506  f1: 0.6784
+epoch 31    train_loss: 0.6025    lr: 0.002673
+epoch 31    train auc: 0.8449  f1: 0.7471    eval auc: 0.7517  f1: 0.6788    test auc: 0.7512  f1: 0.6782
+epoch 32    train_loss: 0.6024    lr: 0.002619
+epoch 32    train auc: 0.8452  f1: 0.7481    eval auc: 0.7521  f1: 0.6799    test auc: 0.7520  f1: 0.6801
+epoch 33    train_loss: 0.6025    lr: 0.002567
+epoch 33    train auc: 0.8455  f1: 0.7469    eval auc: 0.7519  f1: 0.6795    test auc: 0.7518  f1: 0.6803
+epoch 34    train_loss: 0.6026    lr: 0.002516
+epoch 34    train auc: 0.8458  f1: 0.7472    eval auc: 0.7531  f1: 0.6805    test auc: 0.7524  f1: 0.6809
+Early stopping at epoch 34: no eval R@10 improvement for 12 epochs (best epoch 22, eval R@10 0.1198)
+2026-10-26 02:50:55.388637: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 02:50:55.388997: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+Initialized from scratch
+epoch 0    train_loss: 0.6661    lr: 0.005000
+epoch 0    train auc: 0.8273  f1: 0.7407    eval auc: 0.7437  f1: 0.6791    test auc: 0.7396  f1: 0.6785
+epoch 1    train_loss: 0.6143    lr: 0.004900
+epoch 1    train auc: 0.8384  f1: 0.7486    eval auc: 0.7471  f1: 0.6826    test auc: 0.7480  f1: 0.6823
+epoch 2    train_loss: 0.6086    lr: 0.004802
+epoch 2    train auc: 0.8406  f1: 0.7482    eval auc: 0.7500  f1: 0.6819    test auc: 0.7491  f1: 0.6821
+epoch 3    train_loss: 0.6078    lr: 0.004706
+epoch 3    train auc: 0.8409  f1: 0.7470    eval auc: 0.7491  f1: 0.6825    test auc: 0.7489  f1: 0.6794
+epoch 4    train_loss: 0.6067    lr: 0.004612
+epoch 4    train auc: 0.8421  f1: 0.7481    eval auc: 0.7515  f1: 0.6819    test auc: 0.7501  f1: 0.6838
+epoch 5    train_loss: 0.6060    lr: 0.004520
+epoch 5    train auc: 0.8431  f1: 0.7473    eval auc: 0.7509  f1: 0.6798    test auc: 0.7501  f1: 0.6789
+epoch 6    train_loss: 0.6064    lr: 0.004429
+epoch 6    train auc: 0.8426  f1: 0.7475    eval auc: 0.7517  f1: 0.6813    test auc: 0.7499  f1: 0.6803
+epoch 7    train_loss: 0.6054    lr: 0.004341
+epoch 7    train auc: 0.8432  f1: 0.7487    eval auc: 0.7494  f1: 0.6806    test auc: 0.7503  f1: 0.6808
+epoch 8    train_loss: 0.6063    lr: 0.004254
+epoch 8    train auc: 0.8417  f1: 0.7475    eval auc: 0.7503  f1: 0.6803    test auc: 0.7493  f1: 0.6796
+epoch 9    train_loss: 0.6054    lr: 0.004169
+epoch 9    train auc: 0.8444  f1: 0.7465    eval auc: 0.7521  f1: 0.6795    test auc: 0.7510  f1: 0.6801
+epoch 10    train_loss: 0.6053    lr: 0.004085
+epoch 10    train auc: 0.8438  f1: 0.7484    eval auc: 0.7509  f1: 0.6817    test auc: 0.7509  f1: 0.6816
+epoch 11    train_loss: 0.6052    lr: 0.004004
+epoch 11    train auc: 0.8431  f1: 0.7471    eval auc: 0.7512  f1: 0.6802    test auc: 0.7488  f1: 0.6800
+epoch 12    train_loss: 0.6055    lr: 0.003924
+epoch 12    train auc: 0.8429  f1: 0.7481    eval auc: 0.7523  f1: 0.6831    test auc: 0.7494  f1: 0.6802
+epoch 13    train_loss: 0.6047    lr: 0.003845
+epoch 13    train auc: 0.8442  f1: 0.7477    eval auc: 0.7509  f1: 0.6804    test auc: 0.7512  f1: 0.6800
+epoch 14    train_loss: 0.6050    lr: 0.003768
+epoch 14    train auc: 0.8442  f1: 0.7479    eval auc: 0.7514  f1: 0.6810    test auc: 0.7506  f1: 0.6807
+epoch 15    train_loss: 0.6045    lr: 0.003693
+epoch 15    train auc: 0.8443  f1: 0.7465    eval auc: 0.7512  f1: 0.6790    test auc: 0.7505  f1: 0.6800
+epoch 16    train_loss: 0.6051    lr: 0.003619
+epoch 16    train auc: 0.8436  f1: 0.7470    eval auc: 0.7522  f1: 0.6815    test auc: 0.7504  f1: 0.6800
+epoch 17    train_loss: 0.6050    lr: 0.003547
+epoch 17    train auc: 0.8434  f1: 0.7469    eval auc: 0.7514  f1: 0.6795    test auc: 0.7498  f1: 0.6811
+epoch 18    train_loss: 0.6043    lr: 0.003476
+epoch 18    train auc: 0.8442  f1: 0.7469    eval auc: 0.7514  f1: 0.6789    test auc: 0.7514  f1: 0.6804
+epoch 19    train_loss: 0.6042    lr: 0.003406
+epoch 19    train auc: 0.8452  f1: 0.7480    eval auc: 0.7526  f1: 0.6814    test auc: 0.7519  f1: 0.6783
+epoch 20    train_loss: 0.6040    lr: 0.003338
+epoch 20    train auc: 0.8446  f1: 0.7477    eval auc: 0.7528  f1: 0.6806    test auc: 0.7516  f1: 0.6795
+epoch 21    train_loss: 0.6039    lr: 0.003271
+epoch 21    train auc: 0.8449  f1: 0.7466    eval auc: 0.7522  f1: 0.6799    test auc: 0.7524  f1: 0.6815
+epoch 22    train_loss: 0.6032    lr: 0.003206
+epoch 22    train auc: 0.8446  f1: 0.7469    eval auc: 0.7523  f1: 0.6805    test auc: 0.7515  f1: 0.6797
+epoch 23    train_loss: 0.6039    lr: 0.003142
+epoch 23    train auc: 0.8459  f1: 0.7476    eval auc: 0.7525  f1: 0.6805    test auc: 0.7508  f1: 0.6790
+epoch 24    train_loss: 0.6038    lr: 0.003079
+epoch 24    train auc: 0.8453  f1: 0.7479    eval auc: 0.7520  f1: 0.6797    test auc: 0.7515  f1: 0.6795
+epoch 25    train_loss: 0.6035    lr: 0.003017
+epoch 25    train auc: 0.8446  f1: 0.7471    eval auc: 0.7507  f1: 0.6800    test auc: 0.7512  f1: 0.6787
+epoch 26    train_loss: 0.6030    lr: 0.002957
+epoch 26    train auc: 0.8459  f1: 0.7472    eval auc: 0.7535  f1: 0.6799    test auc: 0.7517  f1: 0.6797
+epoch 27    train_loss: 0.6030    lr: 0.002898
+epoch 27    train auc: 0.8459  f1: 0.7481    eval auc: 0.7532  f1: 0.6824    test auc: 0.7515  f1: 0.6801
+Early stopping at epoch 27: no eval R@10 improvement for 12 epochs (best epoch 15, eval R@10 0.1194)
+[log_resources] valid runs: 3/3
+[0.75140771 0.75173368 0.75169109]
+[0.68000349 0.67788076 0.67967966]
+[[0.02817218 0.12042683 0.28729215 0.38447469]
+ [0.02774535 0.11933943 0.28659819 0.38082051]
+ [0.02774535 0.12028455 0.28714116 0.3816219 ]]
+[[0.03414634 0.02859756 0.01371951 0.00947561]
+ [0.03353659 0.02835366 0.01373171 0.00939024]
+ [0.03353659 0.02871951 0.0137561  0.00934756]]
+average auc: 0.7516+\-0.0001
+average f1 : 0.6792+\-0.0009
+average recall   : 0.0279+\-0.0002 0.1200+\-0.0005 0.2870+\-0.0003 0.3823+\-0.0016 
+average precision: 0.0337+\-0.0003 0.0286+\-0.0002 0.0137+\-0.0000 0.0094+\-0.0001 
+average ndcg     : 0.0360+\-0.0002 0.0727+\-0.0003 0.1189+\-0.0002 0.1392+\-0.0003 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0279+-0.0002  precision: 0.0337+-0.0003  ndcg: 0.0360+-0.0002
+  R@10 recall: 0.1200+-0.0005  precision: 0.0286+-0.0002  ndcg: 0.0727+-0.0003
+  R@50 recall: 0.2870+-0.0003  precision: 0.0137+-0.0000  ndcg: 0.1189+-0.0002
+  R@100 recall: 0.3823+-0.0016  precision: 0.0094+-0.0001  ndcg: 0.1392+-0.0003
+average train_seconds: 447.0+\-55.5
+average total_seconds: 917.4+\-106.0
+average peak_vram_mb: 3681.7+\-40.3
+D:\projects\current-git-project\LGKAT-Project\src\train_n_runs.py:640: RuntimeWarning: Mean of empty slice
+  line += '{}@{}:{:.4f}+-{:.4f}  '.format(tagmap[metric], k, np.nanmean(vals), np.nanstd(vals))
+C:\Users\asus\.conda\envs\lgkat\lib\site-packages\numpy\lib\nanfunctions.py:1670: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+sparsity per-bucket results written to ../result/LightGCN_music_sparsity_product_base_sparsity.txt
+average train_Loss 0.60722226
+[2026-10-26 03:05:29] === Task 2 SUCCESS in 46m 12s ===
+[2026-10-26 03:05:29] === Starting Task 3/3: 3/3: Book-Crossing Sparsity (proposed_sparsity, 3 runs) ===
+reading rating file ...
+---------------
+555
+---------------
+splitting dataset ...
+Creating UI Graph ...
+already load adj matrix (32827, 32827) 0.018377065658569336
+Finish Creating Adjacency Matrix of UI Graph.
+reading KG file ...
+constructing knowledge graph ...
+constructing adjacency matrix ...
+data loaded.
+----------
+556
+----------
+WARNING:tensorflow:From C:\Users\asus\.conda\envs\lgkat\lib\site-packages\tensorflow\python\util\dispatch.py:1082: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+Attention: product
+2026-10-26 03:05:46.458297: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX AVX2
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-26 03:05:46.599240: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 03:05:49.900231: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-26 03:05:50.566499: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:354] MLIR V1 optimization pass is not enabled
+Initialized from scratch
+2026-10-26 03:05:51.124882: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 03:05:51.127030: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 03:05:51.127347: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+2026-10-26 03:06:09.264977: I tensorflow/stream_executor/cuda/cuda_blas.cc:1786] TensorFloat-32 will be used for the matrix multiplication. This will only be logged once.
+epoch 0    train_loss: 0.6924    lr: 0.000200
+epoch 0    train auc: 0.8197  f1: 0.7563    eval auc: 0.6141  f1: 0.6129    test auc: 0.6096  f1: 0.6161
+epoch 1    train_loss: 0.6466    lr: 0.000196
+epoch 1    train auc: 0.8682  f1: 0.7862    eval auc: 0.7137  f1: 0.6520    test auc: 0.7088  f1: 0.6495
+epoch 2    train_loss: 0.5390    lr: 0.000192
+epoch 2    train auc: 0.8762  f1: 0.7913    eval auc: 0.7184  f1: 0.6551    test auc: 0.7142  f1: 0.6539
+epoch 3    train_loss: 0.4797    lr: 0.000188
+epoch 3    train auc: 0.8834  f1: 0.7954    eval auc: 0.7163  f1: 0.6544    test auc: 0.7129  f1: 0.6555
+epoch 4    train_loss: 0.4525    lr: 0.000184
+epoch 4    train auc: 0.8893  f1: 0.7984    eval auc: 0.7138  f1: 0.6528    test auc: 0.7107  f1: 0.6546
+epoch 5    train_loss: 0.4370    lr: 0.000181
+epoch 5    train auc: 0.8938  f1: 0.8006    eval auc: 0.7116  f1: 0.6536    test auc: 0.7086  f1: 0.6539
+epoch 6    train_loss: 0.4264    lr: 0.000177
+epoch 6    train auc: 0.8971  f1: 0.8021    eval auc: 0.7096  f1: 0.6535    test auc: 0.7068  f1: 0.6539
+epoch 7    train_loss: 0.4188    lr: 0.000174
+epoch 7    train auc: 0.8999  f1: 0.8034    eval auc: 0.7077  f1: 0.6527    test auc: 0.7052  f1: 0.6534
+Early stopping at epoch 7: no eval R@10 improvement for 5 epochs (best epoch 2, eval R@10 0.0775)
+Attention: product
+2026-10-26 03:15:02.360286: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 03:15:02.367202: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+Initialized from scratch
+epoch 0    train_loss: 0.6922    lr: 0.000200
+epoch 0    train auc: 0.8289  f1: 0.7674    eval auc: 0.6363  f1: 0.6198    test auc: 0.6299  f1: 0.6176
+epoch 1    train_loss: 0.6433    lr: 0.000196
+epoch 1    train auc: 0.8684  f1: 0.7862    eval auc: 0.7129  f1: 0.6512    test auc: 0.7091  f1: 0.6527
+epoch 2    train_loss: 0.5371    lr: 0.000192
+epoch 2    train auc: 0.8761  f1: 0.7900    eval auc: 0.7176  f1: 0.6537    test auc: 0.7143  f1: 0.6550
+epoch 3    train_loss: 0.4790    lr: 0.000188
+epoch 3    train auc: 0.8835  f1: 0.7949    eval auc: 0.7155  f1: 0.6545    test auc: 0.7127  f1: 0.6560
+epoch 4    train_loss: 0.4526    lr: 0.000184
+epoch 4    train auc: 0.8892  f1: 0.7981    eval auc: 0.7132  f1: 0.6535    test auc: 0.7109  f1: 0.6559
+epoch 5    train_loss: 0.4369    lr: 0.000181
+epoch 5    train auc: 0.8936  f1: 0.8000    eval auc: 0.7110  f1: 0.6530    test auc: 0.7088  f1: 0.6558
+epoch 6    train_loss: 0.4264    lr: 0.000177
+epoch 6    train auc: 0.8971  f1: 0.8019    eval auc: 0.7090  f1: 0.6534    test auc: 0.7071  f1: 0.6554
+epoch 7    train_loss: 0.4190    lr: 0.000174
+epoch 7    train auc: 0.9000  f1: 0.8029    eval auc: 0.7073  f1: 0.6531    test auc: 0.7053  f1: 0.6543
+Early stopping at epoch 7: no eval R@10 improvement for 5 epochs (best epoch 2, eval R@10 0.0667)
+Attention: product
+2026-10-26 03:24:27.640925: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1943] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 12.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+2026-10-26 03:24:27.643363: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1532] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13502 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 5060 Ti, pci bus id: 0000:01:00.0, compute capability: 12.0
+Initialized from scratch
+epoch 0    train_loss: 0.6921    lr: 0.000200
+epoch 0    train auc: 0.8221  f1: 0.7602    eval auc: 0.6224  f1: 0.6121    test auc: 0.6204  f1: 0.6163
+epoch 1    train_loss: 0.6423    lr: 0.000196
+epoch 1    train auc: 0.8687  f1: 0.7859    eval auc: 0.7134  f1: 0.6526    test auc: 0.7092  f1: 0.6525
+epoch 2    train_loss: 0.5358    lr: 0.000192
+epoch 2    train auc: 0.8764  f1: 0.7907    eval auc: 0.7178  f1: 0.6557    test auc: 0.7143  f1: 0.6548
+epoch 3    train_loss: 0.4785    lr: 0.000188
+epoch 3    train auc: 0.8838  f1: 0.7946    eval auc: 0.7157  f1: 0.6544    test auc: 0.7127  f1: 0.6549
+epoch 4    train_loss: 0.4519    lr: 0.000184
+epoch 4    train auc: 0.8895  f1: 0.7983    eval auc: 0.7129  f1: 0.6539    test auc: 0.7106  f1: 0.6561
+epoch 5    train_loss: 0.4368    lr: 0.000181
+epoch 5    train auc: 0.8939  f1: 0.8007    eval auc: 0.7105  f1: 0.6530    test auc: 0.7084  f1: 0.6542
+epoch 6    train_loss: 0.4264    lr: 0.000177
+epoch 6    train auc: 0.8972  f1: 0.8024    eval auc: 0.7085  f1: 0.6533    test auc: 0.7068  f1: 0.6552
+epoch 7    train_loss: 0.4185    lr: 0.000174
+epoch 7    train auc: 0.9001  f1: 0.8035    eval auc: 0.7066  f1: 0.6527    test auc: 0.7053  f1: 0.6551
+epoch 8    train_loss: 0.4124    lr: 0.000170
+epoch 8    train auc: 0.9024  f1: 0.8043    eval auc: 0.7052  f1: 0.6521    test auc: 0.7037  f1: 0.6537
+epoch 9    train_loss: 0.4076    lr: 0.000167
+epoch 9    train auc: 0.9041  f1: 0.8047    eval auc: 0.7037  f1: 0.6521    test auc: 0.7025  f1: 0.6541
+epoch 10    train_loss: 0.4035    lr: 0.000163
+epoch 10    train auc: 0.9056  f1: 0.8058    eval auc: 0.7025  f1: 0.6525    test auc: 0.7010  f1: 0.6535
+Early stopping at epoch 10: no eval R@10 improvement for 5 epochs (best epoch 5, eval R@10 0.1083)
+[log_resources] valid runs: 3/3
+[0.71424142 0.7142924  0.71432624]
+[0.65389303 0.65496601 0.65484661]
+[[0.02777778 0.07429701 0.12028846 0.16068803]
+ [0.0561036  0.08179904 0.12933887 0.15407967]
+ [0.017      0.04449206 0.09508532 0.14921465]]
+[[0.025  0.017  0.0058 0.0044]
+ [0.04   0.017  0.0066 0.0048]
+ [0.015  0.01   0.0046 0.0035]]
+average auc: 0.7143+\-0.0000
+average f1 : 0.6546+\-0.0005
+average recall   : 0.0336+\-0.0165 0.0669+\-0.0161 0.1149+\-0.0145 0.1547+\-0.0047 
+average precision: 0.0267+\-0.0103 0.0147+\-0.0033 0.0057+\-0.0008 0.0042+\-0.0005 
+average ndcg     : 0.0415+\-0.0201 0.0541+\-0.0169 0.0663+\-0.0160 0.0745+\-0.0140 
+paper_style (mean+-std over runs, test set):
+  R@2 recall: 0.0336+-0.0165  precision: 0.0267+-0.0103  ndcg: 0.0415+-0.0201
+  R@10 recall: 0.0669+-0.0161  precision: 0.0147+-0.0033  ndcg: 0.0541+-0.0169
+  R@50 recall: 0.1149+-0.0145  precision: 0.0057+-0.0008  ndcg: 0.0663+-0.0160
+  R@100 recall: 0.1547+-0.0047  precision: 0.0042+-0.0005  ndcg: 0.0745+-0.0140
+average train_seconds: 412.4+\-64.3
+average total_seconds: 627.0+\-93.4
+average peak_vram_mb: 5819.0+\-41.5
+sparsity per-bucket results written to ../result/KGCN_LightGCN_book_sparsity_product_proposed_sparsity.txt
+average train_Loss 0.4994252
+[2026-10-26 03:37:04] === Task 3 SUCCESS in 31m 34s ===
+[2026-10-26 03:37:04] All overnight tasks completed in 1h 31m 8s. Results ready in D:\projects\current-git-project\LGKAT-Project\result.

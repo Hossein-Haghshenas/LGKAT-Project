@@ -1,0 +1,54 @@
+Attention case study -- dataset:music model:KGCN_LightGCN att:product
+user:774  (train items:30  test items:9)
+top-5 recommended items and their KG-neighbor attention:
+
+rank 1: item 882  score=0.9454  
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+    neighbor entity    6349  relation   0  attention 0.1250
+
+rank 2: item 42  score=0.9435  
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+    neighbor entity    4150  relation   0  attention 0.1250
+
+rank 3: item 187  score=0.9339  
+    neighbor entity    5732  relation  19  attention 0.1250
+    neighbor entity    5732  relation  19  attention 0.1250
+    neighbor entity    4949  relation  19  attention 0.1250
+    neighbor entity    4949  relation  19  attention 0.1250
+    neighbor entity    4099  relation  19  attention 0.1250
+    neighbor entity    9089  relation  19  attention 0.1250
+    neighbor entity    4898  relation  19  attention 0.1250
+    neighbor entity    4898  relation  19  attention 0.1250
+
+rank 4: item 1308  score=0.9322  
+    neighbor entity    6052  relation   2  attention 0.1250
+    neighbor entity    6052  relation   1  attention 0.1250
+    neighbor entity    6052  relation   2  attention 0.1250
+    neighbor entity    3864  relation   0  attention 0.1250
+    neighbor entity    4080  relation   1  attention 0.1250
+    neighbor entity    5251  relation  17  attention 0.1250
+    neighbor entity    5251  relation  17  attention 0.1250
+    neighbor entity    4080  relation   1  attention 0.1250
+
+rank 5: item 128  score=0.9228  
+    neighbor entity     128  relation  22  attention 0.1251
+    neighbor entity     128  relation  11  attention 0.1251
+    neighbor entity     128  relation  22  attention 0.1251
+    neighbor entity    5227  relation   4  attention 0.1250
+    neighbor entity    4388  relation   1  attention 0.1250
+    neighbor entity    6467  relation   2  attention 0.1250
+    neighbor entity    6216  relation   2  attention 0.1250
+    neighbor entity    5851  relation   1  attention 0.1250
+

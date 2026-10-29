@@ -1,0 +1,146 @@
+{
+  "model_type": "KGCN_LightGCN",
+  "dataset": "music",
+  "att": "product",
+  "exp_tag": "interp_v3",
+  "k_list": [
+    2,
+    10,
+    50,
+    100
+  ],
+  "runs": 1,
+  "auc": [
+    0.8290630036019448
+  ],
+  "f1": [
+    0.7517104956563891
+  ],
+  "recall": [
+    [
+      0.07949999999999999,
+      0.15466666666666665,
+      0.3426666666666667,
+      0.39833333333333326
+    ]
+  ],
+  "precision": [
+    [
+      0.075,
+      0.034,
+      0.0152,
+      0.0092
+    ]
+  ],
+  "ndcg": [
+    [
+      0.0969666571739875,
+      0.12370977679948257,
+      0.17509850903015184,
+      0.1875177479470009
+    ]
+  ],
+  "n_attempted": 1,
+  "n_valid": 1,
+  "run_records": [
+    {
+      "run_index": 0,
+      "status": "ok",
+      "seed_eval": 556,
+      "seed_test": 557,
+      "error": null,
+      "train_seconds": 1726.747883599999,
+      "total_seconds": 2787.4834237,
+      "eval_seconds": 1060.735540100001,
+      "peak_vram_bytes": 4588568576,
+      "peak_vram_mb": 4376.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 36,
+      "best_recall_epoch": 34,
+      "rank_ckpt": "r10",
+      "auc": 0.8290630036019448,
+      "f1": 0.7517104956563891,
+      "recall": [
+        0.07949999999999999,
+        0.15466666666666665,
+        0.3426666666666667,
+        0.39833333333333326
+      ],
+      "precision": [
+        0.075,
+        0.034,
+        0.0152,
+        0.0092
+      ],
+      "ndcg": [
+        0.0969666571739875,
+        0.12370977679948257,
+        0.17509850903015184,
+        0.1875177479470009
+      ]
+    }
+  ],
+  "config": {
+    "adj_type": "norm",
+    "agg_type": "weighted_avg",
+    "aggregator": "concat",
+    "alg_type": "lightgcn",
+    "alpha": 0.5,
+    "att": "product",
+    "batch_size": 128,
+    "cl_detach": "none",
+    "cl_lambda": 0.02,
+    "cl_sample_size": 0,
+    "cl_tau": 0.2,
+    "dataset": "music",
+    "dim": 32,
+    "early_stop": 12,
+    "early_stop_min_epoch": 25,
+    "exp_tag": "interp_v3",
+    "fast_eval": 1,
+    "fusion": "gate",
+    "gpu_id": 0,
+    "interpret": 1,
+    "interpret_topk": 5,
+    "interpret_user": -1,
+    "kgtr_center": 0,
+    "kgtr_dot": 0,
+    "kgtr_ffn": 0,
+    "kgtr_pool": "transformed",
+    "kgtr_rel_bias": 0,
+    "kgtr_temp": 1.0,
+    "kgtr_token": "rel_ej",
+    "l2_weight": 0.0001,
+    "layer_size": "[32]",
+    "log_resources": 1,
+    "logging": "save",
+    "lr": 0.005,
+    "lr_decay": 0.98,
+    "ls_weight": 0,
+    "mess_dropout": "[0.1]",
+    "model_type": "KGCN_LightGCN",
+    "n_epochs": 39,
+    "n_heads": 4,
+    "n_iter": 1,
+    "neighbor_sample_size": 8,
+    "node_dropout": "[0.1]",
+    "node_dropout_flag": 1,
+    "pair_dump": 0,
+    "params": "['dataset','aggregator','n_epochs','neighbor_sample_size','dim','n_iter','batch_size','l2_weight','ls_weight','lr','ratio','layer_size','adj_type','alg_type','node_dropout_flag','node_dropout','mess_dropout','model_type','att','agg_type','alpha','smoothing_steps','runs','logging','pretrain','topk_user_num','topk_k_list','report_ndcg','use_cl','cl_lambda','cl_tau','cl_sample_size','cl_detach','use_simgcl','simgcl_lambda','simgcl_eps','lr_decay','early_stop','early_stop_min_epoch','fusion','exp_tag','n_heads','kgtr_token','kgtr_pool','kgtr_center','kgtr_ffn','kgtr_temp','kgtr_rel_bias','kgtr_dot','fast_eval','sparsity_eval','sparsity_buckets','interpret','interpret_user','interpret_topk']",
+    "pretrain": 0,
+    "rank_ckpt": "r10",
+    "ratio": 1,
+    "report_ndcg": 1,
+    "runs": 1,
+    "seed": 558,
+    "simgcl_eps": 0.05,
+    "simgcl_lambda": 0.02,
+    "smoothing_steps": 8,
+    "sparsity_buckets": "[5,10,20]",
+    "sparsity_eval": 0,
+    "topk_k_list": "[2,10,50,100]",
+    "topk_user_num": 100,
+    "use_cl": 1,
+    "use_simgcl": 1
+  }
+}

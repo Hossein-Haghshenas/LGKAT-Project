@@ -1,0 +1,54 @@
+Attention case study -- dataset:book model:KGCN_LightGCN att:product
+user:6486  (train items:811  test items:162)
+top-5 recommended items and their KG-neighbor attention:
+
+rank 1: item 5  score=0.9160  
+    neighbor entity   68950  relation   0  attention 0.1250
+    neighbor entity   68950  relation   1  attention 0.1250
+    neighbor entity   68950  relation   0  attention 0.1250
+    neighbor entity   68950  relation   1  attention 0.1250
+    neighbor entity   68950  relation   0  attention 0.1250
+    neighbor entity   68950  relation   0  attention 0.1250
+    neighbor entity   68950  relation   1  attention 0.1250
+    neighbor entity   68950  relation   1  attention 0.1250
+
+rank 2: item 81  score=0.9085  
+    neighbor entity   76960  relation   2  attention 0.1250
+    neighbor entity   19681  relation   1  attention 0.1250
+    neighbor entity   19681  relation   0  attention 0.1250
+    neighbor entity   19681  relation   1  attention 0.1250
+    neighbor entity   19681  relation   0  attention 0.1250
+    neighbor entity   19681  relation   0  attention 0.1250
+    neighbor entity   19681  relation   1  attention 0.1250
+    neighbor entity   19681  relation   0  attention 0.1250
+
+rank 3: item 8  score=0.9072  
+    neighbor entity   46199  relation   0  attention 0.1250
+    neighbor entity   46199  relation   1  attention 0.1250
+    neighbor entity   46199  relation   1  attention 0.1250
+    neighbor entity   46199  relation   0  attention 0.1250
+    neighbor entity   46199  relation   1  attention 0.1250
+    neighbor entity   46199  relation   1  attention 0.1250
+    neighbor entity   15248  relation   3  attention 0.1250
+    neighbor entity   15248  relation   3  attention 0.1250
+
+rank 4: item 349  score=0.9071  
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+    neighbor entity   15100  relation   2  attention 0.1250
+
+rank 5: item 10  score=0.9047  
+    neighbor entity   21666  relation   0  attention 0.1250
+    neighbor entity   21666  relation   1  attention 0.1250
+    neighbor entity   23549  relation   5  attention 0.1250
+    neighbor entity   23549  relation   5  attention 0.1250
+    neighbor entity   16104  relation   2  attention 0.1250
+    neighbor entity   16104  relation   2  attention 0.1250
+    neighbor entity   16104  relation   2  attention 0.1250
+    neighbor entity   16104  relation   2  attention 0.1250
+

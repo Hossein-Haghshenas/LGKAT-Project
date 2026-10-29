@@ -1,10 +1,10 @@
 Paired significance test -- dataset: book
-proposed = KGCN_LightGCN (kg_transformer_v2_book_res_residual)   base = KGCN_LightGCN (kg_transformer_v2_book_res_fixed)
+proposed = KGCN_LightGCN (product_protocol_allusers)   base = KGCN_LightGCN (product_thesis_paper_product_sanity_es5)
 paired t-test (scipy.ttest_rel), alternative='two-sided'   * p<.05  ** p<.01  *** p<.001
-runs paired = 5
+runs paired = 3
 
 metric      proposed            base                delta       t         p         sig   
-AUC         0.7146+-0.0006      0.7145+-0.0007      +0.0000     0.105     0.9217    ns    
-F1          0.6565+-0.0013      0.6555+-0.0012      +0.0010     1.241     0.2825    ns    
-Recall@10   0.0687+-0.0238      0.0660+-0.0202      +0.0027     1.000     0.3739    ns    
-NDCG@10     0.0606+-0.0194      0.0569+-0.0163      +0.0038     1.259     0.2764    ns    
+AUC         0.7147+-0.0002      0.7144+-0.0001      +0.0003     1.643     0.2421    ns    
+F1          0.6573+-0.0004      0.6545+-0.0011      +0.0028     5.153     0.0357    *     
+Recall@10   0.0786+-0.0002      0.0669+-0.0161      +0.0118     1.041     0.4072    ns    
+NDCG@10     0.0656+-0.0006      0.0554+-0.0169      +0.0101     0.828     0.4949    ns    

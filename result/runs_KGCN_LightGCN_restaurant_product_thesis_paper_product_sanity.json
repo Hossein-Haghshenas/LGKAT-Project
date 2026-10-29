@@ -9,76 +9,187 @@
     50,
     100
   ],
-  "runs": 0,
-  "auc": [],
-  "f1": [],
-  "recall": [],
-  "precision": [],
+  "runs": 3,
+  "auc": [
+    0.8708143939004794,
+    0.8739670770374324,
+    0.8728725760798506
+  ],
+  "f1": [
+    0.7856912988535889,
+    0.785828386529592,
+    0.7859836876127325
+  ],
+  "recall": [
+    [
+      0.01990909090909091,
+      0.11379004329004327,
+      0.33054545454545453,
+      0.4843160173160173
+    ],
+    [
+      0.056666666666666664,
+      0.12209818775995246,
+      0.41868423733129617,
+      0.5738377684407097
+    ],
+    [
+      0.017083333333333332,
+      0.1236388888888889,
+      0.2970775335775335,
+      0.4479917582417582
+    ]
+  ],
+  "precision": [
+    [
+      0.025,
+      0.027000000000000007,
+      0.015,
+      0.0114
+    ],
+    [
+      0.05,
+      0.027000000000000003,
+      0.021,
+      0.014600000000000002
+    ],
+    [
+      0.02,
+      0.025,
+      0.015600000000000001,
+      0.011899999999999999
+    ]
+  ],
+  "ndcg": [
+    [
+      0.02630929753571458,
+      0.06289683114567948,
+      0.11961319453700671,
+      0.15105690202349645
+    ],
+    [
+      0.06630929753571457,
+      0.09030167334547996,
+      0.1685221162791448,
+      0.2000574927278716
+    ],
+    [
+      0.020177825608059995,
+      0.06370452742748008,
+      0.11257931033643458,
+      0.14282057366913647
+    ]
+  ],
   "n_attempted": 3,
-  "n_valid": 0,
+  "n_valid": 3,
   "run_records": [
     {
       "run_index": 0,
-      "status": "crashed",
+      "status": "ok",
       "seed_eval": 556,
       "seed_test": 557,
-      "error": "ResourceExhaustedError: Graph execution error:\n\nDetected at node 'gradients/SparseTensorDenseMatMul/SparseTensorDenseMatMul_grad/SparseTensorDenseMatMul' defined at (most recent call last):\n    File \"D:\\projects\\current-git-project\\LGKAT-Project\\src\\main.py\", line 264, in <module>\n      train_n_runs(args, data, show_loss, show_topk, show_ctr)\n    File \"D:\\projects\\current-git-project\\LGKAT-Project\\src\\train_n_runs.py\", line 201, in train_n_runs\n      model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entity, ",
-      "train_seconds": 0.0,
-      "total_seconds": 342.40685829999995,
-      "eval_seconds": 342.40685829999995,
-      "peak_vram_bytes": 2422210560,
-      "peak_vram_mb": 2310.0,
+      "error": null,
+      "train_seconds": 1786.0792248269936,
+      "total_seconds": 2894.8577606670005,
+      "eval_seconds": 1108.778535840007,
+      "peak_vram_bytes": 15106834432,
+      "peak_vram_mb": 14407.0,
       "vram_source": "nvidia-smi+tf.get_memory_info",
-      "best_auc_epoch": 0,
-      "best_recall_epoch": 0,
+      "best_auc_epoch": 1,
+      "best_recall_epoch": 1,
       "rank_ckpt": "r10",
-      "auc": null,
-      "f1": null,
-      "recall": null,
-      "precision": null,
-      "ndcg": null
+      "auc": 0.8708143939004794,
+      "f1": 0.7856912988535889,
+      "recall": [
+        0.01990909090909091,
+        0.11379004329004327,
+        0.33054545454545453,
+        0.4843160173160173
+      ],
+      "precision": [
+        0.025,
+        0.027000000000000007,
+        0.015,
+        0.0114
+      ],
+      "ndcg": [
+        0.02630929753571458,
+        0.06289683114567948,
+        0.11961319453700671,
+        0.15105690202349645
+      ]
     },
     {
       "run_index": 1,
-      "status": "crashed",
+      "status": "ok",
       "seed_eval": 558,
       "seed_test": 559,
-      "error": "ResourceExhaustedError: Graph execution error:\n\nDetected at node 'gradients/SparseTensorDenseMatMul_77/SparseTensorDenseMatMul_grad/SparseTensorDenseMatMul' defined at (most recent call last):\n    File \"D:\\projects\\current-git-project\\LGKAT-Project\\src\\main.py\", line 264, in <module>\n      train_n_runs(args, data, show_loss, show_topk, show_ctr)\n    File \"D:\\projects\\current-git-project\\LGKAT-Project\\src\\train_n_runs.py\", line 201, in train_n_runs\n      model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entit",
-      "train_seconds": 0.0,
-      "total_seconds": 435.23060319999996,
-      "eval_seconds": 435.23060319999996,
-      "peak_vram_bytes": 9035579392,
-      "peak_vram_mb": 8617.0,
+      "error": null,
+      "train_seconds": 1693.2902333079837,
+      "total_seconds": 2504.971009178,
+      "eval_seconds": 811.6807758700161,
+      "peak_vram_bytes": 15098445824,
+      "peak_vram_mb": 14399.0,
       "vram_source": "nvidia-smi+tf.get_memory_info",
-      "best_auc_epoch": 0,
+      "best_auc_epoch": 1,
       "best_recall_epoch": 0,
       "rank_ckpt": "r10",
-      "auc": null,
-      "f1": null,
-      "recall": null,
-      "precision": null,
-      "ndcg": null
+      "auc": 0.8739670770374324,
+      "f1": 0.785828386529592,
+      "recall": [
+        0.056666666666666664,
+        0.12209818775995246,
+        0.41868423733129617,
+        0.5738377684407097
+      ],
+      "precision": [
+        0.05,
+        0.027000000000000003,
+        0.021,
+        0.014600000000000002
+      ],
+      "ndcg": [
+        0.06630929753571457,
+        0.09030167334547996,
+        0.1685221162791448,
+        0.2000574927278716
+      ]
     },
     {
       "run_index": 2,
-      "status": "crashed",
+      "status": "ok",
       "seed_eval": 560,
       "seed_test": 561,
-      "error": "ResourceExhaustedError: Graph execution error:\n\nDetected at node 'gradients/SparseTensorDenseMatMul_77/SparseTensorDenseMatMul_grad/SparseTensorDenseMatMul' defined at (most recent call last):\n    File \"D:\\projects\\current-git-project\\LGKAT-Project\\src\\main.py\", line 264, in <module>\n      train_n_runs(args, data, show_loss, show_topk, show_ctr)\n    File \"D:\\projects\\current-git-project\\LGKAT-Project\\src\\train_n_runs.py\", line 201, in train_n_runs\n      model = KGCN(args, n_user, n_item, n_entity, n_relation, adj_entit",
-      "train_seconds": 0.0,
-      "total_seconds": 394.4605996999999,
-      "eval_seconds": 394.4605996999999,
-      "peak_vram_bytes": 9034530816,
-      "peak_vram_mb": 8616.0,
+      "error": null,
+      "train_seconds": 1688.4904981809814,
+      "total_seconds": 2496.8565205370032,
+      "eval_seconds": 808.3660223560219,
+      "peak_vram_bytes": 15098445824,
+      "peak_vram_mb": 14399.0,
       "vram_source": "nvidia-smi+tf.get_memory_info",
-      "best_auc_epoch": 0,
-      "best_recall_epoch": 0,
+      "best_auc_epoch": 1,
+      "best_recall_epoch": 18,
       "rank_ckpt": "r10",
-      "auc": null,
-      "f1": null,
-      "recall": null,
-      "precision": null,
-      "ndcg": null
+      "auc": 0.8728725760798506,
+      "f1": 0.7859836876127325,
+      "recall": [
+        0.017083333333333332,
+        0.1236388888888889,
+        0.2970775335775335,
+        0.4479917582417582
+      ],
+      "precision": [
+        0.02,
+        0.025,
+        0.015600000000000001,
+        0.011899999999999999
+      ],
+      "ndcg": [
+        0.020177825608059995,
+        0.06370452742748008,
+        0.11257931033643458,
+        0.14282057366913647
+      ]
     }
   ],
   "config": {
@@ -126,6 +237,7 @@
     "neighbor_sample_size": 4,
     "node_dropout": "[0.1]",
     "node_dropout_flag": 1,
+    "pair_dump": 0,
     "params": "['dataset','aggregator','n_epochs','neighbor_sample_size','dim','n_iter','batch_size','l2_weight','ls_weight','lr','ratio','layer_size','adj_type','alg_type','node_dropout_flag','node_dropout','mess_dropout','model_type','att','agg_type','alpha','smoothing_steps','runs','logging','pretrain','topk_user_num','topk_k_list','report_ndcg','use_cl','cl_lambda','cl_tau','cl_sample_size','cl_detach','use_simgcl','simgcl_lambda','simgcl_eps','lr_decay','early_stop','early_stop_min_epoch','fusion','exp_tag','n_heads','kgtr_token','kgtr_pool','kgtr_center','kgtr_ffn','kgtr_temp','kgtr_rel_bias','kgtr_dot','fast_eval','sparsity_eval','sparsity_buckets','interpret','interpret_user','interpret_topk']",
     "pretrain": 0,
     "rank_ckpt": "r10",

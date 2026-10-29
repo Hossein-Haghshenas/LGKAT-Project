@@ -1,0 +1,258 @@
+{
+  "model_type": "KGCN_LightGCN",
+  "dataset": "book",
+  "att": "product",
+  "exp_tag": "proposed_sparsity",
+  "k_list": [
+    2,
+    10,
+    50,
+    100
+  ],
+  "runs": 3,
+  "auc": [
+    0.7142414211387109,
+    0.7142923962878649,
+    0.7143262439551162
+  ],
+  "f1": [
+    0.6538930274251715,
+    0.6549660084093476,
+    0.6548466148726831
+  ],
+  "recall": [
+    [
+      0.027777777777777776,
+      0.07429700854700853,
+      0.12028846153846154,
+      0.1606880341880342
+    ],
+    [
+      0.0561036036036036,
+      0.08179904394190109,
+      0.12933887203530062,
+      0.15407967150824295
+    ],
+    [
+      0.017,
+      0.04449206349206349,
+      0.09508531746031747,
+      0.14921464646464647
+    ]
+  ],
+  "precision": [
+    [
+      0.025,
+      0.017,
+      0.0058000000000000005,
+      0.0044
+    ],
+    [
+      0.04,
+      0.017,
+      0.006600000000000002,
+      0.0048
+    ],
+    [
+      0.015,
+      0.01,
+      0.0046,
+      0.0034999999999999996
+    ]
+  ],
+  "ndcg": [
+    [
+      0.03613147192765458,
+      0.054314679241562434,
+      0.06693149215423735,
+      0.07614326060923593
+    ],
+    [
+      0.06839441578296375,
+      0.07462924966847619,
+      0.0854976255522031,
+      0.09077074782726971
+    ],
+    [
+      0.02,
+      0.033325711551488404,
+      0.04632155622684733,
+      0.056546042249902756
+    ]
+  ],
+  "n_attempted": 3,
+  "n_valid": 3,
+  "run_records": [
+    {
+      "run_index": 0,
+      "status": "ok",
+      "seed_eval": 556,
+      "seed_test": 557,
+      "error": null,
+      "train_seconds": 366.07978810000003,
+      "total_seconds": 555.9703703,
+      "eval_seconds": 189.89058219999998,
+      "peak_vram_bytes": 6040846336,
+      "peak_vram_mb": 5761.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 2,
+      "best_recall_epoch": 2,
+      "rank_ckpt": "r10",
+      "auc": 0.7142414211387109,
+      "f1": 0.6538930274251715,
+      "recall": [
+        0.027777777777777776,
+        0.07429700854700853,
+        0.12028846153846154,
+        0.1606880341880342
+      ],
+      "precision": [
+        0.025,
+        0.017,
+        0.0058000000000000005,
+        0.0044
+      ],
+      "ndcg": [
+        0.03613147192765458,
+        0.054314679241562434,
+        0.06693149215423735,
+        0.07614326060923593
+      ]
+    },
+    {
+      "run_index": 1,
+      "status": "ok",
+      "seed_eval": 558,
+      "seed_test": 559,
+      "error": null,
+      "train_seconds": 367.84038350000014,
+      "total_seconds": 566.0497169,
+      "eval_seconds": 198.20933339999988,
+      "peak_vram_bytes": 6140461056,
+      "peak_vram_mb": 5856.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 2,
+      "best_recall_epoch": 2,
+      "rank_ckpt": "r10",
+      "auc": 0.7142923962878649,
+      "f1": 0.6549660084093476,
+      "recall": [
+        0.0561036036036036,
+        0.08179904394190109,
+        0.12933887203530062,
+        0.15407967150824295
+      ],
+      "precision": [
+        0.04,
+        0.017,
+        0.006600000000000002,
+        0.0048
+      ],
+      "ndcg": [
+        0.06839441578296375,
+        0.07462924966847619,
+        0.0854976255522031,
+        0.09077074782726971
+      ]
+    },
+    {
+      "run_index": 2,
+      "status": "ok",
+      "seed_eval": 560,
+      "seed_test": 561,
+      "error": null,
+      "train_seconds": 503.3407778999999,
+      "total_seconds": 758.9243822999999,
+      "eval_seconds": 255.5836044,
+      "peak_vram_bytes": 6123683840,
+      "peak_vram_mb": 5840.0,
+      "vram_source": "nvidia-smi+tf.get_memory_info",
+      "best_auc_epoch": 2,
+      "best_recall_epoch": 5,
+      "rank_ckpt": "r10",
+      "auc": 0.7143262439551162,
+      "f1": 0.6548466148726831,
+      "recall": [
+        0.017,
+        0.04449206349206349,
+        0.09508531746031747,
+        0.14921464646464647
+      ],
+      "precision": [
+        0.015,
+        0.01,
+        0.0046,
+        0.0034999999999999996
+      ],
+      "ndcg": [
+        0.02,
+        0.033325711551488404,
+        0.04632155622684733,
+        0.056546042249902756
+      ]
+    }
+  ],
+  "config": {
+    "adj_type": "norm",
+    "agg_type": "weighted_avg",
+    "aggregator": "concat",
+    "alg_type": "lightgcn",
+    "alpha": 0.0,
+    "att": "product",
+    "batch_size": 256,
+    "cl_detach": "none",
+    "cl_lambda": 0.1,
+    "cl_sample_size": 0,
+    "cl_tau": 0.2,
+    "dataset": "book",
+    "dim": 64,
+    "early_stop": 5,
+    "early_stop_min_epoch": 0,
+    "exp_tag": "proposed_sparsity",
+    "fast_eval": 1,
+    "fusion": "gate",
+    "gpu_id": 0,
+    "interpret": 0,
+    "interpret_topk": 5,
+    "interpret_user": -1,
+    "kgtr_center": 0,
+    "kgtr_dot": 0,
+    "kgtr_ffn": 0,
+    "kgtr_pool": "transformed",
+    "kgtr_rel_bias": 0,
+    "kgtr_temp": 1.0,
+    "kgtr_token": "rel_ej",
+    "l2_weight": 2e-05,
+    "layer_size": "[64]",
+    "log_resources": 1,
+    "logging": "save",
+    "lr": 0.0002,
+    "lr_decay": 0.98,
+    "ls_weight": 0,
+    "mess_dropout": "[0.1]",
+    "model_type": "KGCN_LightGCN",
+    "n_epochs": 39,
+    "n_heads": 4,
+    "n_iter": 1,
+    "neighbor_sample_size": 8,
+    "node_dropout": "[0.1]",
+    "node_dropout_flag": 1,
+    "pair_dump": 0,
+    "params": "['dataset','aggregator','n_epochs','neighbor_sample_size','dim','n_iter','batch_size','l2_weight','ls_weight','lr','ratio','layer_size','adj_type','alg_type','node_dropout_flag','node_dropout','mess_dropout','model_type','att','agg_type','alpha','smoothing_steps','runs','logging','pretrain','topk_user_num','topk_k_list','report_ndcg','use_cl','cl_lambda','cl_tau','cl_sample_size','cl_detach','use_simgcl','simgcl_lambda','simgcl_eps','lr_decay','early_stop','early_stop_min_epoch','fusion','exp_tag','n_heads','kgtr_token','kgtr_pool','kgtr_center','kgtr_ffn','kgtr_temp','kgtr_rel_bias','kgtr_dot','fast_eval','sparsity_eval','sparsity_buckets','interpret','interpret_user','interpret_topk']",
+    "pretrain": 0,
+    "rank_ckpt": "r10",
+    "ratio": 1,
+    "report_ndcg": 1,
+    "runs": 3,
+    "seed": 562,
+    "simgcl_eps": 0.1,
+    "simgcl_lambda": 0.1,
+    "smoothing_steps": 3,
+    "sparsity_buckets": "[5,10,20]",
+    "sparsity_eval": 1,
+    "topk_k_list": "[2,10,50,100]",
+    "topk_user_num": 100,
+    "use_cl": 0,
+    "use_simgcl": 0
+  }
+}

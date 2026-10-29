@@ -1,0 +1,292 @@
+{
+  "dataset": "music",
+  "model_type": "KGCN_LightGCN",
+  "att": "product",
+  "user": 774,
+  "n_neighbor": 8,
+  "user_train_items": [
+    113,
+    419,
+    422,
+    508,
+    510,
+    515,
+    570,
+    721,
+    795,
+    844,
+    944,
+    1248,
+    1287,
+    1306,
+    1310,
+    1325,
+    1386,
+    1513,
+    1759,
+    1961,
+    1993,
+    2253,
+    2462,
+    2466,
+    2556,
+    2687,
+    2739,
+    3504,
+    3528,
+    3562
+  ],
+  "user_test_items": [
+    157,
+    512,
+    513,
+    519,
+    727,
+    1483,
+    2463,
+    2464,
+    2465
+  ],
+  "recommendations": [
+    {
+      "rank": 1,
+      "item": 882,
+      "score": 0.9453737735748291,
+      "in_test": false,
+      "kg_neighbors": [
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 6349,
+          "relation": 0,
+          "attention": 0.125
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "item": 42,
+      "score": 0.9435362219810486,
+      "in_test": false,
+      "kg_neighbors": [
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        },
+        {
+          "entity": 4150,
+          "relation": 0,
+          "attention": 0.125
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "item": 187,
+      "score": 0.9339223504066467,
+      "in_test": false,
+      "kg_neighbors": [
+        {
+          "entity": 5732,
+          "relation": 19,
+          "attention": 0.1250021606683731
+        },
+        {
+          "entity": 5732,
+          "relation": 19,
+          "attention": 0.1250021606683731
+        },
+        {
+          "entity": 4949,
+          "relation": 19,
+          "attention": 0.12500183284282684
+        },
+        {
+          "entity": 4949,
+          "relation": 19,
+          "attention": 0.12500183284282684
+        },
+        {
+          "entity": 4099,
+          "relation": 19,
+          "attention": 0.1250016689300537
+        },
+        {
+          "entity": 9089,
+          "relation": 19,
+          "attention": 0.1250012367963791
+        },
+        {
+          "entity": 4898,
+          "relation": 19,
+          "attention": 0.12499458342790604
+        },
+        {
+          "entity": 4898,
+          "relation": 19,
+          "attention": 0.12499458342790604
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "item": 1308,
+      "score": 0.9322080016136169,
+      "in_test": false,
+      "kg_neighbors": [
+        {
+          "entity": 6052,
+          "relation": 2,
+          "attention": 0.12500017881393433
+        },
+        {
+          "entity": 6052,
+          "relation": 1,
+          "attention": 0.12500017881393433
+        },
+        {
+          "entity": 6052,
+          "relation": 2,
+          "attention": 0.12500017881393433
+        },
+        {
+          "entity": 3864,
+          "relation": 0,
+          "attention": 0.12500005960464478
+        },
+        {
+          "entity": 4080,
+          "relation": 1,
+          "attention": 0.12499985843896866
+        },
+        {
+          "entity": 5251,
+          "relation": 17,
+          "attention": 0.12499985843896866
+        },
+        {
+          "entity": 5251,
+          "relation": 17,
+          "attention": 0.12499985843896866
+        },
+        {
+          "entity": 4080,
+          "relation": 1,
+          "attention": 0.12499985843896866
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "item": 128,
+      "score": 0.9228465557098389,
+      "in_test": false,
+      "kg_neighbors": [
+        {
+          "entity": 128,
+          "relation": 22,
+          "attention": 0.12507517635822296
+        },
+        {
+          "entity": 128,
+          "relation": 11,
+          "attention": 0.12507517635822296
+        },
+        {
+          "entity": 128,
+          "relation": 22,
+          "attention": 0.12507517635822296
+        },
+        {
+          "entity": 5227,
+          "relation": 4,
+          "attention": 0.12495706230401993
+        },
+        {
+          "entity": 4388,
+          "relation": 1,
+          "attention": 0.12495434284210205
+        },
+        {
+          "entity": 6467,
+          "relation": 2,
+          "attention": 0.12495434284210205
+        },
+        {
+          "entity": 6216,
+          "relation": 2,
+          "attention": 0.12495434284210205
+        },
+        {
+          "entity": 5851,
+          "relation": 1,
+          "attention": 0.12495434284210205
+        }
+      ]
+    }
+  ]
+}
